@@ -165,17 +165,18 @@ class KnowledgeEngineAppsUtil:
 
         visualization_content = ''
 
-        feature_dendrogram_name = 'feature_dendrogram.png'
-        feature_dendrogram_display_name = 'feature dendrogram'
+        if feature_dendrogram_path:
+            feature_dendrogram_name = 'feature_dendrogram.png'
+            feature_dendrogram_display_name = 'feature dendrogram'
 
-        shutil.copy2(feature_dendrogram_path,
-                     os.path.join(output_directory, feature_dendrogram_name))
+            shutil.copy2(feature_dendrogram_path,
+                         os.path.join(output_directory, feature_dendrogram_name))
 
-        visualization_content += '<div class="gallery">'
-        visualization_content += '<a target="_blank" href="{}">'.format(feature_dendrogram_name)
-        visualization_content += '<img src="{}" '.format(feature_dendrogram_name)
-        visualization_content += 'alt="{}" width="600" height="400">'.format(feature_dendrogram_display_name)
-        visualization_content += '</a><div class="desc">{}</div></div>'.format(feature_dendrogram_display_name)
+            visualization_content += '<div class="gallery">'
+            visualization_content += '<a target="_blank" href="{}">'.format(feature_dendrogram_name)
+            visualization_content += '<img src="{}" '.format(feature_dendrogram_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(feature_dendrogram_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(feature_dendrogram_display_name)
 
         if feature_dendrogram_truncate_path:
             feature_den_truncate_name = 'feature_dendrogram_last12.png'
@@ -190,17 +191,18 @@ class KnowledgeEngineAppsUtil:
             visualization_content += 'alt="{}" width="600" height="400">'.format(feature_den_truncate_display_name)
             visualization_content += '</a><div class="desc">{}</div></div>'.format(feature_den_truncate_display_name)
 
-        condition_dendrogram_name = 'condition_dendrogram.png'
-        condition_dendrogram_display_name = 'condition dendrogram'
+        if condition_dendrogram_path:
+            condition_dendrogram_name = 'condition_dendrogram.png'
+            condition_dendrogram_display_name = 'condition dendrogram'
 
-        shutil.copy2(condition_dendrogram_path,
-                     os.path.join(output_directory, condition_dendrogram_name))
+            shutil.copy2(condition_dendrogram_path,
+                         os.path.join(output_directory, condition_dendrogram_name))
 
-        visualization_content += '<div class="gallery">'
-        visualization_content += '<a target="_blank" href="{}">'.format(condition_dendrogram_name)
-        visualization_content += '<img src="{}" '.format(condition_dendrogram_name)
-        visualization_content += 'alt="{}" width="600" height="400">'.format(condition_dendrogram_display_name)
-        visualization_content += '</a><div class="desc">{}</div></div>'.format(condition_dendrogram_display_name)
+            visualization_content += '<div class="gallery">'
+            visualization_content += '<a target="_blank" href="{}">'.format(condition_dendrogram_name)
+            visualization_content += '<img src="{}" '.format(condition_dendrogram_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(condition_dendrogram_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(condition_dendrogram_display_name)
 
         if condition_dendrogram_truncate_path:
             condition_den_truncate_name = 'condition_dendrogram_last12.png'
@@ -214,6 +216,9 @@ class KnowledgeEngineAppsUtil:
             visualization_content += '<img src="{}" '.format(condition_den_truncate_name)
             visualization_content += 'alt="{}" width="600" height="400">'.format(condition_den_truncate_display_name)
             visualization_content += '</a><div class="desc">{}</div></div>'.format(condition_den_truncate_display_name)
+
+        if not visualization_content:
+            visualization_content = '<p>Dendrogram is too large to be printed.</p>'
 
         return visualization_content
 
@@ -413,24 +418,28 @@ class KnowledgeEngineAppsUtil:
         flat_cluster = fcluster_ret['flat_cluster']
 
         # generate dendrogram
-        dendrogram_params = {'linkage_matrix': linkage_matrix,
-                             'dist_threshold': dist_threshold,
-                             'labels': labels}
+        if len(linkage_matrix) < 1500:
+            dendrogram_params = {'linkage_matrix': linkage_matrix,
+                                 'dist_threshold': dist_threshold,
+                                 'labels': labels}
 
-        dendrogram_ret = self.ke_util.run_dendrogram(dendrogram_params)
+            dendrogram_ret = self.ke_util.run_dendrogram(dendrogram_params)
 
-        dendrogram_path = dendrogram_ret['result_plots'][0]
+            dendrogram_path = dendrogram_ret['result_plots'][0]
 
-        # generate truncated (last 12 merges) dendrogram
-        if merges > 24:
-            dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
-                                          'dist_threshold': dist_threshold,
-                                          'labels': labels,
-                                          'last_merges': 12}
-            dendrogram_truncate_ret = self.ke_util.run_dendrogram(dendrogram_truncate_params)
+            # generate truncated (last 12 merges) dendrogram
+            if merges > 24:
+                dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
+                                              'dist_threshold': dist_threshold,
+                                              'labels': labels,
+                                              'last_merges': 12}
+                dendrogram_truncate_ret = self.ke_util.run_dendrogram(dendrogram_truncate_params)
 
-            dendrogram_truncate_path = dendrogram_truncate_ret['result_plots'][0]
+                dendrogram_truncate_path = dendrogram_truncate_ret['result_plots'][0]
+            else:
+                dendrogram_truncate_path = None
         else:
+            dendrogram_path = None
             dendrogram_truncate_path = None
 
         return flat_cluster, dendrogram_path, dendrogram_truncate_path
@@ -542,10 +551,6 @@ class KnowledgeEngineAppsUtil:
                                                         genome_ref,
                                                         workspace_name)
         feature_set_set_refs.append(condition_feature_set)
-
-
-        print 'fdsafd'
-        print feature_set_set_refs
 
         returnVal = {'feature_set_set_refs': feature_set_set_refs}
 
