@@ -1,0 +1,216 @@
+{
+  "ver" : "1.0.0",
+  "authors" : ["tgu2"],
+  "contact" : "help@kbase.us",
+  "visible" : true,
+  "categories" : ["active","expression","knowledge_engine"],
+  "widgets" : {
+    "input" : null,
+    "output" : "no-display"
+  },
+   "parameters" : [ {
+    "id" : "expression_matrix_ref",
+    "optional" : false,
+    "advanced" : false,
+    "allow_multiple" : false,
+    "default_values" : [ "" ],
+    "field_type" : "text",
+    "text_options" : {
+      "valid_ws_types" : ["KBaseFeatureValues.ExpressionMatrix"]
+    }
+  },{
+   "id" : "dist_threshold",
+    "optional" : false,
+    "advanced" : false,
+    "allow_multiple" : false,
+    "default_values" : [ "100" ],
+    "field_type" : "text",
+    "text_options" : {
+      "validate_as": "float"
+    }
+  },{
+    "id" : "feature_set_suffix",
+    "optional" : false,
+    "advanced" : true,
+    "allow_multiple" : false,
+    "default_values" : [ "_cluster" ],
+    "field_type" : "text"
+  },{
+    "id" : "dist_metric",
+    "optional" : true,
+    "advanced" : true,
+    "allow_multiple" : false,
+    "default_values" : [ "euclidean" ],
+    "field_type" : "dropdown",
+    "dropdown_options" : {
+      "options": [
+        {
+          "value": "braycurtis",
+          "display": "braycurtis"
+        },{
+          "value": "canberra",
+          "display": "canberra"
+        },{
+          "value": "chebyshev",
+          "display": "chebyshev"
+        },{
+          "value": "cityblock",
+          "display": "cityblock"
+        },{
+          "value": "correlation",
+          "display": "correlation"
+        },{
+          "value": "cosine",
+          "display": "cosine"
+        },{
+          "value": "dice",
+          "display": "dice"
+        },{
+          "value": "euclidean",
+          "display": "euclidean"
+        },{
+          "value": "hamming",
+          "display": "hamming"
+        },{
+          "value": "jaccard",
+          "display": "jaccard"
+        },{
+          "value": "kulsinski",
+          "display": "kulsinski"
+        },{
+          "value": "matching",
+          "display": "matching"
+        },{
+          "value": "rogerstanimoto",
+          "display": "rogerstanimoto"
+        },{
+          "value": "russellrao",
+          "display": "russellrao"
+        },{
+          "value": "sokalmichener",
+          "display": "sokalmichener"
+        },{
+          "value": "sokalsneath",
+          "display": "sokalsneath"
+        },{
+          "value": "sqeuclidean",
+          "display": "sqeuclidean"
+        },{
+          "value": "yule",
+          "display": "yule"
+        }
+    ]}
+  },{
+    "id" : "linkage_method",
+    "optional" : true,
+    "advanced" : true,
+    "allow_multiple" : false,
+    "default_values" : [ "ward" ],
+    "field_type" : "dropdown",
+    "dropdown_options" : {
+      "options": [
+        {
+          "value": "single",
+          "display": "single"
+        },{
+          "value": "complete",
+          "display": "complete"
+        },{
+          "value": "average",
+          "display": "average"
+        },{
+          "value": "weighted",
+          "display": "weighted"
+        },{
+          "value": "centroid",
+          "display": "centroid"
+        },{
+          "value": "median",
+          "display": "median"
+        },{
+          "value": "ward",
+          "display": "ward"
+        }
+    ]}
+  },{
+    "id" : "fcluster_criterion",
+    "optional" : true,
+    "advanced" : true,
+    "allow_multiple" : false,
+    "default_values" : [ "distance" ],
+    "field_type" : "dropdown",
+    "dropdown_options" : {
+      "options": [
+        {
+          "value": "inconsistent",
+          "display": "inconsistent"
+        },{
+          "value": "distance",
+          "display": "distance"
+        },{
+          "value": "maxclust",
+          "display": "maxclust"
+        }
+    ]}
+  }],
+  "behavior" : {
+    "service-mapping" : {
+      "url" : "",
+      "name" : "kb_ke_apps",
+      "method" : "run_expression_matrix_cluster",
+      "input_mapping" : [
+        {
+          "narrative_system_variable": "workspace",
+          "target_property" : "workspace_name"
+        },
+        {
+          "input_parameter" : "expression_matrix_ref",
+          "target_type_transform": "resolved-ref",
+          "target_property" : "expression_matrix_ref"
+        },
+        {
+            "input_parameter" : "dist_threshold",
+            "target_property" : "dist_threshold"
+        },
+        {
+            "input_parameter" : "feature_set_suffix",
+            "target_property" : "feature_set_suffix"
+        },
+        {
+          "input_parameter" : "dist_metric",
+          "target_property" : "dist_metric"
+        },     
+        {
+          "input_parameter" : "linkage_method",
+          "target_property" : "linkage_method"
+        },
+        {
+          "input_parameter" : "fcluster_criterion",
+          "target_property" : "fcluster_criterion"
+        }],
+      "output_mapping" : [
+        {
+          "narrative_system_variable": "workspace",
+          "target_property": "wsName"
+        },
+        {
+         "service_method_output_path": [0,"feature_set_set_refs"],
+         "target_property": "feature_set_set_refs"
+        },
+        {
+          "service_method_output_path": [0, "report_name"],
+          "target_property": "report_name"
+        },
+        {
+          "service_method_output_path": [0, "report_ref"],
+          "target_property": "report_ref"
+        },
+        {
+          "constant_value": "16",
+          "target_property": "report_window_line_height"
+        }
+      ]
+    }
+  },
+  "job_id_output_field" : "docker"
+}
