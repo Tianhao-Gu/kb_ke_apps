@@ -238,6 +238,7 @@ class KnowledgeEngineAppsUtil:
                                                             condition_dendrogram_path,
                                                             condition_dendrogram_truncate_path)
 
+        overview_content = ''
         for feature_set_set_ref in feature_set_set_refs:
           
             feature_set_set_obj = self.ws.get_objects2({'objects':
@@ -250,7 +251,6 @@ class KnowledgeEngineAppsUtil:
 
             items = feature_set_set_data['items']
 
-            overview_content = ''
             if '_condition' in feature_set_set_name:
                 overview_content += '<br/><table><tr><th>Generated Condition Cluster Set'
                 overview_content += '</th></tr>'
@@ -344,6 +344,7 @@ class KnowledgeEngineAppsUtil:
                                                        condition_dendrogram_path,
                                                        condition_dendrogram_truncate_path)
 
+        objects_created = []
         for feature_set_set_ref in feature_set_set_refs:
 
             feature_set_set_data = self.ws.get_objects2({'objects':
@@ -354,7 +355,6 @@ class KnowledgeEngineAppsUtil:
 
             description_set = 'Cluster Set'
             description_object = 'Cluster'
-            objects_created = []
             objects_created.append({'ref': feature_set_set_ref,
                                     'description': description_set})
 
@@ -540,6 +540,10 @@ class KnowledgeEngineAppsUtil:
                                                         genome_ref,
                                                         workspace_name)
         feature_set_set_refs.append(condition_feature_set)
+
+
+        print 'fdsafd'
+        print feature_set_set_refs
 
         returnVal = {'feature_set_set_refs': feature_set_set_refs}
 
