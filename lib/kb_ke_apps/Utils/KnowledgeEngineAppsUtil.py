@@ -252,6 +252,7 @@ class KnowledgeEngineAppsUtil:
             items = feature_set_set_data['items']
 
             if '_condition' in feature_set_set_name:
+                overview_content += '<p><br/></p>'
                 overview_content += '<br/><table><tr><th>Generated Condition Cluster Set'
                 overview_content += '</th></tr>'
                 overview_content += '<tr><td>{} ({})'.format(feature_set_set_name,
@@ -281,6 +282,7 @@ class KnowledgeEngineAppsUtil:
                     overview_content += '<td>{}</td></tr>'.format(number_features)
                 overview_content += '</table>'
             else:
+                overview_content += '<p><br/></p>'
                 overview_content += '<br/><table><tr><th>Generated Feature Cluster Set'
                 overview_content += '</th></tr>'
                 overview_content += '<tr><td>{} ({})'.format(feature_set_set_name,
