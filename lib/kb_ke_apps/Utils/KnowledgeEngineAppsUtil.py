@@ -263,7 +263,7 @@ class KnowledgeEngineAppsUtil:
                 overview_content += '<br/><table><tr><th>Generated Condition Cluster'
                 overview_content += '</th><th></th><th></th><th></th></tr>'
                 overview_content += '<tr><th>Cluster Name</th>'
-                overview_content += '<th>Feature Count</th>'
+                overview_content += '<th>Condition Count</th>'
                 overview_content += '</tr>'
                 for item in items:
                     feature_set_ref = item['ref']
