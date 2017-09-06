@@ -1,0 +1,60 @@
+#
+# Define basic display information
+#
+name     : Create Clustering for ExpressionMatrix - v1.0.0
+
+tooltip  : |
+    Create clustering for ExpressionMatrix object
+screenshots :
+    []
+
+# icon: stringtie-yellow.png
+
+#
+# Define the set of other narrative methods that should be suggested to the user.
+#
+method-suggestions :
+    related :
+        []
+    next :
+        []
+
+#
+# Configure the display and description of the parameters
+#
+parameters :
+  expression_matrix_ref :
+    ui-name : |
+        Expression Matrix Object
+    short-hint : |
+        Expression Matrix Object
+  dist_threshold:
+    ui-name : |
+        Distance Threshold
+    short-hint: |
+        Distance Threshold
+  feature_set_suffix :
+    ui-name : |
+        Clustering Object Name Suffix
+    short-hint : |
+        Clustering Object Name Suffix
+  dist_metric :
+    ui-name : |
+        Distance Metric
+    short-hint : |
+        Distance Metric
+  linkage_method :
+    ui-name : |
+      Linkage Method
+    short-hint : |
+      Linkage Method
+  fcluster_criterion :
+    ui-name : |
+      Fcluster Criterion
+    short-hint : |
+      Fcluster Criterion
+
+description : |
+    <p>This app creates clustering for ExpressionMatrix object</p>
+    <p><strong>Team members who developed & deployed algorithm in KBase:</strong> Tianhao Gu</p>
+
