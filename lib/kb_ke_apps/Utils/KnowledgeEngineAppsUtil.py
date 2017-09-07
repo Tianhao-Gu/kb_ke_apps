@@ -576,8 +576,6 @@ class KnowledgeEngineAppsUtil:
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
 
-        print feature_flat_cluster
-
         (condition_flat_cluster,
          condition_dendrogram_path,
          condition_dendrogram_truncate_path) = self._build_flat_cluster(

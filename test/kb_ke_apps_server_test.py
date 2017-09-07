@@ -111,7 +111,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         cls.expression_matrix_ref = '5290/238/3'
 
-        cls.expression_matrix_ref = '5290/258/6'
+        # cls.expression_matrix_ref = '5290/258/6'
 
     def getWsClient(self):
         return self.__class__.wsClient
