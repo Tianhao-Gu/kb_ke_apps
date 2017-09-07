@@ -111,7 +111,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         cls.expression_matrix_ref = '5290/238/3'
 
-        # cls.expression_matrix_ref = '5290/258/6'
+        cls.expression_matrix_ref = '5290/258/6'
 
     def getWsClient(self):
         return self.__class__.wsClient
@@ -203,7 +203,7 @@ class kb_ke_appsTest(unittest.TestCase):
         params = {'expression_matrix_ref': self.expression_matrix_ref,
                   'workspace_name': self.getWsName(),
                   'feature_set_suffix': '_cluster',
-                  'dist_threshold': 500,
+                  'dist_threshold': 100,
                   'dist_metric': 'cityblock',
                   'linkage_method': 'ward',
                   'fcluster_criterion': 'distance'}

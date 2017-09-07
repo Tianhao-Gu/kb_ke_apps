@@ -396,11 +396,11 @@ class KnowledgeEngineAppsUtil:
                         'metric': dist_metric}
         pdist_ret = self.ke_util.run_pdist(pdist_params)
 
-        square_dist_matrix = pdist_ret['square_dist_matrix']
+        dist_matrix = pdist_ret['dist_matrix']
         labels = pdist_ret['labels']
 
         # performs hierarchical/agglomerative clustering
-        linkage_params = {'square_dist_matrix': square_dist_matrix,
+        linkage_params = {'dist_matrix': dist_matrix,
                           'method': linkage_method}
         linkage_ret = self.ke_util.run_linkage(linkage_params)
 
@@ -443,6 +443,57 @@ class KnowledgeEngineAppsUtil:
             dendrogram_truncate_path = None
 
         return flat_cluster, dendrogram_path, dendrogram_truncate_path
+
+    def _list_workspaces(self, auth):
+        """
+        _list_workspaces: list all workspaces a user has access to
+        """
+        log('receiving all public workspaces')
+
+        workspaces = self.ws.list_workspaces({'auth': auth})
+
+        public_worksapces = [ws for ws in workspaces if ws[5] in ['r', 'w', 'a']]
+
+        log('got {} public workspaces'.format(len(public_worksapces)))
+        
+        return public_worksapces
+
+    def _list_objects(self, workspace_name, data_type, auth, show_delected_object=0):
+        """
+        _list_objects: list all object with type in workspace
+        """
+        log('receiving all {} objects in workspace {}'.format(data_type, workspace_name))
+
+        objects = self.ws.list_workspace_objects({'workspace': workspace_name,
+                                                  'showDeletedObject': show_delected_object,
+                                                  'type': data_type,
+                                                  'auth': auth})
+
+        if objects:
+            log('got {} {} objects in workspace {}'.format(len(objects), 
+                                                           data_type, 
+                                                           workspace_name))
+        return objects
+
+    def _get_all_public_objects(self, auth, data_type, show_delected_object=0):
+        """
+        _get_all_public_objects: get all object ref user has access to with specific data type
+        """
+        log('receiving all {} objects in public workspaces'.format(data_type))
+
+        public_worksapces = self._list_workspaces(auth)
+
+        public_objects = []
+        for public_worksapce in public_worksapces:
+            ws_name = public_worksapce[0]
+            objects = self._list_objects(ws_name, data_type, auth)
+            for object in objects:
+                object_ref = ws_name + '/' + str(object[11]) + '/' + str(object[3])
+                public_objects.append(object_ref)
+
+        log('got {} {} objects in public workspaces'.format(len(public_objects), data_type))
+
+        return public_objects
 
     def __init__(self, config):
         self.ws_url = config["workspace-url"]
@@ -524,6 +575,8 @@ class KnowledgeEngineAppsUtil:
                                                             dist_metric=dist_metric,
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
+
+        print feature_flat_cluster
 
         (condition_flat_cluster,
          condition_dendrogram_path,
