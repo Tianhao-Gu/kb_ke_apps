@@ -3,7 +3,7 @@
   "authors" : ["tgu2"],
   "contact" : "help@kbase.us",
   "visible" : true,
-  "categories" : ["active","expression","knowledge_engine"],
+  "categories" : ["inactive","expression","knowledge_engine"],
   "widgets" : {
     "input" : null,
     "output" : "no-display"
