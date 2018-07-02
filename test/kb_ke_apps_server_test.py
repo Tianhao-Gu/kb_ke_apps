@@ -55,7 +55,7 @@ class kb_ke_appsTest(unittest.TestCase):
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
 
-        cls.gfu = GenomeFileUtil(cls.callback_url)
+        cls.gfu = GenomeFileUtil(cls.callback_url, service_ver='dev')
         cls.dfu = DataFileUtil(cls.callback_url)
 
         suffix = int(time.time() * 1000)
@@ -72,44 +72,45 @@ class kb_ke_appsTest(unittest.TestCase):
 
     @classmethod
     def prepare_data(cls):
-        # # upload genome object
-        # genbank_file_name = 'minimal.gbff'
-        # genbank_file_path = os.path.join(cls.scratch, genbank_file_name)
-        # shutil.copy(os.path.join('data', genbank_file_name), genbank_file_path)
+        # upload genome object
+        genbank_file_name = 'minimal.gbff'
+        genbank_file_path = os.path.join(cls.scratch, genbank_file_name)
+        shutil.copy(os.path.join('data', genbank_file_name), genbank_file_path)
 
-        # genome_object_name = 'test_Genome'
-        # cls.genome_ref = cls.gfu.genbank_to_genome({'file': {'path': genbank_file_path},
-        #                                             'workspace_name': cls.wsName,
-        #                                             'genome_name': genome_object_name
-        #                                             })['genome_ref']
+        genome_object_name = 'test_Genome'
+        cls.genome_ref = cls.gfu.genbank_to_genome({'file': {'path': genbank_file_path},
+                                                    'workspace_name': cls.wsName,
+                                                    'genome_name': genome_object_name,
+                                                    'generate_ids_if_needed': 1
+                                                    })['genome_ref']
 
-        # # upload expression matrix object
-        # workspace_id = cls.dfu.ws_name_to_id(cls.wsName)
-        # object_type = 'KBaseFeatureValues.ExpressionMatrix'
-        # expression_matrix_object_name = 'test_expression_matrix'
-        # expression_matrix_data = {'genome_ref': cls.genome_ref,
-        #                           'scale': 'log2',
-        #                           'type': 'level',
-        #                           'data': {'row_ids': ['gene_1', 'gene_2', 'gene_3'],
-        #                                    'col_ids': ['condition_1', 'condition_2', 
-        #                                                'condition_3', 'condition_4'],
-        #                                    'values': [[0.1, 0.2, 0.3, 0.4], 
-        #                                               [0.3, 0.4, 0.5, 0.6], 
-        #                                               [0.5, 0.6, 0.7, 0.8]]
-        #                                    },
-        #                           'feature_mapping': {},
-        #                           'condition_mapping': {}}
-        # save_object_params = {
-        #     'id': workspace_id,
-        #     'objects': [{'type': object_type,
-        #                  'data': expression_matrix_data,
-        #                  'name': expression_matrix_object_name}]
-        # }
+        # upload expression matrix object
+        workspace_id = cls.dfu.ws_name_to_id(cls.wsName)
+        object_type = 'KBaseFeatureValues.ExpressionMatrix'
+        expression_matrix_object_name = 'test_expression_matrix'
+        expression_matrix_data = {'genome_ref': cls.genome_ref,
+                                  'scale': 'log2',
+                                  'type': 'level',
+                                  'data': {'row_ids': ['gene_1', 'gene_2', 'gene_3'],
+                                           'col_ids': ['condition_1', 'condition_2',
+                                                       'condition_3', 'condition_4'],
+                                           'values': [[0.1, 0.2, 0.3, 0.4],
+                                                      [0.3, 0.4, 0.5, 0.6],
+                                                      [0.5, 0.6, 0.7, 0.8]]
+                                           },
+                                  'feature_mapping': {},
+                                  'condition_mapping': {}}
+        save_object_params = {
+            'id': workspace_id,
+            'objects': [{'type': object_type,
+                         'data': expression_matrix_data,
+                         'name': expression_matrix_object_name}]
+        }
 
-        # dfu_oi = cls.dfu.save_objects(save_object_params)[0]
-        # cls.expression_matrix_ref = str(dfu_oi[6]) + '/' + str(dfu_oi[0]) + '/' + str(dfu_oi[4])
+        dfu_oi = cls.dfu.save_objects(save_object_params)[0]
+        cls.expression_matrix_ref = str(dfu_oi[6]) + '/' + str(dfu_oi[0]) + '/' + str(dfu_oi[4])
 
-        cls.expression_matrix_ref = '5290/238/3'
+        # cls.expression_matrix_ref = '5290/238/3'
 
         # cls.expression_matrix_ref = '5290/258/6'
 
@@ -143,59 +144,59 @@ class kb_ke_appsTest(unittest.TestCase):
         self.assertTrue('report_name' in ret)
         self.assertTrue('report_ref' in ret)
 
-    # def test_bad_run_expression_matrix_cluster_params(self):
-    #     self.start_test()
-    #     invalidate_params = {'missing_expression_matrix_ref': 'expression_matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold'}
-    #     error_msg = '"expression_matrix_ref" parameter is required, but missing'
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
+    def test_bad_run_expression_matrix_cluster_params(self):
+        self.start_test()
+        invalidate_params = {'missing_expression_matrix_ref': 'expression_matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold'}
+        error_msg = '"expression_matrix_ref" parameter is required, but missing'
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
-    #                          'missing_workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold'}
-    #     error_msg = '"workspace_name" parameter is required, but missing'
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
+        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+                             'missing_workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold'}
+        error_msg = '"workspace_name" parameter is required, but missing'
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'missing_feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold'}
-    #     error_msg = '"feature_set_suffix" parameter is required, but missing'
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
+        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'missing_feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold'}
+        error_msg = '"feature_set_suffix" parameter is required, but missing'
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'missing_dist_threshold': 'dist_threshold'}
-    #     error_msg = '"dist_threshold" parameter is required, but missing'
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
+        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'missing_dist_threshold': 'dist_threshold'}
+        error_msg = '"dist_threshold" parameter is required, but missing'
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold',
-    #                          'dist_metric': 'invalidate_metric'}
-    #     error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
+        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold',
+                             'dist_metric': 'invalidate_metric'}
+        error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
 
-    #     invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold',
-    #                          'linkage_method': 'invalidate_method'}
-    #     error_msg = "INPUT ERROR:\nInput linkage algorithm [invalidate_method] is not valid.\n"
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
+        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold',
+                             'linkage_method': 'invalidate_method'}
+        error_msg = "INPUT ERROR:\nInput linkage algorithm [invalidate_method] is not valid.\n"
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
 
-    #     invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold',
-    #                          'fcluster_criterion': 'invalidate_criterion'}
-    #     error_msg = "INPUT ERROR:\nInput criterion [invalidate_criterion] is not valid.\n"
-    #     self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
+        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold',
+                             'fcluster_criterion': 'invalidate_criterion'}
+        error_msg = "INPUT ERROR:\nInput criterion [invalidate_criterion] is not valid.\n"
+        self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
 
     def test_run_expression_matrix_cluster(self):
         self.start_test()
