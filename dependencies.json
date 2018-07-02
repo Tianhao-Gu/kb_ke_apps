@@ -9,7 +9,7 @@
 }, {
   "module_name" : "kb_ke_util",
   "type" : "sdk",
-  "version_tag" : "release"
+  "version_tag" : "dev"
 }, {
   "module_name" : "KBaseReport",
   "type" : "sdk",
