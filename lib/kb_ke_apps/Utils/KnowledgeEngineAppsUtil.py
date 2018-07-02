@@ -505,22 +505,6 @@ class KnowledgeEngineAppsUtil:
         self.dfu = DataFileUtil(self.callback_url)
         self.ke_util = kb_ke_util(self.callback_url, service_ver='dev')
 
-        params = {'onthology_set': {'gene_id_1':
-                                    ['GO:0050794', 'GO:0019222'],
-                                    'gene_id_2':
-                                    ['GO:0031323', 'GO:0050794'],
-                                    'gene_id_3':
-                                    ['GO:0031323', 'GO:0019222'],
-                                    'gene_id_4':
-                                    ['GO:0065007', 'GO:0031323'],
-                                    'gene_id_6':
-                                    ['GO:0031323', 'GO:0031323']}}
-
-        ret = self.ke_util.calc_onthology_dist(params)
-
-        print 'fdsafdsfdsafs'
-        print ret
-
         self.ws = Workspace(self.ws_url, token=self.token)
         self.set_client = SetAPI(self.srv_wiz_url)
 
