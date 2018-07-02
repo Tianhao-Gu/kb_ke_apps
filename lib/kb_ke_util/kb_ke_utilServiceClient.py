@@ -15,7 +15,6 @@ try:
 except:
     # no they aren't
     from baseclient import BaseClient as _BaseClient  # @Reimport
-import time
 
 
 class kb_ke_util(object):
@@ -25,28 +24,16 @@ class kb_ke_util(object):
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
             auth_svc='https://kbase.us/services/authorization/Sessions/Login',
-            service_ver='release',
-            async_job_check_time_ms=100, async_job_check_time_scale_percent=150, 
-            async_job_check_max_time_ms=300000):
+            service_ver='release'):
         if url is None:
-            raise ValueError('A url is required')
+            url = 'https://kbase.us/services/service_wizard'
         self._service_ver = service_ver
         self._client = _BaseClient(
             url, timeout=timeout, user_id=user_id, password=password,
             token=token, ignore_authrc=ignore_authrc,
             trust_all_ssl_certificates=trust_all_ssl_certificates,
             auth_svc=auth_svc,
-            async_job_check_time_ms=async_job_check_time_ms,
-            async_job_check_time_scale_percent=async_job_check_time_scale_percent,
-            async_job_check_max_time_ms=async_job_check_max_time_ms)
-
-    def _check_job(self, job_id):
-        return self._client._check_job('kb_ke_util', job_id)
-
-    def _run_pdist_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.run_pdist', [params],
-             self._service_ver, context)
+            lookup_url=True)
 
     def run_pdist(self, params, context=None):
         """
@@ -76,22 +63,9 @@ class kb_ke_util(object):
            "dist_matrix" of list of Double, parameter "labels" of list of
            String
         """
-        job_id = self._run_pdist_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _run_linkage_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.run_linkage', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.run_pdist',
+            [params], self._service_ver, context)
 
     def run_linkage(self, params, context=None):
         """
@@ -112,22 +86,9 @@ class kb_ke_util(object):
            linkage matrix) -> structure: parameter "linkage_matrix" of list
            of list of Double
         """
-        job_id = self._run_linkage_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _run_fcluster_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.run_fcluster', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.run_linkage',
+            [params], self._service_ver, context)
 
     def run_fcluster(self, params, context=None):
         """
@@ -158,22 +119,9 @@ class kb_ke_util(object):
            is returned to each cluster group)) -> structure: parameter
            "flat_cluster" of mapping from String to list of String
         """
-        job_id = self._run_fcluster_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _run_dendrogram_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.run_dendrogram', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.run_fcluster',
+            [params], self._service_ver, context)
 
     def run_dendrogram(self, params, context=None):
         """
@@ -195,22 +143,9 @@ class kb_ke_util(object):
            run_dendrogram function result_plots - List of result plot
            path(s)) -> structure: parameter "result_plots" of list of String
         """
-        job_id = self._run_dendrogram_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _build_biclusters_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.build_biclusters', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.run_dendrogram',
+            [params], self._service_ver, context)
 
     def build_biclusters(self, params, context=None):
         """
@@ -245,22 +180,9 @@ class kb_ke_util(object):
            [["gene_id_1", "gene_id_2"], ["gene_id_3"]]) -> structure:
            parameter "biclusters" of list of list of String
         """
-        job_id = self._build_biclusters_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _enrich_onthology_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.enrich_onthology', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.build_biclusters',
+            [params], self._service_ver, context)
 
     def enrich_onthology(self, params, context=None):
         """
@@ -286,22 +208,9 @@ class kb_ke_util(object):
            "sample_count" of Long, parameter "total_count" of Long, parameter
            "expected_count" of Long, parameter "p_value" of Double
         """
-        job_id = self._enrich_onthology_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _calc_onthology_dist_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.calc_onthology_dist', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.enrich_onthology',
+            [params], self._service_ver, context)
 
     def calc_onthology_dist(self, params, context=None):
         """
@@ -321,22 +230,9 @@ class kb_ke_util(object):
            structure: parameter "onthology_dist_set" of mapping from type
            "gene_id" to Long
         """
-        job_id = self._calc_onthology_dist_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
-
-    def _calc_weighted_onthology_dist_submit(self, params, context=None):
-        return self._client._submit_job(
-             'kb_ke_util.calc_weighted_onthology_dist', [params],
-             self._service_ver, context)
+        return self._client.call_method(
+            'kb_ke_util.calc_onthology_dist',
+            [params], self._service_ver, context)
 
     def calc_weighted_onthology_dist(self, params, context=None):
         """
@@ -357,28 +253,10 @@ class kb_ke_util(object):
            structure: parameter "onthology_dist_set" of mapping from type
            "gene_id" to Long
         """
-        job_id = self._calc_weighted_onthology_dist_submit(params, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
+        return self._client.call_method(
+            'kb_ke_util.calc_weighted_onthology_dist',
+            [params], self._service_ver, context)
 
     def status(self, context=None):
-        job_id = self._client._submit_job('kb_ke_util.status', 
-            [], self._service_ver, context)
-        async_job_check_time = self._client.async_job_check_time
-        while True:
-            time.sleep(async_job_check_time)
-            async_job_check_time = (async_job_check_time *
-                self._client.async_job_check_time_scale_percent / 100.0)
-            if async_job_check_time > self._client.async_job_check_max_time:
-                async_job_check_time = self._client.async_job_check_max_time
-            job_state = self._check_job(job_id)
-            if job_state['finished']:
-                return job_state['result'][0]
+        return self._client.call_method('kb_ke_util.status',
+                                        [], self._service_ver, context)
