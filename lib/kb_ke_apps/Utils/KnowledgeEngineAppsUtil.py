@@ -11,14 +11,16 @@ from Workspace.WorkspaceClient import Workspace as Workspace
 from KBaseReport.KBaseReportClient import KBaseReport
 from SetAPI.SetAPIServiceClient import SetAPI
 
+
 def log(message, prefix_newline=False):
     print(('\n' if prefix_newline else '') + str(time.time()) + ': ' + message)
 
+
 class KnowledgeEngineAppsUtil:
 
-    METRIC = ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", 
-              "dice", "euclidean", "hamming", "jaccard", "kulsinski", "matching", 
-              "rogerstanimoto", "russellrao", "sokalmichener", "sokalsneath", "sqeuclidean", 
+    METRIC = ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine",
+              "dice", "euclidean", "hamming", "jaccard", "kulsinski", "matching",
+              "rogerstanimoto", "russellrao", "sokalmichener", "sokalsneath", "sqeuclidean",
               "yule"]
 
     METHOD = ["single", "complete", "average", "weighted", "centroid", "median", "ward"]
@@ -48,7 +50,7 @@ class KnowledgeEngineAppsUtil:
         log('start validating run_expression_matrix_cluster params')
 
         # check for required parameters
-        for p in ['expression_matrix_ref', 'workspace_name', 'feature_set_suffix', 
+        for p in ['expression_matrix_ref', 'workspace_name', 'feature_set_suffix',
                   'dist_threshold']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
@@ -63,7 +65,8 @@ class KnowledgeEngineAppsUtil:
         # check method validation
         method = params.get('linkage_method')
         if method and method not in self.METHOD:
-            error_msg = 'INPUT ERROR:\nInput linkage algorithm [{}] is not valid.\n'.format(method)
+            error_msg = 'INPUT ERROR:\nInput linkage algorithm [{}] is not valid.\n'.format(
+                                                                                        method)
             error_msg += 'Available metric: {}'.format(self.METHOD)
             raise ValueError(error_msg)
 
@@ -81,7 +84,7 @@ class KnowledgeEngineAppsUtil:
         row_ids = data_matrix['row_ids']
         values = data_matrix['values']
         col_ids = data_matrix['col_ids']
-        
+
         reverse_data_matrix = dict()
         reverse_data_matrix.update({'row_ids': col_ids})
         reverse_data_matrix.update({'col_ids': row_ids})
@@ -140,11 +143,11 @@ class KnowledgeEngineAppsUtil:
         items = []
         for key, elements in flat_cluster.iteritems():
             cluster_name = cluster_set_name + '_' + key
-            feature_set_obj_ref = self._generate_feature_set(elements, genome_ref, 
+            feature_set_obj_ref = self._generate_feature_set(elements, genome_ref,
                                                              workspace_name, cluster_name)
             items.append({'ref': feature_set_obj_ref})
 
-        featureset_set_data = {'description': 'FeatureSetSet by KnowledgeEngineApps', 
+        featureset_set_data = {'description': 'FeatureSetSet by KnowledgeEngineApps',
                                'items': items}
         featureset_set_save_params = {'data': featureset_set_data,
                                       'workspace': workspace_name,
@@ -155,7 +158,7 @@ class KnowledgeEngineAppsUtil:
 
         return featureset_set_ref
 
-    def _generate_visualization_content(self, output_directory, feature_dendrogram_path, 
+    def _generate_visualization_content(self, output_directory, feature_dendrogram_path,
                                         feature_dendrogram_truncate_path,
                                         condition_dendrogram_path,
                                         condition_dendrogram_truncate_path):
@@ -173,10 +176,13 @@ class KnowledgeEngineAppsUtil:
                          os.path.join(output_directory, feature_dendrogram_name))
 
             visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(feature_dendrogram_name)
+            visualization_content += '<a target="_blank" href="{}">'.format(
+                                                                        feature_dendrogram_name)
             visualization_content += '<img src="{}" '.format(feature_dendrogram_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(feature_dendrogram_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(feature_dendrogram_display_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                                feature_dendrogram_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                feature_dendrogram_display_name)
 
         if feature_dendrogram_truncate_path:
             feature_den_truncate_name = 'feature_dendrogram_last12.png'
@@ -186,10 +192,13 @@ class KnowledgeEngineAppsUtil:
                          os.path.join(output_directory, feature_den_truncate_name))
 
             visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(feature_den_truncate_name)
+            visualization_content += '<a target="_blank" href="{}">'.format(
+                                                                        feature_den_truncate_name)
             visualization_content += '<img src="{}" '.format(feature_den_truncate_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(feature_den_truncate_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(feature_den_truncate_display_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                                feature_den_truncate_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                feature_den_truncate_display_name)
 
         if condition_dendrogram_path:
             condition_dendrogram_name = 'condition_dendrogram.png'
@@ -199,10 +208,13 @@ class KnowledgeEngineAppsUtil:
                          os.path.join(output_directory, condition_dendrogram_name))
 
             visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(condition_dendrogram_name)
+            visualization_content += '<a target="_blank" href="{}">'.format(
+                                                                        condition_dendrogram_name)
             visualization_content += '<img src="{}" '.format(condition_dendrogram_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(condition_dendrogram_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(condition_dendrogram_display_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                                condition_dendrogram_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                condition_dendrogram_display_name)
 
         if condition_dendrogram_truncate_path:
             condition_den_truncate_name = 'condition_dendrogram_last12.png'
@@ -212,10 +224,13 @@ class KnowledgeEngineAppsUtil:
                          os.path.join(output_directory, condition_den_truncate_name))
 
             visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(condition_den_truncate_name)
+            visualization_content += '<a target="_blank" href="{}">'.format(
+                                                                    condition_den_truncate_name)
             visualization_content += '<img src="{}" '.format(condition_den_truncate_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(condition_den_truncate_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(condition_den_truncate_display_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                            condition_den_truncate_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                            condition_den_truncate_display_name)
 
         if not visualization_content:
             visualization_content = '<p>Dendrogram is too large to be printed.</p>'
@@ -238,16 +253,16 @@ class KnowledgeEngineAppsUtil:
 
         visualization_content = self._generate_visualization_content(
                                                             output_directory,
-                                                            feature_dendrogram_path, 
+                                                            feature_dendrogram_path,
                                                             feature_dendrogram_truncate_path,
                                                             condition_dendrogram_path,
                                                             condition_dendrogram_truncate_path)
 
         overview_content = ''
         for feature_set_set_ref in feature_set_set_refs:
-          
+
             feature_set_set_obj = self.ws.get_objects2({'objects':
-                                                        [{'ref': 
+                                                        [{'ref':
                                                          feature_set_set_ref}]})['data'][0]
             feature_set_set_data = feature_set_set_obj['data']
             feature_set_set_info = feature_set_set_obj['info']
@@ -274,7 +289,7 @@ class KnowledgeEngineAppsUtil:
                 for item in items:
                     feature_set_ref = item['ref']
                     feature_set_object = self.ws.get_objects2({'objects':
-                                                               [{'ref': 
+                                                               [{'ref':
                                                                 feature_set_ref}]})['data'][0]
 
                     feature_set_data = feature_set_object['data']
@@ -282,7 +297,7 @@ class KnowledgeEngineAppsUtil:
                     feature_set_name = feature_set_info[1]
                     number_features = len(feature_set_data['element_ordering'])
 
-                    overview_content += '<tr><td>{} ({})</td>'.format(feature_set_name, 
+                    overview_content += '<tr><td>{} ({})</td>'.format(feature_set_name,
                                                                       feature_set_ref)
                     overview_content += '<td>{}</td></tr>'.format(number_features)
                 overview_content += '</table>'
@@ -304,7 +319,7 @@ class KnowledgeEngineAppsUtil:
                 for item in items:
                     feature_set_ref = item['ref']
                     feature_set_object = self.ws.get_objects2({'objects':
-                                                               [{'ref': 
+                                                               [{'ref':
                                                                 feature_set_ref}]})['data'][0]
 
                     feature_set_data = feature_set_object['data']
@@ -312,7 +327,7 @@ class KnowledgeEngineAppsUtil:
                     feature_set_name = feature_set_info[1]
                     number_features = len(feature_set_data['element_ordering'])
 
-                    overview_content += '<tr><td>{} ({})</td>'.format(feature_set_name, 
+                    overview_content += '<tr><td>{} ({})</td>'.format(feature_set_name,
                                                                       feature_set_ref)
                     overview_content += '<td>{}</td></tr>'.format(number_features)
                 overview_content += '</table>'
@@ -333,7 +348,8 @@ class KnowledgeEngineAppsUtil:
         html_report.append({'shock_id': report_shock_id,
                             'name': os.path.basename(result_file_path),
                             'label': os.path.basename(result_file_path),
-                            'description': 'HTML summary report for ExpressionMatrix Cluster App'})
+                            'description': 'HTML summary report for ExpressionMatrix Cluster App'
+                            })
         return html_report
 
     def _generate_report(self, feature_set_set_refs, workspace_name, feature_dendrogram_path,
@@ -355,7 +371,7 @@ class KnowledgeEngineAppsUtil:
         for feature_set_set_ref in feature_set_set_refs:
 
             feature_set_set_data = self.ws.get_objects2({'objects':
-                                                        [{'ref': 
+                                                        [{'ref':
                                                          feature_set_set_ref}]})['data'][0]['data']
 
             items = feature_set_set_data['items']
@@ -385,7 +401,7 @@ class KnowledgeEngineAppsUtil:
 
         return report_output
 
-    def _build_flat_cluster(self, data_matrix, dist_threshold, 
+    def _build_flat_cluster(self, data_matrix, dist_threshold,
                             dist_metric=None, linkage_method=None, fcluster_criterion=None):
         """
         _build_cluster: build flat clusters and dendrogram for data_matrix
@@ -455,7 +471,7 @@ class KnowledgeEngineAppsUtil:
         public_worksapces = [ws for ws in workspaces if ws[5] in ['r', 'w', 'a']]
 
         log('got {} public workspaces'.format(len(public_worksapces)))
-        
+
         return public_worksapces
 
     def _list_objects(self, workspace_name, data_type, auth, show_delected_object=0):
@@ -470,8 +486,8 @@ class KnowledgeEngineAppsUtil:
                                                   'auth': auth})
 
         if objects:
-            log('got {} {} objects in workspace {}'.format(len(objects), 
-                                                           data_type, 
+            log('got {} {} objects in workspace {}'.format(len(objects),
+                                                           data_type,
                                                            workspace_name))
         return objects
 
@@ -520,9 +536,9 @@ class KnowledgeEngineAppsUtil:
         Optional arguments:
         dist_metric: The distance metric to use. Default set to 'euclidean'.
                      The distance function can be
-                     ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", 
-                      "dice", "euclidean", "hamming", "jaccard", "kulsinski", "matching", 
-                      "rogerstanimoto", "russellrao", "sokalmichener", "sokalsneath", 
+                     ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine",
+                      "dice", "euclidean", "hamming", "jaccard", "kulsinski", "matching",
+                      "rogerstanimoto", "russellrao", "sokalmichener", "sokalsneath",
                       "sqeuclidean", "yule"]
                      Details refer to:
                      https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html
@@ -533,7 +549,7 @@ class KnowledgeEngineAppsUtil:
                         Details refer to:
                         https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html
 
-        fcluster_criterion: The criterion to use in forming flat clusters. 
+        fcluster_criterion: The criterion to use in forming flat clusters.
                             Default set to 'inconsistent'.
                             The criterion can be
                             ["inconsistent", "distance", "maxclust"]
@@ -558,12 +574,21 @@ class KnowledgeEngineAppsUtil:
         linkage_method = params.get('linkage_method')
         fcluster_criterion = params.get('fcluster_criterion')
 
-        expression_matrix_object = self.ws.get_objects2({'objects': 
-                                                        [{'ref': 
+        expression_matrix_object = self.ws.get_objects2({'objects':
+                                                        [{'ref':
                                                           expression_matrix_ref}]})['data'][0]
         expression_matrix_info = expression_matrix_object['info']
         expression_matrix_data = expression_matrix_object['data']
         expression_matrix_data_matrix = expression_matrix_data['data']
+
+        values = expression_matrix_data_matrix.get('values')
+        for value in values:
+            for (i, item) in enumerate(value):
+                if item in [None, 'null', 'none', 'None']:
+                    value[i] = 0
+
+        print 'fdsafsd'
+        print expression_matrix_data_matrix
 
         feature_data_matrix = expression_matrix_data_matrix
         condition_data_matrix = self._reverse_data_matrix(expression_matrix_data_matrix)
@@ -580,8 +605,8 @@ class KnowledgeEngineAppsUtil:
         (condition_flat_cluster,
          condition_dendrogram_path,
          condition_dendrogram_truncate_path) = self._build_flat_cluster(
-                                                            condition_data_matrix, 
-                                                            dist_threshold, 
+                                                            condition_data_matrix,
+                                                            dist_threshold,
                                                             dist_metric=dist_metric,
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
