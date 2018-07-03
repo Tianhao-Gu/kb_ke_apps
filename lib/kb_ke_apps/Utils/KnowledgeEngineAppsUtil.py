@@ -434,7 +434,7 @@ class KnowledgeEngineAppsUtil:
         flat_cluster = fcluster_ret['flat_cluster']
 
         # generate dendrogram
-        if len(linkage_matrix) < 1500:
+        if merges < 1500:
             dendrogram_params = {'linkage_matrix': linkage_matrix,
                                  'dist_threshold': dist_threshold,
                                  'labels': labels}
@@ -442,20 +442,19 @@ class KnowledgeEngineAppsUtil:
             dendrogram_ret = self.ke_util.run_dendrogram(dendrogram_params)
 
             dendrogram_path = dendrogram_ret['result_plots'][0]
-
-            # generate truncated (last 12 merges) dendrogram
-            if merges > 24:
-                dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
-                                              'dist_threshold': dist_threshold,
-                                              'labels': labels,
-                                              'last_merges': 12}
-                dendrogram_truncate_ret = self.ke_util.run_dendrogram(dendrogram_truncate_params)
-
-                dendrogram_truncate_path = dendrogram_truncate_ret['result_plots'][0]
-            else:
-                dendrogram_truncate_path = None
         else:
             dendrogram_path = None
+
+        # generate truncated (last 12 merges) dendrogram
+        if merges > 24:
+            dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
+                                          'dist_threshold': dist_threshold,
+                                          'labels': labels,
+                                          'last_merges': 12}
+            dendrogram_truncate_ret = self.ke_util.run_dendrogram(dendrogram_truncate_params)
+
+            dendrogram_truncate_path = dendrogram_truncate_ret['result_plots'][0]
+        else:
             dendrogram_truncate_path = None
 
         return flat_cluster, dendrogram_path, dendrogram_truncate_path
@@ -580,15 +579,6 @@ class KnowledgeEngineAppsUtil:
         expression_matrix_info = expression_matrix_object['info']
         expression_matrix_data = expression_matrix_object['data']
         expression_matrix_data_matrix = expression_matrix_data['data']
-
-        values = expression_matrix_data_matrix.get('values')
-        for value in values:
-            for (i, item) in enumerate(value):
-                if item in [None, 'null', 'none', 'None']:
-                    value[i] = 0
-
-        print 'fdsafsd'
-        print expression_matrix_data_matrix
 
         feature_data_matrix = expression_matrix_data_matrix
         condition_data_matrix = self._reverse_data_matrix(expression_matrix_data_matrix)

@@ -96,7 +96,7 @@ class kb_ke_appsTest(unittest.TestCase):
                                                        'condition_3', 'condition_4'],
                                            'values': [[0.1, 0.2, 0.3, 0.4],
                                                       [0.3, 0.4, 0.5, 0.6],
-                                                      [0.5, 0.6, 0.7, 0.8]]
+                                                      [None, None, None, None]]
                                            },
                                   'feature_mapping': {},
                                   'condition_mapping': {}}
