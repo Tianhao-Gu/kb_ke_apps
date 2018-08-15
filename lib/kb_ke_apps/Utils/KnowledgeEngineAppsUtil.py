@@ -4,12 +4,14 @@ import os
 import errno
 import uuid
 import shutil
+import pandas as pd
 
 from kb_ke_util.kb_ke_utilClient import kb_ke_util
 from DataFileUtil.DataFileUtilClient import DataFileUtil
 from Workspace.WorkspaceClient import Workspace as Workspace
 from KBaseReport.KBaseReportClient import KBaseReport
 from SetAPI.SetAPIServiceClient import SetAPI
+from GenericsAPI.GenericsAPIClient import GenericsAPI
 
 
 def log(message, prefix_newline=False):
@@ -50,7 +52,7 @@ class KnowledgeEngineAppsUtil:
         log('start validating run_expression_matrix_cluster params')
 
         # check for required parameters
-        for p in ['expression_matrix_ref', 'workspace_name', 'feature_set_suffix',
+        for p in ['matrix_ref', 'workspace_name', 'feature_set_suffix',
                   'dist_threshold']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
@@ -76,29 +78,6 @@ class KnowledgeEngineAppsUtil:
             error_msg = 'INPUT ERROR:\nInput criterion [{}] is not valid.\n'.format(criterion)
             error_msg += 'Available metric: {}'.format(self.CRITERION)
             raise ValueError(error_msg)
-
-    def _reverse_data_matrix(self, data_matrix):
-        """
-        _reverse_data_matrix: produce a reverse data matrix
-        """
-        row_ids = data_matrix['row_ids']
-        values = data_matrix['values']
-        col_ids = data_matrix['col_ids']
-
-        reverse_data_matrix = dict()
-        reverse_data_matrix.update({'row_ids': col_ids})
-        reverse_data_matrix.update({'col_ids': row_ids})
-        reverse_col_num = len(col_ids)
-        reverse_values = [[] for i in range(reverse_col_num)]
-
-        for value in values:
-            for pos, element in enumerate(value):
-                reverse_value = reverse_values[pos]
-                reverse_value.append(element)
-
-        reverse_data_matrix.update({'values': reverse_values})
-
-        return reverse_data_matrix
 
     def _generate_feature_set(self, feature_ids, genome_id, workspace_name, feature_set_name):
         """
@@ -459,57 +438,6 @@ class KnowledgeEngineAppsUtil:
 
         return flat_cluster, dendrogram_path, dendrogram_truncate_path
 
-    def _list_workspaces(self, auth):
-        """
-        _list_workspaces: list all workspaces a user has access to
-        """
-        log('receiving all public workspaces')
-
-        workspaces = self.ws.list_workspaces({'auth': auth})
-
-        public_worksapces = [ws for ws in workspaces if ws[5] in ['r', 'w', 'a']]
-
-        log('got {} public workspaces'.format(len(public_worksapces)))
-
-        return public_worksapces
-
-    def _list_objects(self, workspace_name, data_type, auth, show_delected_object=0):
-        """
-        _list_objects: list all object with type in workspace
-        """
-        log('receiving all {} objects in workspace {}'.format(data_type, workspace_name))
-
-        objects = self.ws.list_workspace_objects({'workspace': workspace_name,
-                                                  'showDeletedObject': show_delected_object,
-                                                  'type': data_type,
-                                                  'auth': auth})
-
-        if objects:
-            log('got {} {} objects in workspace {}'.format(len(objects),
-                                                           data_type,
-                                                           workspace_name))
-        return objects
-
-    def _get_all_public_objects(self, auth, data_type, show_delected_object=0):
-        """
-        _get_all_public_objects: get all object ref user has access to with specific data type
-        """
-        log('receiving all {} objects in public workspaces'.format(data_type))
-
-        public_worksapces = self._list_workspaces(auth)
-
-        public_objects = []
-        for public_worksapce in public_worksapces:
-            ws_name = public_worksapce[0]
-            objects = self._list_objects(ws_name, data_type, auth)
-            for object in objects:
-                object_ref = ws_name + '/' + str(object[11]) + '/' + str(object[3])
-                public_objects.append(object_ref)
-
-        log('got {} {} objects in public workspaces'.format(len(public_objects), data_type))
-
-        return public_objects
-
     def __init__(self, config):
         self.ws_url = config["workspace-url"]
         self.callback_url = config['SDK_CALLBACK_URL']
@@ -519,6 +447,7 @@ class KnowledgeEngineAppsUtil:
         self.scratch = config['scratch']
         self.dfu = DataFileUtil(self.callback_url)
         self.ke_util = kb_ke_util(self.callback_url, service_ver='dev')
+        self.gen_api = GenericsAPI(self.callback_url, service_ver='dev')
 
         self.ws = Workspace(self.ws_url, token=self.token)
         self.set_client = SetAPI(self.srv_wiz_url)
@@ -527,7 +456,7 @@ class KnowledgeEngineAppsUtil:
         """
         run_expression_matrix_cluster: generates clusters for ExpressionMatrix data object
 
-        expression_matrix_ref: ExpressionMatrix object reference
+        matrix_ref: Matrix object reference
         workspace_name: the name of the workspace
         feature_set_suffix: suffix append to FeatureSet object name
         dist_threshold: the threshold to apply when forming flat clusters
@@ -565,7 +494,7 @@ class KnowledgeEngineAppsUtil:
 
         self._validate_run_expression_matrix_cluster_params(params)
 
-        expression_matrix_ref = params.get('expression_matrix_ref')
+        matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
         feature_set_suffix = params.get('feature_set_suffix')
         dist_threshold = params.get('dist_threshold')
@@ -575,13 +504,14 @@ class KnowledgeEngineAppsUtil:
 
         expression_matrix_object = self.ws.get_objects2({'objects':
                                                         [{'ref':
-                                                          expression_matrix_ref}]})['data'][0]
+                                                          matrix_ref}]})['data'][0]
         expression_matrix_info = expression_matrix_object['info']
         expression_matrix_data = expression_matrix_object['data']
-        expression_matrix_data_matrix = expression_matrix_data['data']
 
-        feature_data_matrix = expression_matrix_data_matrix
-        condition_data_matrix = self._reverse_data_matrix(expression_matrix_data_matrix)
+        data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
+
+        feature_data_matrix = data_matrix
+        condition_data_matrix = pd.read_json(data_matrix).T.to_json()
 
         (feature_flat_cluster,
          feature_dendrogram_path,

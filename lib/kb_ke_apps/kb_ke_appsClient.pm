@@ -122,7 +122,7 @@ sub new
 $params is a kb_ke_apps.EMClusterParams
 $returnVal is a kb_ke_apps.EMClusterOutput
 EMClusterParams is a reference to a hash where the following keys are defined:
-	expression_matrix_ref has a value which is a kb_ke_apps.obj_ref
+	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	feature_set_suffix has a value which is a string
 	dist_threshold has a value which is a float
@@ -144,7 +144,7 @@ EMClusterOutput is a reference to a hash where the following keys are defined:
 $params is a kb_ke_apps.EMClusterParams
 $returnVal is a kb_ke_apps.EMClusterOutput
 EMClusterParams is a reference to a hash where the following keys are defined:
-	expression_matrix_ref has a value which is a kb_ke_apps.obj_ref
+	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	feature_set_suffix has a value which is a string
 	dist_threshold has a value which is a float
@@ -375,7 +375,7 @@ a string
 =item Description
 
 Input of the run_expression_matrix_cluster function
-expression_matrix_ref: ExpressionMatrix object reference
+matrix_ref: Matrix object reference
 workspace_name: the name of the workspace
 feature_set_suffix: suffix append to FeatureSet object name
 dist_threshold: the threshold to apply when forming flat clusters
@@ -409,7 +409,7 @@ fcluster_criterion: The criterion to use in forming flat clusters. Default set t
 
 <pre>
 a reference to a hash where the following keys are defined:
-expression_matrix_ref has a value which is a kb_ke_apps.obj_ref
+matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
 feature_set_suffix has a value which is a string
 dist_threshold has a value which is a float
@@ -424,7 +424,7 @@ fcluster_criterion has a value which is a string
 =begin text
 
 a reference to a hash where the following keys are defined:
-expression_matrix_ref has a value which is a kb_ke_apps.obj_ref
+matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
 feature_set_suffix has a value which is a string
 dist_threshold has a value which is a float

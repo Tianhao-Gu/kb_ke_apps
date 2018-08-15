@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * <p>Original spec-file type: EMClusterParams</p>
  * <pre>
  * Input of the run_expression_matrix_cluster function
- * expression_matrix_ref: ExpressionMatrix object reference
+ * matrix_ref: Matrix object reference
  * workspace_name: the name of the workspace
  * feature_set_suffix: suffix append to FeatureSet object name
  * dist_threshold: the threshold to apply when forming flat clusters
@@ -44,7 +44,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Generated("com.googlecode.jsonschema2pojo")
 @JsonPropertyOrder({
-    "expression_matrix_ref",
+    "matrix_ref",
     "workspace_name",
     "feature_set_suffix",
     "dist_threshold",
@@ -54,8 +54,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 })
 public class EMClusterParams {
 
-    @JsonProperty("expression_matrix_ref")
-    private String expressionMatrixRef;
+    @JsonProperty("matrix_ref")
+    private String matrixRef;
     @JsonProperty("workspace_name")
     private String workspaceName;
     @JsonProperty("feature_set_suffix")
@@ -70,18 +70,18 @@ public class EMClusterParams {
     private String fclusterCriterion;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-    @JsonProperty("expression_matrix_ref")
-    public String getExpressionMatrixRef() {
-        return expressionMatrixRef;
+    @JsonProperty("matrix_ref")
+    public String getMatrixRef() {
+        return matrixRef;
     }
 
-    @JsonProperty("expression_matrix_ref")
-    public void setExpressionMatrixRef(String expressionMatrixRef) {
-        this.expressionMatrixRef = expressionMatrixRef;
+    @JsonProperty("matrix_ref")
+    public void setMatrixRef(String matrixRef) {
+        this.matrixRef = matrixRef;
     }
 
-    public EMClusterParams withExpressionMatrixRef(String expressionMatrixRef) {
-        this.expressionMatrixRef = expressionMatrixRef;
+    public EMClusterParams withMatrixRef(String matrixRef) {
+        this.matrixRef = matrixRef;
         return this;
     }
 
@@ -187,7 +187,7 @@ public class EMClusterParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((("EMClusterParams"+" [expressionMatrixRef=")+ expressionMatrixRef)+", workspaceName=")+ workspaceName)+", featureSetSuffix=")+ featureSetSuffix)+", distThreshold=")+ distThreshold)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((("EMClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", featureSetSuffix=")+ featureSetSuffix)+", distThreshold=")+ distThreshold)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
