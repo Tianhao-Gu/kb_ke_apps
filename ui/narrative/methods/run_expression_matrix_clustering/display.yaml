@@ -23,11 +23,11 @@ method-suggestions :
 # Configure the display and description of the parameters
 #
 parameters :
-  expression_matrix_ref :
+  matrix_ref :
     ui-name : |
-        Expression Matrix Object
+        Matrix Object
     short-hint : |
-        Expression Matrix Object
+        Matrix Object
   dist_threshold:
     ui-name : |
         Distance Threshold

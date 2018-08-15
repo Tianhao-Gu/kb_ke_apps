@@ -146,35 +146,35 @@ class kb_ke_appsTest(unittest.TestCase):
 
     def test_bad_run_expression_matrix_cluster_params(self):
         self.start_test()
-        invalidate_params = {'missing_expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'missing_matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
                              'feature_set_suffix': 'feature_set_suffix',
                              'dist_threshold': 'dist_threshold'}
-        error_msg = '"expression_matrix_ref" parameter is required, but missing'
+        error_msg = '"matrix_ref" parameter is required, but missing'
         self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'matrix_ref': 'matrix_ref',
                              'missing_workspace_name': 'workspace_name',
                              'feature_set_suffix': 'feature_set_suffix',
                              'dist_threshold': 'dist_threshold'}
         error_msg = '"workspace_name" parameter is required, but missing'
         self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
                              'missing_feature_set_suffix': 'feature_set_suffix',
                              'dist_threshold': 'dist_threshold'}
         error_msg = '"feature_set_suffix" parameter is required, but missing'
         self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
                              'feature_set_suffix': 'feature_set_suffix',
                              'missing_dist_threshold': 'dist_threshold'}
         error_msg = '"dist_threshold" parameter is required, but missing'
         self.fail_run_expression_matrix_cluster(invalidate_params, error_msg)
 
-        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
                              'feature_set_suffix': 'feature_set_suffix',
                              'dist_threshold': 'dist_threshold',
@@ -182,7 +182,7 @@ class kb_ke_appsTest(unittest.TestCase):
         error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
         self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
 
-        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
                              'feature_set_suffix': 'feature_set_suffix',
                              'dist_threshold': 'dist_threshold',
@@ -190,7 +190,7 @@ class kb_ke_appsTest(unittest.TestCase):
         error_msg = "INPUT ERROR:\nInput linkage algorithm [invalidate_method] is not valid.\n"
         self.fail_run_expression_matrix_cluster(invalidate_params, error_msg, contains=True)
 
-        invalidate_params = {'expression_matrix_ref': 'expression_matrix_ref',
+        invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
                              'feature_set_suffix': 'feature_set_suffix',
                              'dist_threshold': 'dist_threshold',
@@ -201,7 +201,7 @@ class kb_ke_appsTest(unittest.TestCase):
     def test_run_expression_matrix_cluster(self):
         self.start_test()
 
-        params = {'expression_matrix_ref': self.expression_matrix_ref,
+        params = {'matrix_ref': self.expression_matrix_ref,
                   'workspace_name': self.getWsName(),
                   'feature_set_suffix': '_cluster',
                   'dist_threshold': 100,

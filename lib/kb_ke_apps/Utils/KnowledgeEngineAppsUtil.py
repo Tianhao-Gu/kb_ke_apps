@@ -52,7 +52,7 @@ class KnowledgeEngineAppsUtil:
         log('start validating run_expression_matrix_cluster params')
 
         # check for required parameters
-        for p in ['expression_matrix_ref', 'workspace_name', 'feature_set_suffix',
+        for p in ['matrix_ref', 'workspace_name', 'feature_set_suffix',
                   'dist_threshold']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
@@ -456,7 +456,7 @@ class KnowledgeEngineAppsUtil:
         """
         run_expression_matrix_cluster: generates clusters for ExpressionMatrix data object
 
-        expression_matrix_ref: ExpressionMatrix object reference
+        matrix_ref: Matrix object reference
         workspace_name: the name of the workspace
         feature_set_suffix: suffix append to FeatureSet object name
         dist_threshold: the threshold to apply when forming flat clusters
@@ -494,7 +494,7 @@ class KnowledgeEngineAppsUtil:
 
         self._validate_run_expression_matrix_cluster_params(params)
 
-        matrix_ref = params.get('expression_matrix_ref')
+        matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
         feature_set_suffix = params.get('feature_set_suffix')
         dist_threshold = params.get('dist_threshold')

@@ -9,14 +9,16 @@
     "output" : "no-display"
   },
    "parameters" : [ {
-    "id" : "expression_matrix_ref",
+    "id" : "matrix_ref",
     "optional" : false,
     "advanced" : false,
     "allow_multiple" : false,
     "default_values" : [ "" ],
     "field_type" : "text",
     "text_options" : {
-      "valid_ws_types" : ["KBaseFeatureValues.ExpressionMatrix", "KBaseFeatureValues.DifferentialExpressionMatrix"]
+      "valid_ws_types" : ["KBaseFeatureValues.ExpressionMatrix", "KBaseFeatureValues.DifferentialExpressionMatrix",
+                          "KBaseMatrices.DifferentialExpressionMatrix", "KBaseMatrices.ExpressionMatrix",
+                          "KBaseMatrices.FitnessMatrix"]
     }
   },{
    "id" : "dist_threshold",
@@ -164,9 +166,9 @@
           "target_property" : "workspace_name"
         },
         {
-          "input_parameter" : "expression_matrix_ref",
+          "input_parameter" : "matrix_ref",
           "target_type_transform": "resolved-ref",
-          "target_property" : "expression_matrix_ref"
+          "target_property" : "matrix_ref"
         },
         {
             "input_parameter" : "dist_threshold",

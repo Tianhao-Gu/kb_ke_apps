@@ -13,7 +13,7 @@ module kb_ke_apps {
   typedef string obj_ref;
 
   /* Input of the run_expression_matrix_cluster function
-    expression_matrix_ref: ExpressionMatrix object reference
+    matrix_ref: Matrix object reference
     workspace_name: the name of the workspace
     feature_set_suffix: suffix append to FeatureSet object name
     dist_threshold: the threshold to apply when forming flat clusters
@@ -41,7 +41,7 @@ module kb_ke_apps {
                         https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.fcluster.html
   */
   typedef structure {
-    obj_ref expression_matrix_ref;
+    obj_ref matrix_ref;
     string workspace_name;
     string feature_set_suffix;
     float dist_threshold;

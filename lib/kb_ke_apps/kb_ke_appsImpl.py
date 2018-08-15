@@ -23,7 +23,7 @@ class kb_ke_apps:
     ######################################### noqa
     VERSION = "1.0.0"
     GIT_URL = "https://github.com/Tianhao-Gu/kb_ke_apps.git"
-    GIT_COMMIT_HASH = "c152fe23c41508c05d5418f17a7868e4acdb2393"
+    GIT_COMMIT_HASH = "beb530c3e5af85075c1b65488e8e58f7777a3a81"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -43,12 +43,12 @@ class kb_ke_apps:
         """
         run_expression_matrix_cluster: generates clusters for ExpressionMatrix data object
         :param params: instance of type "EMClusterParams" (Input of the
-           run_expression_matrix_cluster function expression_matrix_ref:
-           ExpressionMatrix object reference workspace_name: the name of the
-           workspace feature_set_suffix: suffix append to FeatureSet object
-           name dist_threshold: the threshold to apply when forming flat
-           clusters Optional arguments: dist_metric: The distance metric to
-           use. Default set to 'euclidean'. The distance function can be
+           run_expression_matrix_cluster function matrix_ref: Matrix object
+           reference workspace_name: the name of the workspace
+           feature_set_suffix: suffix append to FeatureSet object name
+           dist_threshold: the threshold to apply when forming flat clusters
+           Optional arguments: dist_metric: The distance metric to use.
+           Default set to 'euclidean'. The distance function can be
            ["braycurtis", "canberra", "chebyshev", "cityblock",
            "correlation", "cosine", "dice", "euclidean", "hamming",
            "jaccard", "kulsinski", "matching", "rogerstanimoto",
@@ -64,13 +64,12 @@ class kb_ke_apps:
            forming flat clusters. Default set to 'distance'. The criterion
            can be ["inconsistent", "distance", "maxclust"] Details refer to:
            https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.
-           hierarchy.fcluster.html) -> structure: parameter
-           "expression_matrix_ref" of type "obj_ref" (An X/Y/Z style
-           reference), parameter "workspace_name" of String, parameter
-           "feature_set_suffix" of String, parameter "dist_threshold" of
-           Double, parameter "dist_metric" of String, parameter
-           "linkage_method" of String, parameter "fcluster_criterion" of
-           String
+           hierarchy.fcluster.html) -> structure: parameter "matrix_ref" of
+           type "obj_ref" (An X/Y/Z style reference), parameter
+           "workspace_name" of String, parameter "feature_set_suffix" of
+           String, parameter "dist_threshold" of Double, parameter
+           "dist_metric" of String, parameter "linkage_method" of String,
+           parameter "fcluster_criterion" of String
         :returns: instance of type "EMClusterOutput" (Ouput of the
            run_expression_matrix_cluster function feature_set_set_refs: a
            list of result FeatureSetSet object references report_name: report
