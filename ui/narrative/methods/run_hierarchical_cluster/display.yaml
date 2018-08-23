@@ -1,10 +1,10 @@
 #
 # Define basic display information
 #
-name     : Create Clustering for ExpressionMatrix - v1.0.0
+name     : Create Hierarchical Clustering for Matrix - v1.0.0
 
 tooltip  : |
-    Create clustering for ExpressionMatrix object
+    Create hierarchical clustering for Matrix object
 screenshots :
     []
 
@@ -55,6 +55,6 @@ parameters :
       Fcluster Criterion
 
 description : |
-    <p>This app creates clustering for ExpressionMatrix object</p>
+    <p>This app creates hierarchical clustering for a matrix object</p>
     <p><strong>Team members who developed & deployed algorithm in KBase:</strong> Tianhao Gu</p>
 

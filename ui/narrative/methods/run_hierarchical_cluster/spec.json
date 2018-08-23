@@ -159,7 +159,7 @@
     "service-mapping" : {
       "url" : "",
       "name" : "kb_ke_apps",
-      "method" : "run_expression_matrix_cluster",
+      "method" : "run_hierarchical_cluster",
       "input_mapping" : [
         {
           "narrative_system_variable": "workspace",

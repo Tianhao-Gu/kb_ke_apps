@@ -333,10 +333,14 @@ class Application(object):
         self.serverlog.set_log_level(6)
         self.rpc_service = JSONRPCServiceCustom()
         self.method_authentication = dict()
-        self.rpc_service.add(impl_kb_ke_apps.run_expression_matrix_cluster,
-                             name='kb_ke_apps.run_expression_matrix_cluster',
+        self.rpc_service.add(impl_kb_ke_apps.run_hierarchical_cluster,
+                             name='kb_ke_apps.run_hierarchical_cluster',
                              types=[dict])
-        self.method_authentication['kb_ke_apps.run_expression_matrix_cluster'] = 'required'  # noqa
+        self.method_authentication['kb_ke_apps.run_hierarchical_cluster'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_ke_apps.run_kmeans_cluster,
+                             name='kb_ke_apps.run_kmeans_cluster',
+                             types=[dict])
+        self.method_authentication['kb_ke_apps.run_kmeans_cluster'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_ke_apps.status,
                              name='kb_ke_apps.status',
                              types=[dict])

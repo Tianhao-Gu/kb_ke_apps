@@ -43,13 +43,34 @@ class KnowledgeEngineAppsUtil:
             else:
                 raise
 
-    def _validate_run_expression_matrix_cluster_params(self, params):
+    def _validate_run_kmeans_cluster_params(self, params):
         """
-        _validate_run_expression_matrix_cluster_params:
-                validates params passed to run_expression_matrix_cluster method
+        _validate_run_kmeans_cluster_params:
+                validates params passed to run_kmeans_cluster method
         """
 
-        log('start validating run_expression_matrix_cluster params')
+        log('start validating run_kmeans_cluster params')
+
+        # check for required parameters
+        for p in ['matrix_ref', 'workspace_name', 'cluster_set_suffix',
+                  'k_num']:
+            if p not in params:
+                raise ValueError('"{}" parameter is required, but missing'.format(p))
+
+        # check metric validation
+        metric = params.get('dist_metric')
+        if metric and metric not in self.METRIC:
+            error_msg = 'INPUT ERROR:\nInput metric function [{}] is not valid.\n'.format(metric)
+            error_msg += 'Available metric: {}'.format(self.METRIC)
+            raise ValueError(error_msg)
+
+    def _validate_run_hierarchical_cluster_params(self, params):
+        """
+        _validate_run_hierarchical_cluster_params:
+                validates params passed to run_hierarchical_cluster method
+        """
+
+        log('start validating run_hierarchical_cluster params')
 
         # check for required parameters
         for p in ['matrix_ref', 'workspace_name', 'feature_set_suffix',
@@ -115,9 +136,9 @@ class KnowledgeEngineAppsUtil:
 
         return feature_set_obj_ref
 
-    def _build_cluster_set(self, flat_cluster, cluster_set_name, genome_ref, workspace_name):
+    def _build_feature_set(self, flat_cluster, cluster_set_name, genome_ref, workspace_name):
         """
-        _build_cluster_set: build FeatureSetSet object
+        _build_feature_set: build FeatureSetSet object
         """
         items = []
         for key, elements in flat_cluster.iteritems():
@@ -136,6 +157,56 @@ class KnowledgeEngineAppsUtil:
         featureset_set_ref = save_result['set_ref']
 
         return featureset_set_ref
+
+    def _gen_clusters(self, clusters, conditionset_mapping):
+        clusters_list = list()
+
+        for cluster in clusters.values():
+            labeled_cluster = {}
+            labeled_cluster.update({'id_to_data_position': cluster})
+            if conditionset_mapping:
+                id_to_condition = {k: v for k, v in conditionset_mapping.items() if k in cluster.keys()}
+                labeled_cluster.update({'id_to_condition': id_to_condition})
+
+            clusters_list.append(labeled_cluster)
+
+        return clusters_list
+
+    def _build_cluster_set(self, clusters, cluster_set_name, genome_ref, matrix_ref,
+                           conditionset_mapping, conditionset_ref, workspace_name,
+                           clustering_parameters):
+        """
+        _build_cluster_set: build KBaseExperiments.ClusterSet object
+        """
+
+        log('start saving KBaseExperiments.ClusterSet object')
+
+        if isinstance(workspace_name, int) or workspace_name.isdigit():
+            workspace_id = workspace_name
+        else:
+            workspace_id = self.dfu.ws_name_to_id(workspace_name)
+
+        clusters_list = self._gen_clusters(clusters, conditionset_mapping)
+
+        cluster_set_data = {'clusters': clusters_list,
+                            'clustering_parameters': clustering_parameters,
+                            'original_data': matrix_ref,
+                            'condition_set_ref': conditionset_ref,
+                            'genome_ref': genome_ref}
+
+        cluster_set_data = {k: v for k, v in cluster_set_data.items() if v}
+
+        object_type = 'KBaseExperiments.ClusterSet'
+        save_object_params = {
+            'id': workspace_id,
+            'objects': [{'type': object_type,
+                         'data': cluster_set_data,
+                         'name': cluster_set_name}]}
+
+        dfu_oi = self.dfu.save_objects(save_object_params)[0]
+        cluster_set_ref = str(dfu_oi[6]) + '/' + str(dfu_oi[0]) + '/' + str(dfu_oi[4])
+
+        return cluster_set_ref
 
     def _generate_visualization_content(self, output_directory, feature_dendrogram_path,
                                         feature_dendrogram_truncate_path,
@@ -438,6 +509,40 @@ class KnowledgeEngineAppsUtil:
 
         return flat_cluster, dendrogram_path, dendrogram_truncate_path
 
+    def _build_kmeans_cluster(self, data_matrix, k_num, dist_metric=None):
+        """
+        _build_kmeans_cluster: Build Kmeans cluster
+        """
+
+        # calculate distance matrix
+        pdist_params = {'data_matrix': data_matrix,
+                        'metric': dist_metric}
+        pdist_ret = self.ke_util.run_pdist(pdist_params)
+
+        dist_matrix = pdist_ret['dist_matrix']
+        labels = pdist_ret['labels']
+
+        # run kmeans algorithm
+        kmeans_params = {'dist_matrix': dist_matrix,
+                         'k_num': k_num}
+        kmeans_ret = self.ke_util.run_kmeans2(kmeans_params)
+
+        centroid = kmeans_ret.get('kmeans_ret')
+        idx = kmeans_ret.get('idx')
+
+        df = pd.read_json(data_matrix)
+        rows = df.index.tolist()
+
+        clusters = {}
+        for list_index, value in enumerate(idx):
+            cluster = clusters.get(value)
+            if not cluster:
+                clusters.update({value: {rows[list_index]: list_index}})
+            else:
+                cluster.update({rows[list_index]: list_index})
+
+        return clusters
+
     def __init__(self, config):
         self.ws_url = config["workspace-url"]
         self.callback_url = config['SDK_CALLBACK_URL']
@@ -452,9 +557,89 @@ class KnowledgeEngineAppsUtil:
         self.ws = Workspace(self.ws_url, token=self.token)
         self.set_client = SetAPI(self.srv_wiz_url)
 
-    def run_expression_matrix_cluster(self, params):
+    def run_kmeans_cluster(self, params):
         """
-        run_expression_matrix_cluster: generates clusters for ExpressionMatrix data object
+        run_kmeans_cluster: generates Kmeans clusters for Matrix data object
+
+        matrix_ref: Matrix object reference
+        workspace_name: the name of the workspace
+        cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+        k_num: number of clusters to form
+
+        Optional arguments:
+        dist_metric: The distance metric to use. Default set to 'euclidean'.
+                     The distance function can be
+                     ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine",
+                      "dice", "euclidean", "hamming", "jaccard", "kulsinski", "matching",
+                      "rogerstanimoto", "russellrao", "sokalmichener", "sokalsneath", "sqeuclidean",
+                      "yule"]
+                     Details refer to:
+                     https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html
+
+        return:
+        cluster_set_refs: KBaseExperiments.ClusterSet object references
+        report_name: report name generated by KBaseReport
+        report_ref: report reference generated by KBaseReport
+        """
+
+        self._validate_run_kmeans_cluster_params(params)
+
+        matrix_ref = params.get('matrix_ref')
+        workspace_name = params.get('workspace_name')
+        cluster_set_suffix = params.get('cluster_set_suffix')
+        k_num = params.get('k_num')
+        dist_metric = params.get('dist_metric')
+
+        matrix_object = self.ws.get_objects2({'objects': [{'ref': matrix_ref}]})['data'][0]
+        matrix_info = matrix_object['info']
+        matrix_data = matrix_object['data']
+
+        data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
+        transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
+
+        row_kmeans_clusters = self._build_kmeans_cluster(data_matrix, k_num,
+                                                         dist_metric=dist_metric)
+
+        col_kmeans_clusters = self._build_kmeans_cluster(transpose_data_matrix, k_num,
+                                                         dist_metric=dist_metric)
+
+        genome_ref = matrix_data.get('genome_ref')
+        matrix_name = matrix_info[1]
+
+        clustering_parameters = {'k_num': str(k_num),
+                                 'dist_metric': str(dist_metric)}
+
+        cluster_set_refs = []
+
+        row_cluster_set_name = matrix_name + '_row' + cluster_set_suffix
+        row_cluster_set = self._build_cluster_set(row_kmeans_clusters,
+                                                  row_cluster_set_name,
+                                                  genome_ref,
+                                                  matrix_ref,
+                                                  matrix_data.get('row_mapping'),
+                                                  matrix_data.get('row_conditionset_ref'),
+                                                  workspace_name,
+                                                  clustering_parameters)
+        cluster_set_refs.append(row_cluster_set)
+
+        col_cluster_set_name = matrix_name + '_column' + cluster_set_suffix
+        col_cluster_set = self._build_cluster_set(col_kmeans_clusters,
+                                                  col_cluster_set_name,
+                                                  genome_ref,
+                                                  matrix_ref,
+                                                  matrix_data.get('col_mapping'),
+                                                  matrix_data.get('col_conditionset_ref'),
+                                                  workspace_name,
+                                                  clustering_parameters)
+        cluster_set_refs.append(col_cluster_set)
+
+        returnVal = {'cluster_set_refs': cluster_set_refs}
+
+        return returnVal
+
+    def run_hierarchical_cluster(self, params):
+        """
+        run_hierarchical_cluster: generates hierarchical clusters for Matrix data object
 
         matrix_ref: Matrix object reference
         workspace_name: the name of the workspace
@@ -492,7 +677,7 @@ class KnowledgeEngineAppsUtil:
         log('--->\nrunning run_expression_matrix_cluster\n' +
             'params:\n{}'.format(json.dumps(params, indent=1)))
 
-        self._validate_run_expression_matrix_cluster_params(params)
+        self._validate_run_hierarchical_cluster_params(params)
 
         matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
@@ -536,14 +721,14 @@ class KnowledgeEngineAppsUtil:
         feature_set_set_refs = []
 
         feature_cluster_set_name = expression_matrix_name + '_feature' + feature_set_suffix
-        feature_feature_set = self._build_cluster_set(feature_flat_cluster,
+        feature_feature_set = self._build_feature_set(feature_flat_cluster,
                                                       feature_cluster_set_name,
                                                       genome_ref,
                                                       workspace_name)
         feature_set_set_refs.append(feature_feature_set)
 
         condition_cluster_set_name = expression_matrix_name + '_condition' + feature_set_suffix
-        condition_feature_set = self._build_cluster_set(condition_flat_cluster,
+        condition_feature_set = self._build_feature_set(condition_flat_cluster,
                                                         condition_cluster_set_name,
                                                         genome_ref,
                                                         workspace_name)

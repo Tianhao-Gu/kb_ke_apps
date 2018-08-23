@@ -108,9 +108,9 @@ sub new
 
 
 
-=head2 run_expression_matrix_cluster
+=head2 run_hierarchical_cluster
 
-  $returnVal = $obj->run_expression_matrix_cluster($params)
+  $returnVal = $obj->run_hierarchical_cluster($params)
 
 =over 4
 
@@ -119,9 +119,9 @@ sub new
 =begin html
 
 <pre>
-$params is a kb_ke_apps.EMClusterParams
-$returnVal is a kb_ke_apps.EMClusterOutput
-EMClusterParams is a reference to a hash where the following keys are defined:
+$params is a kb_ke_apps.HierClusterParams
+$returnVal is a kb_ke_apps.HierClusterOutput
+HierClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	feature_set_suffix has a value which is a string
@@ -130,7 +130,7 @@ EMClusterParams is a reference to a hash where the following keys are defined:
 	linkage_method has a value which is a string
 	fcluster_criterion has a value which is a string
 obj_ref is a string
-EMClusterOutput is a reference to a hash where the following keys are defined:
+HierClusterOutput is a reference to a hash where the following keys are defined:
 	feature_set_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -141,9 +141,9 @@ EMClusterOutput is a reference to a hash where the following keys are defined:
 
 =begin text
 
-$params is a kb_ke_apps.EMClusterParams
-$returnVal is a kb_ke_apps.EMClusterOutput
-EMClusterParams is a reference to a hash where the following keys are defined:
+$params is a kb_ke_apps.HierClusterParams
+$returnVal is a kb_ke_apps.HierClusterOutput
+HierClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	feature_set_suffix has a value which is a string
@@ -152,7 +152,7 @@ EMClusterParams is a reference to a hash where the following keys are defined:
 	linkage_method has a value which is a string
 	fcluster_criterion has a value which is a string
 obj_ref is a string
-EMClusterOutput is a reference to a hash where the following keys are defined:
+HierClusterOutput is a reference to a hash where the following keys are defined:
 	feature_set_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
 	report_name has a value which is a string
 	report_ref has a value which is a string
@@ -162,13 +162,13 @@ EMClusterOutput is a reference to a hash where the following keys are defined:
 
 =item Description
 
-run_expression_matrix_cluster: generates clusters for ExpressionMatrix data object
+run_hierarchical_cluster: generates hierarchical clusters for Matrix data object
 
 =back
 
 =cut
 
- sub run_expression_matrix_cluster
+ sub run_hierarchical_cluster
 {
     my($self, @args) = @_;
 
@@ -177,7 +177,7 @@ run_expression_matrix_cluster: generates clusters for ExpressionMatrix data obje
     if ((my $n = @args) != 1)
     {
 	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
-							       "Invalid argument count for function run_expression_matrix_cluster (received $n, expecting 1)");
+							       "Invalid argument count for function run_hierarchical_cluster (received $n, expecting 1)");
     }
     {
 	my($params) = @args;
@@ -185,31 +185,135 @@ run_expression_matrix_cluster: generates clusters for ExpressionMatrix data obje
 	my @_bad_arguments;
         (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
         if (@_bad_arguments) {
-	    my $msg = "Invalid arguments passed to run_expression_matrix_cluster:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    my $msg = "Invalid arguments passed to run_hierarchical_cluster:\n" . join("", map { "\t$_\n" } @_bad_arguments);
 	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
-								   method_name => 'run_expression_matrix_cluster');
+								   method_name => 'run_hierarchical_cluster');
 	}
     }
 
     my $url = $self->{url};
     my $result = $self->{client}->call($url, $self->{headers}, {
-	    method => "kb_ke_apps.run_expression_matrix_cluster",
+	    method => "kb_ke_apps.run_hierarchical_cluster",
 	    params => \@args,
     });
     if ($result) {
 	if ($result->is_error) {
 	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
 					       code => $result->content->{error}->{code},
-					       method_name => 'run_expression_matrix_cluster',
+					       method_name => 'run_hierarchical_cluster',
 					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
 					      );
 	} else {
 	    return wantarray ? @{$result->result} : $result->result->[0];
 	}
     } else {
-        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method run_expression_matrix_cluster",
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method run_hierarchical_cluster",
 					    status_line => $self->{client}->status_line,
-					    method_name => 'run_expression_matrix_cluster',
+					    method_name => 'run_hierarchical_cluster',
+				       );
+    }
+}
+ 
+
+
+=head2 run_kmeans_cluster
+
+  $returnVal = $obj->run_kmeans_cluster($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a kb_ke_apps.KmeansClusterParams
+$returnVal is a kb_ke_apps.KmeansClusterOutput
+KmeansClusterParams is a reference to a hash where the following keys are defined:
+	matrix_ref has a value which is a kb_ke_apps.obj_ref
+	workspace_name has a value which is a string
+	cluster_set_suffix has a value which is a string
+	k_num has a value which is an int
+	dist_metric has a value which is a string
+obj_ref is a string
+KmeansClusterOutput is a reference to a hash where the following keys are defined:
+	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+	report_name has a value which is a string
+	report_ref has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a kb_ke_apps.KmeansClusterParams
+$returnVal is a kb_ke_apps.KmeansClusterOutput
+KmeansClusterParams is a reference to a hash where the following keys are defined:
+	matrix_ref has a value which is a kb_ke_apps.obj_ref
+	workspace_name has a value which is a string
+	cluster_set_suffix has a value which is a string
+	k_num has a value which is an int
+	dist_metric has a value which is a string
+obj_ref is a string
+KmeansClusterOutput is a reference to a hash where the following keys are defined:
+	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+	report_name has a value which is a string
+	report_ref has a value which is a string
+
+
+=end text
+
+=item Description
+
+run_kmeans_cluster: generates Kmeans clusters for Matrix data object
+
+=back
+
+=cut
+
+ sub run_kmeans_cluster
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function run_kmeans_cluster (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to run_kmeans_cluster:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'run_kmeans_cluster');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "kb_ke_apps.run_kmeans_cluster",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'run_kmeans_cluster',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method run_kmeans_cluster",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'run_kmeans_cluster',
 				       );
     }
 }
@@ -257,16 +361,16 @@ sub version {
             Bio::KBase::Exceptions::JSONRPC->throw(
                 error => $result->error_message,
                 code => $result->content->{code},
-                method_name => 'run_expression_matrix_cluster',
+                method_name => 'run_kmeans_cluster',
             );
         } else {
             return wantarray ? @{$result->result} : $result->result->[0];
         }
     } else {
         Bio::KBase::Exceptions::HTTP->throw(
-            error => "Error invoking method run_expression_matrix_cluster",
+            error => "Error invoking method run_kmeans_cluster",
             status_line => $self->{client}->status_line,
-            method_name => 'run_expression_matrix_cluster',
+            method_name => 'run_kmeans_cluster',
         );
     }
 }
@@ -366,7 +470,7 @@ a string
 
 
 
-=head2 EMClusterParams
+=head2 HierClusterParams
 
 =over 4
 
@@ -374,7 +478,7 @@ a string
 
 =item Description
 
-Input of the run_expression_matrix_cluster function
+Input of the run_hierarchical_cluster function
 matrix_ref: Matrix object reference
 workspace_name: the name of the workspace
 feature_set_suffix: suffix append to FeatureSet object name
@@ -439,7 +543,7 @@ fcluster_criterion has a value which is a string
 
 
 
-=head2 EMClusterOutput
+=head2 HierClusterOutput
 
 =over 4
 
@@ -447,7 +551,7 @@ fcluster_criterion has a value which is a string
 
 =item Description
 
-Ouput of the run_expression_matrix_cluster function
+Ouput of the run_hierarchical_cluster function
 feature_set_set_refs: a list of result FeatureSetSet object references
 report_name: report name generated by KBaseReport
 report_ref: report reference generated by KBaseReport
@@ -471,6 +575,105 @@ report_ref has a value which is a string
 
 a reference to a hash where the following keys are defined:
 feature_set_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
+report_name has a value which is a string
+report_ref has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 KmeansClusterParams
+
+=over 4
+
+
+
+=item Description
+
+Input of the run_kmeans_cluster function
+matrix_ref: Matrix object reference
+workspace_name: the name of the workspace
+cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+k_num: number of clusters to form
+
+Optional arguments:
+dist_metric: The distance metric to use. Default set to 'euclidean'.
+             The distance function can be
+             ["braycurtis", "canberra", "chebyshev", "cityblock", "correlation", "cosine", 
+              "dice", "euclidean", "hamming", "jaccard", "kulsinski", "matching", 
+              "rogerstanimoto", "russellrao", "sokalmichener", "sokalsneath", "sqeuclidean", 
+              "yule"]
+             Details refer to:
+             https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+matrix_ref has a value which is a kb_ke_apps.obj_ref
+workspace_name has a value which is a string
+cluster_set_suffix has a value which is a string
+k_num has a value which is an int
+dist_metric has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+matrix_ref has a value which is a kb_ke_apps.obj_ref
+workspace_name has a value which is a string
+cluster_set_suffix has a value which is a string
+k_num has a value which is an int
+dist_metric has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 KmeansClusterOutput
+
+=over 4
+
+
+
+=item Description
+
+Ouput of the run_kmeans_cluster function
+cluster_set_ref: KBaseExperiments.ClusterSet object references
+report_name: report name generated by KBaseReport
+report_ref: report reference generated by KBaseReport
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+report_name has a value which is a string
+report_ref has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+cluster_set_ref has a value which is a kb_ke_apps.obj_ref
 report_name has a value which is a string
 report_ref has a value which is a string
 

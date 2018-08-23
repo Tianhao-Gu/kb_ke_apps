@@ -24,7 +24,7 @@ class kb_ke_util(object):
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
             auth_svc='https://kbase.us/services/authorization/Sessions/Login',
-            service_ver='dev'):
+            service_ver='release'):
         if url is None:
             url = 'https://kbase.us/services/service_wizard'
         self._service_ver = service_ver
@@ -34,6 +34,25 @@ class kb_ke_util(object):
             trust_all_ssl_certificates=trust_all_ssl_certificates,
             auth_svc=auth_svc,
             lookup_url=True)
+
+    def run_kmeans2(self, params, context=None):
+        """
+        run_kmeans2: a wrapper method for  scipy.cluster.vq.kmeans2
+        reference:
+        https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.vq.kmeans2.html#scipy.cluster.vq.kmeans2
+        :param params: instance of type "KmeansParams" (Input of the
+           run_kmeans2 function dist_matrix - a condensed distance matrix
+           (refer to run_pdist return) k_num: number of clusters to form) ->
+           structure: parameter "dist_matrix" of list of Double, parameter
+           "k_num" of Long
+        :returns: instance of type "KmeansOutput" (Ouput of the run_kmeans2
+           function centroid - centroids found at the last iteration of
+           k-means idx - index of the centroid) -> structure: parameter
+           "centroid" of list of Double, parameter "idx" of list of Long
+        """
+        return self._client.call_method(
+            'kb_ke_util.run_kmeans2',
+            [params], self._service_ver, context)
 
     def run_pdist(self, params, context=None):
         """
