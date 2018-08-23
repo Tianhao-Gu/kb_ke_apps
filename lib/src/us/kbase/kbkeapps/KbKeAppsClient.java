@@ -163,20 +163,38 @@ public class KbKeAppsClient {
     }
 
     /**
-     * <p>Original spec-file function name: run_expression_matrix_cluster</p>
+     * <p>Original spec-file function name: run_hierarchical_cluster</p>
      * <pre>
-     * run_expression_matrix_cluster: generates clusters for ExpressionMatrix data object
+     * run_hierarchical_cluster: generates hierarchical clusters for Matrix data object
      * </pre>
-     * @param   params   instance of type {@link us.kbase.kbkeapps.EMClusterParams EMClusterParams}
-     * @return   parameter "returnVal" of type {@link us.kbase.kbkeapps.EMClusterOutput EMClusterOutput}
+     * @param   params   instance of type {@link us.kbase.kbkeapps.HierClusterParams HierClusterParams}
+     * @return   parameter "returnVal" of type {@link us.kbase.kbkeapps.HierClusterOutput HierClusterOutput}
      * @throws IOException if an IO exception occurs
      * @throws JsonClientException if a JSON RPC exception occurs
      */
-    public EMClusterOutput runExpressionMatrixCluster(EMClusterParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+    public HierClusterOutput runHierarchicalCluster(HierClusterParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
         List<Object> args = new ArrayList<Object>();
         args.add(params);
-        TypeReference<List<EMClusterOutput>> retType = new TypeReference<List<EMClusterOutput>>() {};
-        List<EMClusterOutput> res = caller.jsonrpcCall("kb_ke_apps.run_expression_matrix_cluster", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        TypeReference<List<HierClusterOutput>> retType = new TypeReference<List<HierClusterOutput>>() {};
+        List<HierClusterOutput> res = caller.jsonrpcCall("kb_ke_apps.run_hierarchical_cluster", args, retType, true, true, jsonRpcContext, this.serviceVersion);
+        return res.get(0);
+    }
+
+    /**
+     * <p>Original spec-file function name: run_kmeans_cluster</p>
+     * <pre>
+     * run_kmeans_cluster: generates Kmeans clusters for Matrix data object
+     * </pre>
+     * @param   params   instance of type {@link us.kbase.kbkeapps.KmeansClusterParams KmeansClusterParams}
+     * @return   parameter "returnVal" of type {@link us.kbase.kbkeapps.KmeansClusterOutput KmeansClusterOutput}
+     * @throws IOException if an IO exception occurs
+     * @throws JsonClientException if a JSON RPC exception occurs
+     */
+    public KmeansClusterOutput runKmeansCluster(KmeansClusterParams params, RpcContext... jsonRpcContext) throws IOException, JsonClientException {
+        List<Object> args = new ArrayList<Object>();
+        args.add(params);
+        TypeReference<List<KmeansClusterOutput>> retType = new TypeReference<List<KmeansClusterOutput>>() {};
+        List<KmeansClusterOutput> res = caller.jsonrpcCall("kb_ke_apps.run_kmeans_cluster", args, retType, true, true, jsonRpcContext, this.serviceVersion);
         return res.get(0);
     }
 

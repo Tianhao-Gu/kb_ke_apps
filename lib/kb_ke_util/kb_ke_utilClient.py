@@ -25,7 +25,7 @@ class kb_ke_util(object):
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
             auth_svc='https://kbase.us/services/authorization/Sessions/Login',
-            service_ver='dev',
+            service_ver='release',
             async_job_check_time_ms=100, async_job_check_time_scale_percent=150, 
             async_job_check_max_time_ms=300000):
         if url is None:
@@ -42,6 +42,38 @@ class kb_ke_util(object):
 
     def _check_job(self, job_id):
         return self._client._check_job('kb_ke_util', job_id)
+
+    def _run_kmeans2_submit(self, params, context=None):
+        return self._client._submit_job(
+             'kb_ke_util.run_kmeans2', [params],
+             self._service_ver, context)
+
+    def run_kmeans2(self, params, context=None):
+        """
+        run_kmeans2: a wrapper method for  scipy.cluster.vq.kmeans2
+        reference:
+        https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.vq.kmeans2.html#scipy.cluster.vq.kmeans2
+        :param params: instance of type "KmeansParams" (Input of the
+           run_kmeans2 function dist_matrix - a condensed distance matrix
+           (refer to run_pdist return) k_num: number of clusters to form) ->
+           structure: parameter "dist_matrix" of list of Double, parameter
+           "k_num" of Long
+        :returns: instance of type "KmeansOutput" (Ouput of the run_kmeans2
+           function centroid - centroids found at the last iteration of
+           k-means idx - index of the centroid) -> structure: parameter
+           "centroid" of list of Double, parameter "idx" of list of Long
+        """
+        job_id = self._run_kmeans2_submit(params, context)
+        async_job_check_time = self._client.async_job_check_time
+        while True:
+            time.sleep(async_job_check_time)
+            async_job_check_time = (async_job_check_time *
+                self._client.async_job_check_time_scale_percent / 100.0)
+            if async_job_check_time > self._client.async_job_check_max_time:
+                async_job_check_time = self._client.async_job_check_max_time
+            job_state = self._check_job(job_id)
+            if job_state['finished']:
+                return job_state['result'][0]
 
     def _run_pdist_submit(self, params, context=None):
         return self._client._submit_job(
