@@ -108,7 +108,7 @@
     "service-mapping" : {
       "url" : "",
       "name" : "kb_ke_apps",
-      "method" : "run_hierarchical_cluster",
+      "method" : "run_kmeans_cluster",
       "input_mapping" : [
         {
           "narrative_system_variable": "workspace",
