@@ -164,99 +164,104 @@ class kb_ke_appsTest(unittest.TestCase):
         self.assertTrue('report_name' in ret)
         self.assertTrue('report_ref' in ret)
 
-    # def test_bad_run_hierarchical_cluster_params(self):
-    #     self.start_test()
-    #     invalidate_params = {'missing_matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold'}
-    #     error_msg = '"matrix_ref" parameter is required, but missing'
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
+    def check_run_kmeans_cluster_output(self, ret):
+        self.assertTrue('cluster_set_refs' in ret)
+        self.assertTrue('report_name' in ret)
+        self.assertTrue('report_ref' in ret)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'missing_workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold'}
-    #     error_msg = '"workspace_name" parameter is required, but missing'
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
+    def test_bad_run_hierarchical_cluster_params(self):
+        self.start_test()
+        invalidate_params = {'missing_matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold'}
+        error_msg = '"matrix_ref" parameter is required, but missing'
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'missing_feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold'}
-    #     error_msg = '"feature_set_suffix" parameter is required, but missing'
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'missing_workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold'}
+        error_msg = '"workspace_name" parameter is required, but missing'
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'missing_dist_threshold': 'dist_threshold'}
-    #     error_msg = '"dist_threshold" parameter is required, but missing'
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'missing_feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold'}
+        error_msg = '"feature_set_suffix" parameter is required, but missing'
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold',
-    #                          'dist_metric': 'invalidate_metric'}
-    #     error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg, contains=True)
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'missing_dist_threshold': 'dist_threshold'}
+        error_msg = '"dist_threshold" parameter is required, but missing'
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold',
-    #                          'linkage_method': 'invalidate_method'}
-    #     error_msg = "INPUT ERROR:\nInput linkage algorithm [invalidate_method] is not valid.\n"
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg, contains=True)
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold',
+                             'dist_metric': 'invalidate_metric'}
+        error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg, contains=True)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'feature_set_suffix': 'feature_set_suffix',
-    #                          'dist_threshold': 'dist_threshold',
-    #                          'fcluster_criterion': 'invalidate_criterion'}
-    #     error_msg = "INPUT ERROR:\nInput criterion [invalidate_criterion] is not valid.\n"
-    #     self.fail_run_hierarchical_cluster(invalidate_params, error_msg, contains=True)
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold',
+                             'linkage_method': 'invalidate_method'}
+        error_msg = "INPUT ERROR:\nInput linkage algorithm [invalidate_method] is not valid.\n"
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg, contains=True)
 
-    # def test_bad_run_kmeans_cluster_params(self):
-    #     self.start_test()
-    #     invalidate_params = {'missing_matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'cluster_set_suffix': 'cluster_set_suffix',
-    #                          'k_num': 'k_num'}
-    #     error_msg = '"matrix_ref" parameter is required, but missing'
-    #     self.fail_run_kmeans_cluster(invalidate_params, error_msg)
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'feature_set_suffix': 'feature_set_suffix',
+                             'dist_threshold': 'dist_threshold',
+                             'fcluster_criterion': 'invalidate_criterion'}
+        error_msg = "INPUT ERROR:\nInput criterion [invalidate_criterion] is not valid.\n"
+        self.fail_run_hierarchical_cluster(invalidate_params, error_msg, contains=True)
 
-    #     invalidate_params = {'matrix_ref': 'matrix_ref',
-    #                          'workspace_name': 'workspace_name',
-    #                          'cluster_set_suffix': 'cluster_set_suffix',
-    #                          'k_num': 'k_num',
-    #                          'dist_metric': 'invalidate_metric'}
-    #     error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
-    #     self.fail_run_kmeans_cluster(invalidate_params, error_msg, contains=True)
+    def test_bad_run_kmeans_cluster_params(self):
+        self.start_test()
+        invalidate_params = {'missing_matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'k_num': 'k_num'}
+        error_msg = '"matrix_ref" parameter is required, but missing'
+        self.fail_run_kmeans_cluster(invalidate_params, error_msg)
 
-    # def test_run_hierarchical_cluster(self):
-    #     self.start_test()
+        invalidate_params = {'matrix_ref': 'matrix_ref',
+                             'workspace_name': 'workspace_name',
+                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'k_num': 'k_num',
+                             'dist_metric': 'invalidate_metric'}
+        error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
+        self.fail_run_kmeans_cluster(invalidate_params, error_msg, contains=True)
 
-    #     params = {'matrix_ref': self.expression_matrix_ref,
-    #               'workspace_name': self.getWsName(),
-    #               'feature_set_suffix': '_cluster',
-    #               'dist_threshold': 100,
-    #               'dist_metric': 'cityblock',
-    #               'linkage_method': 'ward',
-    #               'fcluster_criterion': 'distance'}
-    #     ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
-    #     self.check_run_hierarchical_cluster_output(ret)
+    def test_run_hierarchical_cluster(self):
+        self.start_test()
 
-    #     params = {'matrix_ref': self.matrix_obj_ref,
-    #               'workspace_name': self.getWsName(),
-    #               'feature_set_suffix': '_cluster',
-    #               'dist_threshold': 100,
-    #               'dist_metric': 'cityblock',
-    #               'linkage_method': 'ward',
-    #               'fcluster_criterion': 'distance'}
-    #     ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
-    #     self.check_run_hierarchical_cluster_output(ret)
+        params = {'matrix_ref': self.expression_matrix_ref,
+                  'workspace_name': self.getWsName(),
+                  'feature_set_suffix': '_cluster',
+                  'dist_threshold': 100,
+                  'dist_metric': 'cityblock',
+                  'linkage_method': 'ward',
+                  'fcluster_criterion': 'distance'}
+        ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
+        self.check_run_hierarchical_cluster_output(ret)
+
+        params = {'matrix_ref': self.matrix_obj_ref,
+                  'workspace_name': self.getWsName(),
+                  'feature_set_suffix': '_cluster',
+                  'dist_threshold': 100,
+                  'dist_metric': 'cityblock',
+                  'linkage_method': 'ward',
+                  'fcluster_criterion': 'distance'}
+        ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
+        self.check_run_hierarchical_cluster_output(ret)
 
     def test_run_kmeans_cluster(self):
         self.start_test()
@@ -267,3 +272,4 @@ class kb_ke_appsTest(unittest.TestCase):
                   'k_num': 2,
                   'dist_metric': 'cityblock'}
         ret = self.getImpl().run_kmeans_cluster(self.ctx, params)[0]
+        self.check_run_kmeans_cluster_output(ret)

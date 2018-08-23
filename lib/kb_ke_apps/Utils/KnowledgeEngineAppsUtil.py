@@ -402,11 +402,13 @@ class KnowledgeEngineAppsUtil:
                             })
         return html_report
 
-    def _generate_report(self, feature_set_set_refs, workspace_name, feature_dendrogram_path,
-                         feature_dendrogram_truncate_path, condition_dendrogram_path,
-                         condition_dendrogram_truncate_path):
+    def _generate_hierarchical_cluster_report(self, feature_set_set_refs, workspace_name,
+                                              feature_dendrogram_path,
+                                              feature_dendrogram_truncate_path,
+                                              condition_dendrogram_path,
+                                              condition_dendrogram_truncate_path):
         """
-        _generate_report: generate summary report
+        _generate_hierarchical_cluster_report: generate summary report
         """
 
         log('creating report')
@@ -445,6 +447,26 @@ class KnowledgeEngineAppsUtil:
                          'report_object_name': 'kb_deseq2_report_' + str(uuid.uuid4())}
 
         kbase_report_client = KBaseReport(self.callback_url)
+        output = kbase_report_client.create_extended_report(report_params)
+
+        report_output = {'report_name': output['name'], 'report_ref': output['ref']}
+
+        return report_output
+
+    def _generate_kmeans_cluster_report(self, cluster_set_refs, workspace_name):
+        """
+        _generate_kmeans_cluster_report: generate summary report
+        """
+        objects_created = []
+        for cluster_set_ref in cluster_set_refs:
+            objects_created.append({'ref': cluster_set_ref,
+                                    'description': 'Kmeans ClusterSet'})
+        report_params = {'message': '',
+                         'objects_created': objects_created,
+                         'workspace_name': workspace_name,
+                         'report_object_name': 'run_kmeans_cluster_' + str(uuid.uuid4())}
+
+        kbase_report_client = KBaseReport(self.callback_url, token=self.token)
         output = kbase_report_client.create_extended_report(report_params)
 
         report_output = {'report_name': output['name'], 'report_ref': output['ref']}
@@ -635,6 +657,10 @@ class KnowledgeEngineAppsUtil:
 
         returnVal = {'cluster_set_refs': cluster_set_refs}
 
+        report_output = self._generate_kmeans_cluster_report(cluster_set_refs, workspace_name)
+
+        returnVal.update(report_output)
+
         return returnVal
 
     def run_hierarchical_cluster(self, params):
@@ -687,11 +713,10 @@ class KnowledgeEngineAppsUtil:
         linkage_method = params.get('linkage_method')
         fcluster_criterion = params.get('fcluster_criterion')
 
-        expression_matrix_object = self.ws.get_objects2({'objects':
-                                                        [{'ref':
+        matrix_object = self.ws.get_objects2({'objects': [{'ref':
                                                           matrix_ref}]})['data'][0]
-        expression_matrix_info = expression_matrix_object['info']
-        expression_matrix_data = expression_matrix_object['data']
+        matrix_info = matrix_object['info']
+        matrix_data = matrix_object['data']
 
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
 
@@ -716,18 +741,18 @@ class KnowledgeEngineAppsUtil:
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
 
-        genome_ref = expression_matrix_data.get('genome_ref')
-        expression_matrix_name = expression_matrix_info[1]
+        genome_ref = matrix_data.get('genome_ref')
+        matrix_name = matrix_info[1]
         feature_set_set_refs = []
 
-        feature_cluster_set_name = expression_matrix_name + '_feature' + feature_set_suffix
+        feature_cluster_set_name = matrix_name + '_feature' + feature_set_suffix
         feature_feature_set = self._build_feature_set(feature_flat_cluster,
                                                       feature_cluster_set_name,
                                                       genome_ref,
                                                       workspace_name)
         feature_set_set_refs.append(feature_feature_set)
 
-        condition_cluster_set_name = expression_matrix_name + '_condition' + feature_set_suffix
+        condition_cluster_set_name = matrix_name + '_condition' + feature_set_suffix
         condition_feature_set = self._build_feature_set(condition_flat_cluster,
                                                         condition_cluster_set_name,
                                                         genome_ref,
@@ -736,12 +761,13 @@ class KnowledgeEngineAppsUtil:
 
         returnVal = {'feature_set_set_refs': feature_set_set_refs}
 
-        report_output = self._generate_report(feature_set_set_refs,
-                                              workspace_name,
-                                              feature_dendrogram_path,
-                                              feature_dendrogram_truncate_path,
-                                              condition_dendrogram_path,
-                                              condition_dendrogram_truncate_path)
+        report_output = self._generate_hierarchical_cluster_report(
+                                                            feature_set_set_refs,
+                                                            workspace_name,
+                                                            feature_dendrogram_path,
+                                                            feature_dendrogram_truncate_path,
+                                                            condition_dendrogram_path,
+                                                            condition_dendrogram_truncate_path)
         returnVal.update(report_output)
 
         return returnVal
