@@ -1,0 +1,74 @@
+{
+  "ver" : "1.0.0",
+  "authors" : ["tgu2"],
+  "contact" : "help@kbase.us",
+  "visible" : true,
+  "categories" : ["active","expression","knowledge_engine"],
+  "widgets" : {
+    "input" : null,
+    "output" : "no-display"
+  },
+   "parameters" : [
+  {
+    "id" : "cluster_set_ref",
+    "optional" : false,
+    "advanced" : false,
+    "allow_multiple" : false,
+    "default_values" : [ "" ],
+    "field_type" : "text",
+    "text_options" : {
+      "valid_ws_types" : ["KBaseExperiments.ClusterSet"]
+    }
+  },{
+    "id" : "pca_matrix_name",
+    "optional" : false,
+    "advanced" : true,
+    "allow_multiple" : false,
+    "default_values" : [ "" ],
+    "field_type" : "text"
+  }],
+  "behavior" : {
+    "service-mapping" : {
+      "url" : "",
+      "name" : "kb_ke_apps",
+      "method" : "run_pca",
+      "input_mapping" : [
+        {
+          "narrative_system_variable": "workspace",
+          "target_property" : "workspace_name"
+        },
+        {
+          "input_parameter" : "cluster_set_ref",
+          "target_type_transform": "resolved-ref",
+          "target_property" : "cluster_set_ref"
+        },
+        {
+            "input_parameter" : "pca_matrix_name",
+            "target_property" : "pca_matrix_name"
+        }],
+      "output_mapping" : [
+        {
+          "narrative_system_variable": "workspace",
+          "target_property": "wsName"
+        },
+        {
+         "service_method_output_path": [0,"pca_ref"],
+         "target_property": "pca_ref"
+        },
+        {
+          "service_method_output_path": [0, "report_name"],
+          "target_property": "report_name"
+        },
+        {
+          "service_method_output_path": [0, "report_ref"],
+          "target_property": "report_ref"
+        },
+        {
+          "constant_value": "16",
+          "target_property": "report_window_line_height"
+        }
+      ]
+    }
+  },
+  "job_id_output_field" : "docker"
+}

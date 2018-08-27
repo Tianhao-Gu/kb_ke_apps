@@ -1,0 +1,41 @@
+#
+# Define basic display information
+#
+name     : Create PCA Matrix - v1.0.0
+
+tooltip  : |
+    Creates PCA matrix for a ClusterSet object
+screenshots :
+    []
+
+icon: data-yellow.png
+
+#
+# Define the set of other narrative methods that should be suggested to the user.
+#
+method-suggestions :
+    related :
+        []
+    next :
+        []
+
+#
+# Configure the display and description of the parameters
+#
+parameters :
+  cluster_set_ref :
+    ui-name : |
+        ClusterSet Object
+    short-hint : |
+        ClusterSet Object
+
+  pca_matrix_name :
+    ui-name : |
+        PCA Matrix Name
+    short-hint : |
+        PCA Matrix Name
+
+description : |
+    <p>This app creates pca matrix for a cluster set object</p>
+    <p><strong>Team members who developed & deployed algorithm in KBase:</strong> Tianhao Gu</p>
+

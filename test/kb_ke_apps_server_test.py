@@ -123,7 +123,43 @@ class kb_ke_appsTest(unittest.TestCase):
                   'workspace_name': cls.wsName,
                   'input_file_path': matrix_file_path,
                   'genome_ref': cls.genome_ref}
-        cls.matrix_obj_ref = cls.gen_api.import_matrix_from_excel(params).get('matrix_obj_ref')
+        gen_api_ret = cls.gen_api.import_matrix_from_excel(params)
+
+        cls.matrix_obj_ref = gen_api_ret.get('matrix_obj_ref')
+        matrix_obj_data = cls.dfu.get_objects(
+            {"object_refs": [cls.matrix_obj_ref]})['data'][0]['data']
+
+        cls.col_conditionset_ref = matrix_obj_data.get('col_conditionset_ref')
+        cls.row_conditionset_ref = matrix_obj_data.get('row_conditionset_ref')
+
+        # upload KBaseExperiments.ClusterSet object
+        object_type = 'KBaseExperiments.ClusterSet'
+        cluster_set_object_name = 'test_clusterset'
+        cluster_set_data = {'clustering_parameters': {'dist_metric': 'cityblock',
+                                                      'k_num': '2'},
+                            'clusters': [{'id_to_condition': {
+                                            'WRI_RS00015_CDS_1': 'test_row_condition_2',
+                                            'WRI_RS00025_CDS_1': 'test_row_condition_3'},
+                                          'id_to_data_position': {
+                                            'WRI_RS00015_CDS_1': 1,
+                                            'WRI_RS00025_CDS_1': 2}},
+                                         {'id_to_condition': {
+                                            'WRI_RS00010_CDS_1': 'test_row_condition_1'},
+                                         'id_to_data_position': {
+                                            'WRI_RS00010_CDS_1': 0}}],
+                            'condition_set_ref': cls.row_conditionset_ref,
+                            'genome_ref': cls.genome_ref,
+                            'original_data': cls.matrix_obj_ref}
+
+        save_object_params = {
+            'id': workspace_id,
+            'objects': [{'type': object_type,
+                         'data': cluster_set_data,
+                         'name': cluster_set_object_name}]
+        }
+
+        dfu_oi = cls.dfu.save_objects(save_object_params)[0]
+        cls.cluster_set_ref = str(dfu_oi[6]) + '/' + str(dfu_oi[0]) + '/' + str(dfu_oi[4])
 
     def getWsClient(self):
         return self.__class__.wsClient
@@ -154,6 +190,15 @@ class kb_ke_appsTest(unittest.TestCase):
                                 contains=False):
         with self.assertRaises(exception) as context:
             self.getImpl().run_kmeans_cluster(self.ctx, params)
+        if contains:
+            self.assertIn(error, str(context.exception.message))
+        else:
+            self.assertEqual(error, str(context.exception.message))
+
+    def fail_run_pca(self, params, error, exception=ValueError,
+                     contains=False):
+        with self.assertRaises(exception) as context:
+            self.getImpl().run_pca(self.ctx, params)
         if contains:
             self.assertIn(error, str(context.exception.message))
         else:
@@ -273,3 +318,32 @@ class kb_ke_appsTest(unittest.TestCase):
                   'dist_metric': 'cityblock'}
         ret = self.getImpl().run_kmeans_cluster(self.ctx, params)[0]
         self.check_run_kmeans_cluster_output(ret)
+
+    def test_bad_run_pca_params(self):
+        self.start_test()
+        invalidate_params = {'missing_cluster_set_ref': 'cluster_set_ref',
+                             'workspace_name': 'workspace_name',
+                             'pca_matrix_name': 'pca_matrix_name'}
+        error_msg = '"cluster_set_ref" parameter is required, but missing'
+        self.fail_run_pca(invalidate_params, error_msg)
+
+    def test_run_pca(self):
+        self.start_test()
+
+        params = {'cluster_set_ref': self.cluster_set_ref,
+                  'workspace_name': self.getWsName(),
+                  'pca_matrix_name': 'test_pca_matrix'}
+        ret = self.getImpl().run_pca(self.ctx, params)[0]
+
+        self.assertTrue('report_name' in ret)
+        self.assertTrue('report_ref' in ret)
+        self.assertTrue('pca_ref' in ret)
+
+        pca_matrix_ref = ret.get('pca_ref')
+
+        pca_matrix_data = self.dfu.get_objects(
+                    {"object_refs": [pca_matrix_ref]})['data'][0]['data']
+        expected_row_ids = [u'WRI_RS00010_CDS_1', u'WRI_RS00015_CDS_1', u'WRI_RS00025_CDS_1']
+        expected_col_ids = [u'principal_component_1', u'principal_component_2', u'cluster']
+        self.assertItemsEqual(expected_row_ids, pca_matrix_data.get('row_ids'))
+        self.assertItemsEqual(expected_col_ids, pca_matrix_data.get('col_ids'))

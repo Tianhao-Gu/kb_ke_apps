@@ -237,7 +237,7 @@ KmeansClusterParams is a reference to a hash where the following keys are define
 	dist_metric has a value which is a string
 obj_ref is a string
 KmeansClusterOutput is a reference to a hash where the following keys are defined:
-	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+	cluster_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
 	report_name has a value which is a string
 	report_ref has a value which is a string
 
@@ -257,7 +257,7 @@ KmeansClusterParams is a reference to a hash where the following keys are define
 	dist_metric has a value which is a string
 obj_ref is a string
 KmeansClusterOutput is a reference to a hash where the following keys are defined:
-	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+	cluster_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
 	report_name has a value which is a string
 	report_ref has a value which is a string
 
@@ -318,6 +318,106 @@ run_kmeans_cluster: generates Kmeans clusters for Matrix data object
     }
 }
  
+
+
+=head2 run_pca
+
+  $returnVal = $obj->run_pca($params)
+
+=over 4
+
+=item Parameter and return types
+
+=begin html
+
+<pre>
+$params is a kb_ke_apps.PCAParams
+$returnVal is a kb_ke_apps.PCAOutput
+PCAParams is a reference to a hash where the following keys are defined:
+	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+	workspace_name has a value which is a string
+	pca_matrix_suffix has a value which is a string
+obj_ref is a string
+PCAOutput is a reference to a hash where the following keys are defined:
+	pca_ref has a value which is a kb_ke_apps.obj_ref
+	report_name has a value which is a string
+	report_ref has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+$params is a kb_ke_apps.PCAParams
+$returnVal is a kb_ke_apps.PCAOutput
+PCAParams is a reference to a hash where the following keys are defined:
+	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+	workspace_name has a value which is a string
+	pca_matrix_suffix has a value which is a string
+obj_ref is a string
+PCAOutput is a reference to a hash where the following keys are defined:
+	pca_ref has a value which is a kb_ke_apps.obj_ref
+	report_name has a value which is a string
+	report_ref has a value which is a string
+
+
+=end text
+
+=item Description
+
+run_pca: generates PCA matrix for KBaseExperiments.ClusterSet data object
+
+=back
+
+=cut
+
+ sub run_pca
+{
+    my($self, @args) = @_;
+
+# Authentication: required
+
+    if ((my $n = @args) != 1)
+    {
+	Bio::KBase::Exceptions::ArgumentValidationError->throw(error =>
+							       "Invalid argument count for function run_pca (received $n, expecting 1)");
+    }
+    {
+	my($params) = @args;
+
+	my @_bad_arguments;
+        (ref($params) eq 'HASH') or push(@_bad_arguments, "Invalid type for argument 1 \"params\" (value was \"$params\")");
+        if (@_bad_arguments) {
+	    my $msg = "Invalid arguments passed to run_pca:\n" . join("", map { "\t$_\n" } @_bad_arguments);
+	    Bio::KBase::Exceptions::ArgumentValidationError->throw(error => $msg,
+								   method_name => 'run_pca');
+	}
+    }
+
+    my $url = $self->{url};
+    my $result = $self->{client}->call($url, $self->{headers}, {
+	    method => "kb_ke_apps.run_pca",
+	    params => \@args,
+    });
+    if ($result) {
+	if ($result->is_error) {
+	    Bio::KBase::Exceptions::JSONRPC->throw(error => $result->error_message,
+					       code => $result->content->{error}->{code},
+					       method_name => 'run_pca',
+					       data => $result->content->{error}->{error} # JSON::RPC::ReturnObject only supports JSONRPC 1.1 or 1.O
+					      );
+	} else {
+	    return wantarray ? @{$result->result} : $result->result->[0];
+	}
+    } else {
+        Bio::KBase::Exceptions::HTTP->throw(error => "Error invoking method run_pca",
+					    status_line => $self->{client}->status_line,
+					    method_name => 'run_pca',
+				       );
+    }
+}
+ 
   
 sub status
 {
@@ -361,16 +461,16 @@ sub version {
             Bio::KBase::Exceptions::JSONRPC->throw(
                 error => $result->error_message,
                 code => $result->content->{code},
-                method_name => 'run_kmeans_cluster',
+                method_name => 'run_pca',
             );
         } else {
             return wantarray ? @{$result->result} : $result->result->[0];
         }
     } else {
         Bio::KBase::Exceptions::HTTP->throw(
-            error => "Error invoking method run_kmeans_cluster",
+            error => "Error invoking method run_pca",
             status_line => $self->{client}->status_line,
-            method_name => 'run_kmeans_cluster',
+            method_name => 'run_pca',
         );
     }
 }
@@ -651,7 +751,7 @@ dist_metric has a value which is a string
 =item Description
 
 Ouput of the run_kmeans_cluster function
-cluster_set_ref: KBaseExperiments.ClusterSet object references
+cluster_set_refs: KBaseExperiments.ClusterSet object references
 report_name: report name generated by KBaseReport
 report_ref: report reference generated by KBaseReport
 
@@ -662,7 +762,7 @@ report_ref: report reference generated by KBaseReport
 
 <pre>
 a reference to a hash where the following keys are defined:
-cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+cluster_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
 report_name has a value which is a string
 report_ref has a value which is a string
 
@@ -673,7 +773,91 @@ report_ref has a value which is a string
 =begin text
 
 a reference to a hash where the following keys are defined:
+cluster_set_refs has a value which is a reference to a list where each element is a kb_ke_apps.obj_ref
+report_name has a value which is a string
+report_ref has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 PCAParams
+
+=over 4
+
+
+
+=item Description
+
+Input of the run_pca function
+cluster_set_ref: KBaseExperiments.ClusterSet object references
+workspace_name: the name of the workspace
+pca_matrix_suffix: suffix append to PCA (KBaseFeatureValues.FloatMatrix2D) object name
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
 cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+workspace_name has a value which is a string
+pca_matrix_suffix has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+cluster_set_ref has a value which is a kb_ke_apps.obj_ref
+workspace_name has a value which is a string
+pca_matrix_suffix has a value which is a string
+
+
+=end text
+
+=back
+
+
+
+=head2 PCAOutput
+
+=over 4
+
+
+
+=item Description
+
+Ouput of the run_pca function
+pca_ref: PCA object reference (as KBaseFeatureValues.FloatMatrix2D data type)
+report_name: report name generated by KBaseReport
+report_ref: report reference generated by KBaseReport
+
+
+=item Definition
+
+=begin html
+
+<pre>
+a reference to a hash where the following keys are defined:
+pca_ref has a value which is a kb_ke_apps.obj_ref
+report_name has a value which is a string
+report_ref has a value which is a string
+
+</pre>
+
+=end html
+
+=begin text
+
+a reference to a hash where the following keys are defined:
+pca_ref has a value which is a kb_ke_apps.obj_ref
 report_name has a value which is a string
 report_ref has a value which is a string
 
