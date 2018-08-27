@@ -5,6 +5,8 @@ import errno
 import uuid
 import shutil
 import pandas as pd
+from matplotlib import pyplot as plt
+import numpy as np
 
 from kb_ke_util.kb_ke_utilClient import kb_ke_util
 from DataFileUtil.DataFileUtilClient import DataFileUtil
@@ -300,9 +302,10 @@ class KnowledgeEngineAppsUtil:
 
         return visualization_content
 
-    def _generate_html_report(self, feature_set_set_refs, feature_dendrogram_path,
-                              feature_dendrogram_truncate_path, condition_dendrogram_path,
-                              condition_dendrogram_truncate_path):
+    def _generate_hierarchical_html_report(self, feature_set_set_refs, feature_dendrogram_path,
+                                           feature_dendrogram_truncate_path,
+                                           condition_dendrogram_path,
+                                           condition_dendrogram_truncate_path):
         """
         _generate_html_report: generate html summary report
         """
@@ -426,11 +429,12 @@ class KnowledgeEngineAppsUtil:
 
         log('creating report')
 
-        output_html_files = self._generate_html_report(feature_set_set_refs,
-                                                       feature_dendrogram_path,
-                                                       feature_dendrogram_truncate_path,
-                                                       condition_dendrogram_path,
-                                                       condition_dendrogram_truncate_path)
+        output_html_files = self._generate_hierarchical_html_report(
+                                                        feature_set_set_refs,
+                                                        feature_dendrogram_path,
+                                                        feature_dendrogram_truncate_path,
+                                                        condition_dendrogram_path,
+                                                        condition_dendrogram_truncate_path)
 
         objects_created = []
         for feature_set_set_ref in feature_set_set_refs:
@@ -486,16 +490,105 @@ class KnowledgeEngineAppsUtil:
 
         return report_output
 
-    def _generate_pca_report(self, pca_ref, workspace_name):
+    def _generate_pca_html_files(self, pca_plot):
+
+        log('start generating html report')
+        html_report = list()
+
+        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        self._mkdir_p(output_directory)
+        result_file_path = os.path.join(output_directory, 'report.html')
+
+        visualization_content = ''
+
+        pca_plot_name = os.path.basename(pca_plot)
+        pca_plot_display_name = '2 Component PCA'
+
+        shutil.copy2(pca_plot,
+                     os.path.join(output_directory, pca_plot_name))
+
+        visualization_content += '<div class="gallery">'
+        visualization_content += '<a target="_blank" href="{}">'.format(pca_plot_name)
+        visualization_content += '<img src="{}" '.format(pca_plot_name)
+        visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                                pca_plot_display_name)
+        visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                pca_plot_display_name)
+
+        with open(result_file_path, 'w') as result_file:
+            with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
+                      'r') as report_template_file:
+                report_template = report_template_file.read()
+                report_template = report_template.replace('<p>Visualization_Content</p>',
+                                                          visualization_content)
+                result_file.write(report_template)
+
+        report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,
+                                                  'pack': 'zip'})['shock_id']
+
+        html_report.append({'shock_id': report_shock_id,
+                            'name': os.path.basename(result_file_path),
+                            'label': os.path.basename(result_file_path),
+                            'description': 'HTML summary report for ExpressionMatrix Cluster App'
+                            })
+        return html_report
+
+    def _generate_pca_plot(self, pca_matrix_data):
+        """
+        _generate_pca_plot: generate a plot for PCA data
+        """
+
+        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        self._mkdir_p(output_directory)
+        pca_plot = os.path.join(output_directory, 'pca.png')
+
+        df = pd.DataFrame(pca_matrix_data.get('values'),
+                          index=pca_matrix_data.get('row_ids'),
+                          columns=pca_matrix_data.get('col_ids'))
+
+        plt.switch_backend('agg')
+
+        fig = plt.figure(figsize=(16, 16))
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_xlabel('Principal Component 1', fontsize=15)
+        ax.set_ylabel('Principal Component 2', fontsize=15)
+        ax.set_title('2 component PCA', fontsize=20)
+
+        clusters = list(set(['cluster_{}'.format(x) for x in df['cluster'].tolist()]))
+        colors = ['red', 'green', 'blue', 'orange', 'yellow', 'pink', 'lightcyan', 'cyan']
+        if len(clusters) > len(colors):
+            np.random.seed(12345)
+            n = 1024
+            colors = np.random.rand(n)
+
+        for cluster, color in zip(clusters, colors):
+            indicesToKeep = df['cluster'] == int(cluster.split('_')[-1])
+            ax.scatter(df.loc[indicesToKeep, 'principal_component_1'],
+                       df.loc[indicesToKeep, 'principal_component_2'],
+                       c=str(color),
+                       s=50)
+        ax.legend(clusters)
+        ax.grid()
+
+        plt.savefig(pca_plot)
+
+        return pca_plot
+
+    def _generate_pca_report(self, pca_ref, pca_matrix_data, workspace_name):
         """
         _generate_kmeans_cluster_report: generate summary report
         """
         objects_created = []
         objects_created.append({'ref': pca_ref,
                                 'description': 'PCA Matrix'})
+
+        pca_plot = self._generate_pca_plot(pca_matrix_data)
+        output_html_files = self._generate_pca_html_files(pca_plot)
         report_params = {'message': '',
                          'objects_created': objects_created,
                          'workspace_name': workspace_name,
+                         'html_links': output_html_files,
+                         'direct_html_link_index': 0,
                          'report_object_name': 'run_pca_' + str(uuid.uuid4())}
 
         kbase_report_client = KBaseReport(self.callback_url, token=self.token)
@@ -546,7 +639,7 @@ class KnowledgeEngineAppsUtil:
         dfu_oi = self.dfu.save_objects(save_object_params)[0]
         float_matrix_ref = str(dfu_oi[6]) + '/' + str(dfu_oi[0]) + '/' + str(dfu_oi[4])
 
-        return float_matrix_ref
+        return float_matrix_ref, pca_matrix_data
 
     def _build_flat_cluster(self, data_matrix, dist_threshold,
                             dist_metric=None, linkage_method=None, fcluster_criterion=None):
@@ -695,11 +788,12 @@ class KnowledgeEngineAppsUtil:
         df = pd.read_json(PCA_matrix)
         df.fillna(0, inplace=True)
 
-        pca_ref = self._save_2D_matrix(df, clusters, workspace_name, pca_matrix_name)
+        pca_ref,  pca_matrix_data = self._save_2D_matrix(df, clusters,
+                                                         workspace_name, pca_matrix_name)
 
         returnVal = {'pca_ref': pca_ref}
 
-        report_output = self._generate_pca_report(pca_ref, workspace_name)
+        report_output = self._generate_pca_report(pca_ref, pca_matrix_data, workspace_name)
 
         returnVal.update(report_output)
         return returnVal
