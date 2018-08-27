@@ -510,7 +510,7 @@ class KnowledgeEngineAppsUtil:
         visualization_content += '<div class="gallery">'
         visualization_content += '<a target="_blank" href="{}">'.format(pca_plot_name)
         visualization_content += '<img src="{}" '.format(pca_plot_name)
-        visualization_content += 'alt="{}" width="600" height="400">'.format(
+        visualization_content += 'alt="{}" width="600" height="600">'.format(
                                                                 pca_plot_display_name)
         visualization_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 pca_plot_display_name)
@@ -548,7 +548,7 @@ class KnowledgeEngineAppsUtil:
 
         plt.switch_backend('agg')
 
-        fig = plt.figure(figsize=(16, 16))
+        fig = plt.figure(figsize=(8, 8))
         ax = fig.add_subplot(1, 1, 1)
         ax.set_xlabel('Principal Component 1', fontsize=15)
         ax.set_ylabel('Principal Component 2', fontsize=15)
