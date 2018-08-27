@@ -341,6 +341,10 @@ class Application(object):
                              name='kb_ke_apps.run_kmeans_cluster',
                              types=[dict])
         self.method_authentication['kb_ke_apps.run_kmeans_cluster'] = 'required'  # noqa
+        self.rpc_service.add(impl_kb_ke_apps.run_pca,
+                             name='kb_ke_apps.run_pca',
+                             types=[dict])
+        self.method_authentication['kb_ke_apps.run_pca'] = 'required'  # noqa
         self.rpc_service.add(impl_kb_ke_apps.status,
                              name='kb_ke_apps.status',
                              types=[dict])

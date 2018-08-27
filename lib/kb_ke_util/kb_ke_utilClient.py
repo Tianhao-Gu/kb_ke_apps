@@ -43,6 +43,38 @@ class kb_ke_util(object):
     def _check_job(self, job_id):
         return self._client._check_job('kb_ke_util', job_id)
 
+    def _run_PCA_submit(self, params, context=None):
+        return self._client._submit_job(
+             'kb_ke_util.run_PCA', [params],
+             self._service_ver, context)
+
+    def run_PCA(self, params, context=None):
+        """
+        run_PCA: perform PCA on a n-dimensional matrix
+        :param params: instance of type "PCAParams" (Input of the run_PCA
+           function data_matrix - raw data matrix in json format
+           e.g.{u'condition_1': {u'gene_1': 0.1, u'gene_2': 0.3, u'gene_3':
+           None}, u'condition_2': {u'gene_1': 0.2, u'gene_2': 0.4, u'gene_3':
+           None}, u'condition_3': {u'gene_1': 0.3, u'gene_2': 0.5, u'gene_3':
+           None}, u'condition_4': {u'gene_1': 0.4, u'gene_2': 0.6, u'gene_3':
+           None}}) -> structure: parameter "data_matrix" of String
+        :returns: instance of type "PCAOutput" (Ouput of the run_PCA function
+           PCA_matrix - PCA matrix in json format with principal_component_1,
+           principal_component_2 col and same index as original data matrix)
+           -> structure: parameter "PCA_matrix" of String
+        """
+        job_id = self._run_PCA_submit(params, context)
+        async_job_check_time = self._client.async_job_check_time
+        while True:
+            time.sleep(async_job_check_time)
+            async_job_check_time = (async_job_check_time *
+                self._client.async_job_check_time_scale_percent / 100.0)
+            if async_job_check_time > self._client.async_job_check_max_time:
+                async_job_check_time = self._client.async_job_check_max_time
+            job_state = self._check_job(job_id)
+            if job_state['finished']:
+                return job_state['result'][0]
+
     def _run_kmeans2_submit(self, params, context=None):
         return self._client._submit_job(
              'kb_ke_util.run_kmeans2', [params],
@@ -86,11 +118,13 @@ class kb_ke_util(object):
         reference: 
         https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html
         :param params: instance of type "PdistParams" (Input of the run_pdist
-           function data_matrix - raw data matrix with row_ids, col_ids and
-           values e.g.{'row_ids': ['gene_1', 'gene_2'], 'col_ids':
-           ['condition_1', 'condition_2'], 'values': [[0.1, 0.2], [0.3, 0.4],
-           [0.5, 0.6]]} Optional arguments: metric - The distance metric to
-           use. Default set to 'euclidean'. The distance function can be
+           function data_matrix - raw data matrix in json format
+           e.g.{u'condition_1': {u'gene_1': 0.1, u'gene_2': 0.3, u'gene_3':
+           None}, u'condition_2': {u'gene_1': 0.2, u'gene_2': 0.4, u'gene_3':
+           None}, u'condition_3': {u'gene_1': 0.3, u'gene_2': 0.5, u'gene_3':
+           None}, u'condition_4': {u'gene_1': 0.4, u'gene_2': 0.6, u'gene_3':
+           None}} Optional arguments: metric - The distance metric to use.
+           Default set to 'euclidean'. The distance function can be
            ["braycurtis", "canberra", "chebyshev", "cityblock",
            "correlation", "cosine", "dice", "euclidean", "hamming",
            "jaccard", "kulsinski", "matching", "rogerstanimoto",
@@ -100,8 +134,8 @@ class kb_ke_util(object):
            distance.pdist.html Note: Advanced metric functions 'minkowski',
            'seuclidean' and 'mahalanobis' included in
            scipy.spatial.distance.pdist library are not implemented) ->
-           structure: parameter "data_matrix" of mapping from String to list
-           of String, parameter "metric" of String
+           structure: parameter "data_matrix" of String, parameter "metric"
+           of String
         :returns: instance of type "PdistOutput" (Ouput of the run_pdist
            function dist_matrix - 1D distance matrix labels - item name
            corresponding to each dist_matrix element) -> structure: parameter
