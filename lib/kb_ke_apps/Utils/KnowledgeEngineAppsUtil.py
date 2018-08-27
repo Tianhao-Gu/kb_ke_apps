@@ -516,7 +516,7 @@ class KnowledgeEngineAppsUtil:
                                                                 pca_plot_display_name)
 
         with open(result_file_path, 'w') as result_file:
-            with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
+            with open(os.path.join(os.path.dirname(__file__), 'pca_report_template.html'),
                       'r') as report_template_file:
                 report_template = report_template_file.read()
                 report_template = report_template.replace('<p>Visualization_Content</p>',
@@ -537,6 +537,9 @@ class KnowledgeEngineAppsUtil:
         """
         _generate_pca_plot: generate a plot for PCA data
         """
+
+        print 'fsafds'
+        print pca_matrix_data
 
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
