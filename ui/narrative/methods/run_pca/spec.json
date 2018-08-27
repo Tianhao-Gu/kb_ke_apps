@@ -22,10 +22,14 @@
   },{
     "id" : "pca_matrix_name",
     "optional" : false,
-    "advanced" : true,
+    "advanced" : false,
     "allow_multiple" : false,
     "default_values" : [ "" ],
-    "field_type" : "text"
+    "field_type" : "text",
+    "text_options" : {
+        "valid_ws_types" : ["KBaseFeatureValues.FloatMatrix2D"],
+        "is_output_name" : true
+      }
   }],
   "behavior" : {
     "service-mapping" : {
