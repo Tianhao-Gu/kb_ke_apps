@@ -676,12 +676,17 @@ class KnowledgeEngineAppsUtil:
         cluster_set_source = self.dfu.get_objects(
                     {"object_refs": [cluster_set_ref]})['data'][0]
 
+        cluster_set_info = cluster_set_source.get('info')
+        cluster_set_name = cluster_set_info[1]
         cluster_set_data = cluster_set_source.get('data')
         clusters = cluster_set_data.get('clusters')
 
         matrix_ref = cluster_set_data.get('original_data')
 
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
+
+        if '_column_' in cluster_set_name:
+            data_matrix = pd.read_json(data_matrix).T.to_json()  # transpose matrix
 
         # run pca algorithm
         pca_params = {'data_matrix': data_matrix}
