@@ -538,9 +538,6 @@ class KnowledgeEngineAppsUtil:
         _generate_pca_plot: generate a plot for PCA data
         """
 
-        print 'fsafds'
-        print pca_matrix_data
-
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
         pca_plot = os.path.join(output_directory, 'pca.png')
