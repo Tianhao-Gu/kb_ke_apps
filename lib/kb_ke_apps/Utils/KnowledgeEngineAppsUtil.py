@@ -516,7 +516,7 @@ class KnowledgeEngineAppsUtil:
                                                                 pca_plot_display_name)
 
         with open(result_file_path, 'w') as result_file:
-            with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
+            with open(os.path.join(os.path.dirname(__file__), 'pca_report_template.html'),
                       'r') as report_template_file:
                 report_template = report_template_file.read()
                 report_template = report_template.replace('<p>Visualization_Content</p>',
