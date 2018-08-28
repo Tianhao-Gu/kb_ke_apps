@@ -124,7 +124,7 @@ $returnVal is a kb_ke_apps.HierClusterOutput
 HierClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
-	cluster_set_suffix has a value which is a string
+	cluster_set_name has a value which is a string
 	dist_threshold has a value which is a float
 	dist_metric has a value which is a string
 	linkage_method has a value which is a string
@@ -146,7 +146,7 @@ $returnVal is a kb_ke_apps.HierClusterOutput
 HierClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
-	cluster_set_suffix has a value which is a string
+	cluster_set_name has a value which is a string
 	dist_threshold has a value which is a float
 	dist_metric has a value which is a string
 	linkage_method has a value which is a string
@@ -232,7 +232,7 @@ $returnVal is a kb_ke_apps.KmeansClusterOutput
 KmeansClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
-	cluster_set_suffix has a value which is a string
+	cluster_set_name has a value which is a string
 	k_num has a value which is an int
 	dist_metric has a value which is a string
 obj_ref is a string
@@ -252,7 +252,7 @@ $returnVal is a kb_ke_apps.KmeansClusterOutput
 KmeansClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
-	cluster_set_suffix has a value which is a string
+	cluster_set_name has a value which is a string
 	k_num has a value which is an int
 	dist_metric has a value which is a string
 obj_ref is a string
@@ -581,7 +581,7 @@ a string
 Input of the run_hierarchical_cluster function
 matrix_ref: Matrix object reference
 workspace_name: the name of the workspace
-cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+cluster_set_name: KBaseExperiments.ClusterSet object name
 dist_threshold: the threshold to apply when forming flat clusters
 
 Optional arguments:
@@ -615,7 +615,7 @@ fcluster_criterion: The criterion to use in forming flat clusters. Default set t
 a reference to a hash where the following keys are defined:
 matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
-cluster_set_suffix has a value which is a string
+cluster_set_name has a value which is a string
 dist_threshold has a value which is a float
 dist_metric has a value which is a string
 linkage_method has a value which is a string
@@ -630,7 +630,7 @@ fcluster_criterion has a value which is a string
 a reference to a hash where the following keys are defined:
 matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
-cluster_set_suffix has a value which is a string
+cluster_set_name has a value which is a string
 dist_threshold has a value which is a float
 dist_metric has a value which is a string
 linkage_method has a value which is a string
@@ -696,7 +696,7 @@ report_ref has a value which is a string
 Input of the run_kmeans_cluster function
 matrix_ref: Matrix object reference
 workspace_name: the name of the workspace
-cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+cluster_set_name: KBaseExperiments.ClusterSet object name
 k_num: number of clusters to form
 
 Optional arguments:
@@ -718,7 +718,7 @@ dist_metric: The distance metric to use. Default set to 'euclidean'.
 a reference to a hash where the following keys are defined:
 matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
-cluster_set_suffix has a value which is a string
+cluster_set_name has a value which is a string
 k_num has a value which is an int
 dist_metric has a value which is a string
 
@@ -731,7 +731,7 @@ dist_metric has a value which is a string
 a reference to a hash where the following keys are defined:
 matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
-cluster_set_suffix has a value which is a string
+cluster_set_name has a value which is a string
 k_num has a value which is an int
 dist_metric has a value which is a string
 

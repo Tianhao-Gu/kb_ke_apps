@@ -218,35 +218,35 @@ class kb_ke_appsTest(unittest.TestCase):
         self.start_test()
         invalidate_params = {'missing_matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'dist_threshold': 'dist_threshold'}
         error_msg = '"matrix_ref" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'missing_workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'dist_threshold': 'dist_threshold'}
         error_msg = '"workspace_name" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'missing_cluster_set_suffix': 'cluster_set_suffix',
+                             'missing_cluster_set_name': 'cluster_set_name',
                              'dist_threshold': 'dist_threshold'}
-        error_msg = '"cluster_set_suffix" parameter is required, but missing'
+        error_msg = '"cluster_set_name" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'missing_dist_threshold': 'dist_threshold'}
         error_msg = '"dist_threshold" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'dist_threshold': 'dist_threshold',
                              'dist_metric': 'invalidate_metric'}
         error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
@@ -254,7 +254,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'dist_threshold': 'dist_threshold',
                              'linkage_method': 'invalidate_method'}
         error_msg = "INPUT ERROR:\nInput linkage algorithm [invalidate_method] is not valid.\n"
@@ -262,7 +262,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'dist_threshold': 'dist_threshold',
                              'fcluster_criterion': 'invalidate_criterion'}
         error_msg = "INPUT ERROR:\nInput criterion [invalidate_criterion] is not valid.\n"
@@ -272,14 +272,14 @@ class kb_ke_appsTest(unittest.TestCase):
         self.start_test()
         invalidate_params = {'missing_matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'k_num': 'k_num'}
         error_msg = '"matrix_ref" parameter is required, but missing'
         self.fail_run_kmeans_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_suffix': 'cluster_set_suffix',
+                             'cluster_set_name': 'cluster_set_name',
                              'k_num': 'k_num',
                              'dist_metric': 'invalidate_metric'}
         error_msg = 'INPUT ERROR:\nInput metric function [invalidate_metric] is not valid.\n'
@@ -290,7 +290,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         params = {'matrix_ref': self.expression_matrix_ref,
                   'workspace_name': self.getWsName(),
-                  'cluster_set_suffix': '_cluster',
+                  'cluster_set_name': 'test_hierarchical_cluster_1',
                   'dist_threshold': 1,
                   'dist_metric': 'cityblock',
                   'linkage_method': 'ward',
@@ -300,7 +300,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         params = {'matrix_ref': self.matrix_obj_ref,
                   'workspace_name': self.getWsName(),
-                  'cluster_set_suffix': '_cluster',
+                  'cluster_set_name': 'test_hierarchical_cluster_2',
                   'dist_threshold': 100,
                   'dist_metric': 'cityblock',
                   'linkage_method': 'ward',
@@ -313,7 +313,7 @@ class kb_ke_appsTest(unittest.TestCase):
 
         params = {'matrix_ref': self.matrix_obj_ref,
                   'workspace_name': self.getWsName(),
-                  'cluster_set_suffix': '_cluster',
+                  'cluster_set_name': 'test_kmeans_cluster',
                   'k_num': 2,
                   'dist_metric': 'cityblock'}
         ret = self.getImpl().run_kmeans_cluster(self.ctx, params)[0]

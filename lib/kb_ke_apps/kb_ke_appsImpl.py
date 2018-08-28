@@ -23,7 +23,7 @@ class kb_ke_apps:
     ######################################### noqa
     VERSION = "1.0.0"
     GIT_URL = "https://github.com/Tianhao-Gu/kb_ke_apps.git"
-    GIT_COMMIT_HASH = "e3169f6017c4d5b4d98f65b0b93031f11296bbf1"
+    GIT_COMMIT_HASH = "a355ade618c581bea30115582c0a5b737b5b4c27"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -45,10 +45,10 @@ class kb_ke_apps:
         :param params: instance of type "HierClusterParams" (Input of the
            run_hierarchical_cluster function matrix_ref: Matrix object
            reference workspace_name: the name of the workspace
-           cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet
-           object name dist_threshold: the threshold to apply when forming
-           flat clusters Optional arguments: dist_metric: The distance metric
-           to use. Default set to 'euclidean'. The distance function can be
+           cluster_set_name: KBaseExperiments.ClusterSet object name
+           dist_threshold: the threshold to apply when forming flat clusters
+           Optional arguments: dist_metric: The distance metric to use.
+           Default set to 'euclidean'. The distance function can be
            ["braycurtis", "canberra", "chebyshev", "cityblock",
            "correlation", "cosine", "dice", "euclidean", "hamming",
            "jaccard", "kulsinski", "matching", "rogerstanimoto",
@@ -66,7 +66,7 @@ class kb_ke_apps:
            https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.
            hierarchy.fcluster.html) -> structure: parameter "matrix_ref" of
            type "obj_ref" (An X/Y/Z style reference), parameter
-           "workspace_name" of String, parameter "cluster_set_suffix" of
+           "workspace_name" of String, parameter "cluster_set_name" of
            String, parameter "dist_threshold" of Double, parameter
            "dist_metric" of String, parameter "linkage_method" of String,
            parameter "fcluster_criterion" of String
@@ -102,19 +102,19 @@ class kb_ke_apps:
         run_kmeans_cluster: generates Kmeans clusters for Matrix data object
         :param params: instance of type "KmeansClusterParams" (Input of the
            run_kmeans_cluster function matrix_ref: Matrix object reference
-           workspace_name: the name of the workspace cluster_set_suffix:
-           suffix append to KBaseExperiments.ClusterSet object name k_num:
-           number of clusters to form Optional arguments: dist_metric: The
-           distance metric to use. Default set to 'euclidean'. The distance
-           function can be ["braycurtis", "canberra", "chebyshev",
-           "cityblock", "correlation", "cosine", "dice", "euclidean",
-           "hamming", "jaccard", "kulsinski", "matching", "rogerstanimoto",
+           workspace_name: the name of the workspace cluster_set_name:
+           KBaseExperiments.ClusterSet object name k_num: number of clusters
+           to form Optional arguments: dist_metric: The distance metric to
+           use. Default set to 'euclidean'. The distance function can be
+           ["braycurtis", "canberra", "chebyshev", "cityblock",
+           "correlation", "cosine", "dice", "euclidean", "hamming",
+           "jaccard", "kulsinski", "matching", "rogerstanimoto",
            "russellrao", "sokalmichener", "sokalsneath", "sqeuclidean",
            "yule"] Details refer to:
            https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.
            distance.pdist.html) -> structure: parameter "matrix_ref" of type
            "obj_ref" (An X/Y/Z style reference), parameter "workspace_name"
-           of String, parameter "cluster_set_suffix" of String, parameter
+           of String, parameter "cluster_set_name" of String, parameter
            "k_num" of Long, parameter "dist_metric" of String
         :returns: instance of type "KmeansClusterOutput" (Ouput of the
            run_kmeans_cluster function cluster_set_refs:

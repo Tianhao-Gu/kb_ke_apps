@@ -31,12 +31,16 @@
       "validate_as": "float"
     }
   },{
-    "id" : "cluster_set_suffix",
+    "id" : "cluster_set_name",
     "optional" : false,
     "advanced" : true,
     "allow_multiple" : false,
-    "default_values" : [ "_cluster" ],
-    "field_type" : "text"
+    "default_values" : [ "" ],
+    "field_type" : "text",
+    "text_options" : {
+        "valid_ws_types" : ["KBaseExperiments.ClusterSet"],
+        "is_output_name" : true
+      }
   },{
     "id" : "dist_metric",
     "optional" : true,
@@ -175,8 +179,8 @@
             "target_property" : "dist_threshold"
         },
         {
-            "input_parameter" : "cluster_set_suffix",
-            "target_property" : "cluster_set_suffix"
+            "input_parameter" : "cluster_set_name",
+            "target_property" : "cluster_set_name"
         },
         {
           "input_parameter" : "dist_metric",

@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * Input of the run_kmeans_cluster function
  * matrix_ref: Matrix object reference
  * workspace_name: the name of the workspace
- * cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+ * cluster_set_name: KBaseExperiments.ClusterSet object name
  * k_num: number of clusters to form
  * Optional arguments:
  * dist_metric: The distance metric to use. Default set to 'euclidean'.
@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "matrix_ref",
     "workspace_name",
-    "cluster_set_suffix",
+    "cluster_set_name",
     "k_num",
     "dist_metric"
 })
@@ -46,8 +46,8 @@ public class KmeansClusterParams {
     private String matrixRef;
     @JsonProperty("workspace_name")
     private String workspaceName;
-    @JsonProperty("cluster_set_suffix")
-    private String clusterSetSuffix;
+    @JsonProperty("cluster_set_name")
+    private String clusterSetName;
     @JsonProperty("k_num")
     private Long kNum;
     @JsonProperty("dist_metric")
@@ -84,18 +84,18 @@ public class KmeansClusterParams {
         return this;
     }
 
-    @JsonProperty("cluster_set_suffix")
-    public String getClusterSetSuffix() {
-        return clusterSetSuffix;
+    @JsonProperty("cluster_set_name")
+    public String getClusterSetName() {
+        return clusterSetName;
     }
 
-    @JsonProperty("cluster_set_suffix")
-    public void setClusterSetSuffix(String clusterSetSuffix) {
-        this.clusterSetSuffix = clusterSetSuffix;
+    @JsonProperty("cluster_set_name")
+    public void setClusterSetName(String clusterSetName) {
+        this.clusterSetName = clusterSetName;
     }
 
-    public KmeansClusterParams withClusterSetSuffix(String clusterSetSuffix) {
-        this.clusterSetSuffix = clusterSetSuffix;
+    public KmeansClusterParams withClusterSetName(String clusterSetName) {
+        this.clusterSetName = clusterSetName;
         return this;
     }
 
@@ -141,7 +141,7 @@ public class KmeansClusterParams {
 
     @Override
     public String toString() {
-        return ((((((((((((("KmeansClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetSuffix=")+ clusterSetSuffix)+", kNum=")+ kNum)+", distMetric=")+ distMetric)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((("KmeansClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetName=")+ clusterSetName)+", kNum=")+ kNum)+", distMetric=")+ distMetric)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

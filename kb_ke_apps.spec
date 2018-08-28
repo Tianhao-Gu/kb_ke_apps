@@ -15,7 +15,7 @@ module kb_ke_apps {
   /* Input of the run_hierarchical_cluster function
     matrix_ref: Matrix object reference
     workspace_name: the name of the workspace
-    cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+    cluster_set_name: KBaseExperiments.ClusterSet object name
     dist_threshold: the threshold to apply when forming flat clusters
 
     Optional arguments:
@@ -43,7 +43,7 @@ module kb_ke_apps {
   typedef structure {
     obj_ref matrix_ref;
     string workspace_name;
-    string cluster_set_suffix;
+    string cluster_set_name;
     float dist_threshold;
 
     string dist_metric;
@@ -68,7 +68,7 @@ module kb_ke_apps {
   /* Input of the run_kmeans_cluster function
     matrix_ref: Matrix object reference
     workspace_name: the name of the workspace
-    cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+    cluster_set_name: KBaseExperiments.ClusterSet object name
     k_num: number of clusters to form
 
     Optional arguments:
@@ -84,7 +84,7 @@ module kb_ke_apps {
   typedef structure {
     obj_ref matrix_ref;
     string workspace_name;
-    string cluster_set_suffix;
+    string cluster_set_name;
     int k_num;
 
     string dist_metric;
