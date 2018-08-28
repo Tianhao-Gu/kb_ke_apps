@@ -34,7 +34,7 @@
   },{
     "id" : "cluster_set_name",
     "optional" : false,
-    "advanced" : true,
+    "advanced" : false,
     "allow_multiple" : false,
     "default_values" : [ "" ],
     "field_type" : "text",
