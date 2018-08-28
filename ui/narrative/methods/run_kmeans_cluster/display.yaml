@@ -1,7 +1,7 @@
 #
 # Define basic display information
 #
-name     : Create Kmeans Clustering for Matrix - v1.0.0
+name     : Create Kmeans Clustering for Matrix
 
 tooltip  : |
     Create kmeans clustering for Matrix object

@@ -1,7 +1,7 @@
 #
 # Define basic display information
 #
-name     : Create Hierarchical Clustering for Matrix - v1.0.0
+name     : Create Hierarchical Clustering for Matrix
 
 tooltip  : |
     Create hierarchical clustering for Matrix object
