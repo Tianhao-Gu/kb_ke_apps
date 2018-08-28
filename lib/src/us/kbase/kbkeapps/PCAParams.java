@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * Input of the run_pca function
  * cluster_set_ref: KBaseExperiments.ClusterSet object references
  * workspace_name: the name of the workspace
- * pca_matrix_suffix: suffix append to PCA (KBaseFeatureValues.FloatMatrix2D) object name
+ * pca_matrix_name: name of PCA (KBaseFeatureValues.FloatMatrix2D) object
  * </pre>
  * 
  */
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "cluster_set_ref",
     "workspace_name",
-    "pca_matrix_suffix"
+    "pca_matrix_name"
 })
 public class PCAParams {
 
@@ -34,8 +34,8 @@ public class PCAParams {
     private String clusterSetRef;
     @JsonProperty("workspace_name")
     private String workspaceName;
-    @JsonProperty("pca_matrix_suffix")
-    private String pcaMatrixSuffix;
+    @JsonProperty("pca_matrix_name")
+    private String pcaMatrixName;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("cluster_set_ref")
@@ -68,18 +68,18 @@ public class PCAParams {
         return this;
     }
 
-    @JsonProperty("pca_matrix_suffix")
-    public String getPcaMatrixSuffix() {
-        return pcaMatrixSuffix;
+    @JsonProperty("pca_matrix_name")
+    public String getPcaMatrixName() {
+        return pcaMatrixName;
     }
 
-    @JsonProperty("pca_matrix_suffix")
-    public void setPcaMatrixSuffix(String pcaMatrixSuffix) {
-        this.pcaMatrixSuffix = pcaMatrixSuffix;
+    @JsonProperty("pca_matrix_name")
+    public void setPcaMatrixName(String pcaMatrixName) {
+        this.pcaMatrixName = pcaMatrixName;
     }
 
-    public PCAParams withPcaMatrixSuffix(String pcaMatrixSuffix) {
-        this.pcaMatrixSuffix = pcaMatrixSuffix;
+    public PCAParams withPcaMatrixName(String pcaMatrixName) {
+        this.pcaMatrixName = pcaMatrixName;
         return this;
     }
 
@@ -95,7 +95,7 @@ public class PCAParams {
 
     @Override
     public String toString() {
-        return ((((((((("PCAParams"+" [clusterSetRef=")+ clusterSetRef)+", workspaceName=")+ workspaceName)+", pcaMatrixSuffix=")+ pcaMatrixSuffix)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((("PCAParams"+" [clusterSetRef=")+ clusterSetRef)+", workspaceName=")+ workspaceName)+", pcaMatrixName=")+ pcaMatrixName)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
