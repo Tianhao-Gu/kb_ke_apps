@@ -1,7 +1,7 @@
 #
 # Define basic display information
 #
-name     : Create PCA Matrix - v1.0.0
+name     : Create PCA Matrix
 
 tooltip  : |
     Creates PCA matrix for a ClusterSet object
