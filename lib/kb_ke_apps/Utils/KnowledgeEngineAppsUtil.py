@@ -224,91 +224,95 @@ class KnowledgeEngineAppsUtil:
 
         return cluster_set_ref
 
-    def _generate_visualization_content(self, output_directory, feature_dendrogram_path,
-                                        feature_dendrogram_truncate_path,
-                                        condition_dendrogram_path,
-                                        condition_dendrogram_truncate_path):
+    def _generate_visualization_content(self, output_directory,
+                                        row_dendrogram_path,
+                                        row_dendrogram_truncate_path,
+                                        col_dendrogram_path,
+                                        col_dendrogram_truncate_path):
+
         """
         _generate_visualization_content: generate visualization html content
         """
 
         visualization_content = ''
 
-        if feature_dendrogram_path:
-            feature_dendrogram_name = 'feature_dendrogram.png'
-            feature_dendrogram_display_name = 'feature dendrogram'
+        if row_dendrogram_path:
+            row_dendrogram_name = 'row_dendrogram.png'
+            row_dendrogram_display_name = 'row dendrogram'
 
-            shutil.copy2(feature_dendrogram_path,
-                         os.path.join(output_directory, feature_dendrogram_name))
-
-            visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(
-                                                                        feature_dendrogram_name)
-            visualization_content += '<img src="{}" '.format(feature_dendrogram_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(
-                                                                feature_dendrogram_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(
-                                                                feature_dendrogram_display_name)
-
-        if feature_dendrogram_truncate_path:
-            feature_den_truncate_name = 'feature_dendrogram_last12.png'
-            feature_den_truncate_display_name = 'feature dendrogram truncated (last 12 merges)'
-
-            shutil.copy2(feature_dendrogram_truncate_path,
-                         os.path.join(output_directory, feature_den_truncate_name))
+            shutil.copy2(row_dendrogram_path,
+                         os.path.join(output_directory, row_dendrogram_name))
 
             visualization_content += '<div class="gallery">'
             visualization_content += '<a target="_blank" href="{}">'.format(
-                                                                        feature_den_truncate_name)
-            visualization_content += '<img src="{}" '.format(feature_den_truncate_name)
+                                                                        row_dendrogram_name)
+            visualization_content += '<img src="{}" '.format(row_dendrogram_name)
             visualization_content += 'alt="{}" width="600" height="400">'.format(
-                                                                feature_den_truncate_display_name)
+                                                                row_dendrogram_display_name)
             visualization_content += '</a><div class="desc">{}</div></div>'.format(
-                                                                feature_den_truncate_display_name)
+                                                                row_dendrogram_display_name)
 
-        if condition_dendrogram_path:
-            condition_dendrogram_name = 'condition_dendrogram.png'
-            condition_dendrogram_display_name = 'condition dendrogram'
+        if row_dendrogram_truncate_path:
+            row_den_truncate_name = 'row_dendrogram_last12.png'
+            row_den_truncate_display_name = 'row dendrogram truncated (last 12 merges)'
 
-            shutil.copy2(condition_dendrogram_path,
-                         os.path.join(output_directory, condition_dendrogram_name))
+            shutil.copy2(row_dendrogram_truncate_path,
+                         os.path.join(output_directory, row_den_truncate_name))
 
             visualization_content += '<div class="gallery">'
             visualization_content += '<a target="_blank" href="{}">'.format(
-                                                                        condition_dendrogram_name)
-            visualization_content += '<img src="{}" '.format(condition_dendrogram_name)
+                                                                        row_den_truncate_name)
+            visualization_content += '<img src="{}" '.format(row_den_truncate_name)
             visualization_content += 'alt="{}" width="600" height="400">'.format(
-                                                                condition_dendrogram_display_name)
+                                                                row_den_truncate_display_name)
             visualization_content += '</a><div class="desc">{}</div></div>'.format(
-                                                                condition_dendrogram_display_name)
+                                                                row_den_truncate_display_name)
 
-        if condition_dendrogram_truncate_path:
-            condition_den_truncate_name = 'condition_dendrogram_last12.png'
-            condition_den_truncate_display_name = 'condition dendrogram truncated (last 12 merges)'
+        if col_dendrogram_path:
+            col_dendrogram_name = 'column_dendrogram.png'
+            col_dendrogram_display_name = 'column dendrogram'
 
-            shutil.copy2(condition_dendrogram_truncate_path,
-                         os.path.join(output_directory, condition_den_truncate_name))
+            shutil.copy2(col_dendrogram_path,
+                         os.path.join(output_directory, col_dendrogram_name))
 
             visualization_content += '<div class="gallery">'
             visualization_content += '<a target="_blank" href="{}">'.format(
-                                                                    condition_den_truncate_name)
-            visualization_content += '<img src="{}" '.format(condition_den_truncate_name)
+                                                                        col_dendrogram_name)
+            visualization_content += '<img src="{}" '.format(col_dendrogram_name)
             visualization_content += 'alt="{}" width="600" height="400">'.format(
-                                                            condition_den_truncate_display_name)
+                                                                col_dendrogram_display_name)
             visualization_content += '</a><div class="desc">{}</div></div>'.format(
-                                                            condition_den_truncate_display_name)
+                                                                col_dendrogram_display_name)
+
+        if col_dendrogram_truncate_path:
+            col_den_truncate_name = 'column_dendrogram_last12.png'
+            col_den_truncate_display_name = 'column dendrogram truncated (last 12 merges)'
+
+            shutil.copy2(col_dendrogram_truncate_path,
+                         os.path.join(output_directory, col_den_truncate_name))
+
+            visualization_content += '<div class="gallery">'
+            visualization_content += '<a target="_blank" href="{}">'.format(
+                                                                    col_den_truncate_name)
+            visualization_content += '<img src="{}" '.format(col_den_truncate_name)
+            visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                            col_den_truncate_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                            col_den_truncate_display_name)
 
         if not visualization_content:
             visualization_content = '<p>Dendrogram is too large to be printed.</p>'
 
         return visualization_content
 
-    def _generate_hierarchical_html_report(self, feature_set_set_refs, feature_dendrogram_path,
-                                           feature_dendrogram_truncate_path,
-                                           condition_dendrogram_path,
-                                           condition_dendrogram_truncate_path):
+    def _generate_hierarchical_html_report(self, cluster_set_refs,
+                                           row_dendrogram_path,
+                                           row_dendrogram_truncate_path,
+                                           col_dendrogram_path,
+                                           col_dendrogram_truncate_path):
         """
-        _generate_html_report: generate html summary report
+        _generate_hierarchical_html_report: generate html summary report for hierarchical
+                                            clustering app
         """
 
         log('start generating html report')
@@ -316,95 +320,19 @@ class KnowledgeEngineAppsUtil:
 
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
-        result_file_path = os.path.join(output_directory, 'report.html')
+        result_file_path = os.path.join(output_directory, 'hier_report.html')
 
         visualization_content = self._generate_visualization_content(
                                                             output_directory,
-                                                            feature_dendrogram_path,
-                                                            feature_dendrogram_truncate_path,
-                                                            condition_dendrogram_path,
-                                                            condition_dendrogram_truncate_path)
-
-        overview_content = ''
-        for feature_set_set_ref in feature_set_set_refs:
-
-            feature_set_set_obj = self.ws.get_objects2({'objects':
-                                                        [{'ref':
-                                                         feature_set_set_ref}]})['data'][0]
-            feature_set_set_data = feature_set_set_obj['data']
-            feature_set_set_info = feature_set_set_obj['info']
-
-            feature_set_set_name = feature_set_set_info[1]
-
-            items = feature_set_set_data['items']
-
-            if '_column' in feature_set_set_name:
-                overview_content += '<p><br/></p>'
-                overview_content += '<br/><table><tr><th>Generated Condition Cluster Set'
-                overview_content += '</th></tr>'
-                overview_content += '<tr><td>{} ({})'.format(feature_set_set_name,
-                                                             feature_set_set_ref)
-                overview_content += '</td></tr></table>'
-
-                overview_content += '<p><br/></p>'
-
-                overview_content += '<br/><table><tr><th>Generated Condition Cluster'
-                overview_content += '</th><th></th><th></th><th></th></tr>'
-                overview_content += '<tr><th>Cluster Name</th>'
-                overview_content += '<th>Condition Count</th>'
-                overview_content += '</tr>'
-                for item in items:
-                    feature_set_ref = item['ref']
-                    feature_set_object = self.ws.get_objects2({'objects':
-                                                               [{'ref':
-                                                                feature_set_ref}]})['data'][0]
-
-                    feature_set_data = feature_set_object['data']
-                    feature_set_info = feature_set_object['info']
-                    feature_set_name = feature_set_info[1]
-                    number_features = len(feature_set_data['element_ordering'])
-
-                    overview_content += '<tr><td>{} ({})</td>'.format(feature_set_name,
-                                                                      feature_set_ref)
-                    overview_content += '<td>{}</td></tr>'.format(number_features)
-                overview_content += '</table>'
-            else:
-                overview_content += '<p><br/></p>'
-                overview_content += '<br/><table><tr><th>Generated Feature Cluster Set'
-                overview_content += '</th></tr>'
-                overview_content += '<tr><td>{} ({})'.format(feature_set_set_name,
-                                                             feature_set_set_ref)
-                overview_content += '</td></tr></table>'
-
-                overview_content += '<p><br/></p>'
-
-                overview_content += '<br/><table><tr><th>Generated Feature Clusters'
-                overview_content += '</th><th></th><th></th><th></th></tr>'
-                overview_content += '<tr><th>Cluster Name</th>'
-                overview_content += '<th>Feature Count</th>'
-                overview_content += '</tr>'
-                for item in items:
-                    feature_set_ref = item['ref']
-                    feature_set_object = self.ws.get_objects2({'objects':
-                                                               [{'ref':
-                                                                feature_set_ref}]})['data'][0]
-
-                    feature_set_data = feature_set_object['data']
-                    feature_set_info = feature_set_object['info']
-                    feature_set_name = feature_set_info[1]
-                    number_features = len(feature_set_data['element_ordering'])
-
-                    overview_content += '<tr><td>{} ({})</td>'.format(feature_set_name,
-                                                                      feature_set_ref)
-                    overview_content += '<td>{}</td></tr>'.format(number_features)
-                overview_content += '</table>'
+                                                            row_dendrogram_path,
+                                                            row_dendrogram_truncate_path,
+                                                            col_dendrogram_path,
+                                                            col_dendrogram_truncate_path)
 
         with open(result_file_path, 'w') as result_file:
-            with open(os.path.join(os.path.dirname(__file__), 'report_template.html'),
+            with open(os.path.join(os.path.dirname(__file__), 'hier_report_template.html'),
                       'r') as report_template_file:
                 report_template = report_template_file.read()
-                report_template = report_template.replace('<p>Overview_Content</p>',
-                                                          overview_content)
                 report_template = report_template.replace('<p>Visualization_Content</p>',
                                                           visualization_content)
                 result_file.write(report_template)
@@ -419,11 +347,11 @@ class KnowledgeEngineAppsUtil:
                             })
         return html_report
 
-    def _generate_hierarchical_cluster_report(self, feature_set_set_refs, workspace_name,
-                                              feature_dendrogram_path,
-                                              feature_dendrogram_truncate_path,
-                                              condition_dendrogram_path,
-                                              condition_dendrogram_truncate_path):
+    def _generate_hierarchical_cluster_report(self, cluster_set_refs, workspace_name,
+                                              row_dendrogram_path,
+                                              row_dendrogram_truncate_path,
+                                              col_dendrogram_path,
+                                              col_dendrogram_truncate_path):
         """
         _generate_hierarchical_cluster_report: generate summary report
         """
@@ -431,30 +359,16 @@ class KnowledgeEngineAppsUtil:
         log('creating report')
 
         output_html_files = self._generate_hierarchical_html_report(
-                                                        feature_set_set_refs,
-                                                        feature_dendrogram_path,
-                                                        feature_dendrogram_truncate_path,
-                                                        condition_dendrogram_path,
-                                                        condition_dendrogram_truncate_path)
+                                                        cluster_set_refs,
+                                                        row_dendrogram_path,
+                                                        row_dendrogram_truncate_path,
+                                                        col_dendrogram_path,
+                                                        col_dendrogram_truncate_path)
 
         objects_created = []
-        for feature_set_set_ref in feature_set_set_refs:
-
-            feature_set_set_data = self.ws.get_objects2({'objects':
-                                                        [{'ref':
-                                                         feature_set_set_ref}]})['data'][0]['data']
-
-            items = feature_set_set_data['items']
-
-            description_set = 'Cluster Set'
-            description_object = 'Cluster'
-            objects_created.append({'ref': feature_set_set_ref,
-                                    'description': description_set})
-
-            for item in items:
-                feature_set_ref = item['ref']
-                objects_created.append({'ref': feature_set_ref,
-                                        'description': description_object})
+        for cluster_set_ref in cluster_set_refs:
+            objects_created.append({'ref': cluster_set_ref,
+                                    'description': 'Hierarchical ClusterSet'})
 
         report_params = {'message': '',
                          'workspace_name': workspace_name,
@@ -498,7 +412,7 @@ class KnowledgeEngineAppsUtil:
 
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
-        result_file_path = os.path.join(output_directory, 'report.html')
+        result_file_path = os.path.join(output_directory, 'pca_report.html')
 
         visualization_content = ''
 
@@ -675,7 +589,7 @@ class KnowledgeEngineAppsUtil:
         flat_cluster = fcluster_ret['flat_cluster']
 
         # generate dendrogram
-        if merges < 1500:
+        try:
             dendrogram_params = {'linkage_matrix': linkage_matrix,
                                  'dist_threshold': dist_threshold,
                                  'labels': labels}
@@ -683,11 +597,11 @@ class KnowledgeEngineAppsUtil:
             dendrogram_ret = self.ke_util.run_dendrogram(dendrogram_params)
 
             dendrogram_path = dendrogram_ret['result_plots'][0]
-        else:
+        except:
             dendrogram_path = None
 
         # generate truncated (last 12 merges) dendrogram
-        if merges > 24:
+        if merges > 256:
             dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
                                           'dist_threshold': dist_threshold,
                                           'labels': labels,
@@ -915,11 +829,11 @@ class KnowledgeEngineAppsUtil:
                             https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.fcluster.html
 
         return:
-        feature_set_set_refs: a list of result FeatureSetSet object references
+        cluster_set_refs: KBaseExperiments.ClusterSet object references
         report_name: report name generated by KBaseReport
         report_ref: report reference generated by KBaseReport
         """
-        log('--->\nrunning run_expression_matrix_cluster\n' +
+        log('--->\nrunning run_hierarchical_cluster\n' +
             'params:\n{}'.format(json.dumps(params, indent=1)))
 
         self._validate_run_hierarchical_cluster_params(params)
@@ -940,8 +854,8 @@ class KnowledgeEngineAppsUtil:
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
 
         (row_flat_cluster,
-         feature_dendrogram_path,
-         feature_dendrogram_truncate_path) = self._build_flat_cluster(
+         row_dendrogram_path,
+         row_dendrogram_truncate_path) = self._build_flat_cluster(
                                                             data_matrix,
                                                             dist_threshold,
                                                             dist_metric=dist_metric,
@@ -949,8 +863,8 @@ class KnowledgeEngineAppsUtil:
                                                             fcluster_criterion=fcluster_criterion)
 
         (col_flat_cluster,
-         condition_dendrogram_path,
-         condition_dendrogram_truncate_path) = self._build_flat_cluster(
+         col_dendrogram_path,
+         col_dendrogram_truncate_path) = self._build_flat_cluster(
                                                             transpose_data_matrix,
                                                             dist_threshold,
                                                             dist_metric=dist_metric,
@@ -994,7 +908,12 @@ class KnowledgeEngineAppsUtil:
 
         returnVal = {'cluster_set_refs': cluster_set_refs}
 
-        report_output = self._generate_kmeans_cluster_report(cluster_set_refs, workspace_name)
+        report_output = self._generate_hierarchical_cluster_report(cluster_set_refs,
+                                                                   workspace_name,
+                                                                   row_dendrogram_path,
+                                                                   row_dendrogram_truncate_path,
+                                                                   col_dendrogram_path,
+                                                                   col_dendrogram_truncate_path)
         returnVal.update(report_output)
 
         return returnVal
