@@ -33,11 +33,11 @@ parameters :
         Distance Threshold
     short-hint: |
         Distance Threshold
-  cluster_set_suffix :
+  cluster_set_name :
     ui-name : |
-        Clustering Object Name Suffix
+        ClusterSet Object Name
     short-hint : |
-        Clustering Object Name Suffix
+        ClusterSet Object Name
   dist_metric :
     ui-name : |
         Distance Metric

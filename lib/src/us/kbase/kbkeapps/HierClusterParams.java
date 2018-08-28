@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * Input of the run_hierarchical_cluster function
  * matrix_ref: Matrix object reference
  * workspace_name: the name of the workspace
- * cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+ * cluster_set_name: KBaseExperiments.ClusterSet object name
  * dist_threshold: the threshold to apply when forming flat clusters
  * Optional arguments:
  * dist_metric: The distance metric to use. Default set to 'euclidean'.
@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "matrix_ref",
     "workspace_name",
-    "cluster_set_suffix",
+    "cluster_set_name",
     "dist_threshold",
     "dist_metric",
     "linkage_method",
@@ -58,8 +58,8 @@ public class HierClusterParams {
     private String matrixRef;
     @JsonProperty("workspace_name")
     private String workspaceName;
-    @JsonProperty("cluster_set_suffix")
-    private String clusterSetSuffix;
+    @JsonProperty("cluster_set_name")
+    private String clusterSetName;
     @JsonProperty("dist_threshold")
     private Double distThreshold;
     @JsonProperty("dist_metric")
@@ -100,18 +100,18 @@ public class HierClusterParams {
         return this;
     }
 
-    @JsonProperty("cluster_set_suffix")
-    public String getClusterSetSuffix() {
-        return clusterSetSuffix;
+    @JsonProperty("cluster_set_name")
+    public String getClusterSetName() {
+        return clusterSetName;
     }
 
-    @JsonProperty("cluster_set_suffix")
-    public void setClusterSetSuffix(String clusterSetSuffix) {
-        this.clusterSetSuffix = clusterSetSuffix;
+    @JsonProperty("cluster_set_name")
+    public void setClusterSetName(String clusterSetName) {
+        this.clusterSetName = clusterSetName;
     }
 
-    public HierClusterParams withClusterSetSuffix(String clusterSetSuffix) {
-        this.clusterSetSuffix = clusterSetSuffix;
+    public HierClusterParams withClusterSetName(String clusterSetName) {
+        this.clusterSetName = clusterSetName;
         return this;
     }
 
@@ -187,7 +187,7 @@ public class HierClusterParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((("HierClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetSuffix=")+ clusterSetSuffix)+", distThreshold=")+ distThreshold)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((("HierClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetName=")+ clusterSetName)+", distThreshold=")+ distThreshold)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

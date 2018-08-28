@@ -67,7 +67,7 @@ class KnowledgeEngineAppsUtil:
         log('start validating run_kmeans_cluster params')
 
         # check for required parameters
-        for p in ['matrix_ref', 'workspace_name', 'cluster_set_suffix',
+        for p in ['matrix_ref', 'workspace_name', 'cluster_set_name',
                   'k_num']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
@@ -88,7 +88,7 @@ class KnowledgeEngineAppsUtil:
         log('start validating run_hierarchical_cluster params')
 
         # check for required parameters
-        for p in ['matrix_ref', 'workspace_name', 'cluster_set_suffix',
+        for p in ['matrix_ref', 'workspace_name', 'cluster_set_name',
                   'dist_threshold']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
@@ -805,7 +805,7 @@ class KnowledgeEngineAppsUtil:
 
         matrix_ref: Matrix object reference
         workspace_name: the name of the workspace
-        cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+        cluster_set_name: KBaseExperiments.ClusterSet object name
         k_num: number of clusters to form
 
         Optional arguments:
@@ -828,12 +828,11 @@ class KnowledgeEngineAppsUtil:
 
         matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
-        cluster_set_suffix = params.get('cluster_set_suffix')
+        cluster_set_name = params.get('cluster_set_name')
         k_num = params.get('k_num')
         dist_metric = params.get('dist_metric')
 
         matrix_object = self.ws.get_objects2({'objects': [{'ref': matrix_ref}]})['data'][0]
-        matrix_info = matrix_object['info']
         matrix_data = matrix_object['data']
 
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
@@ -846,14 +845,12 @@ class KnowledgeEngineAppsUtil:
                                                          dist_metric=dist_metric)
 
         genome_ref = matrix_data.get('genome_ref')
-        matrix_name = matrix_info[1]
-
         clustering_parameters = {'k_num': str(k_num),
                                  'dist_metric': str(dist_metric)}
 
         cluster_set_refs = []
 
-        row_cluster_set_name = matrix_name + '_row' + cluster_set_suffix
+        row_cluster_set_name = cluster_set_name + '_row'
         row_cluster_set = self._build_kmeans_cluster_set(
                                                     row_kmeans_clusters,
                                                     row_cluster_set_name,
@@ -865,7 +862,7 @@ class KnowledgeEngineAppsUtil:
                                                     clustering_parameters)
         cluster_set_refs.append(row_cluster_set)
 
-        col_cluster_set_name = matrix_name + '_column' + cluster_set_suffix
+        col_cluster_set_name = cluster_set_name + '_column'
         col_cluster_set = self._build_kmeans_cluster_set(
                                                     col_kmeans_clusters,
                                                     col_cluster_set_name,
@@ -891,7 +888,7 @@ class KnowledgeEngineAppsUtil:
 
         matrix_ref: Matrix object reference
         workspace_name: the name of the workspace
-        cluster_set_suffix: suffix append to KBaseExperiments.ClusterSet object name
+        cluster_set_name: KBaseExperiments.ClusterSet object name
         dist_threshold: the threshold to apply when forming flat clusters
 
         Optional arguments:
@@ -929,7 +926,7 @@ class KnowledgeEngineAppsUtil:
 
         matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
-        cluster_set_suffix = params.get('cluster_set_suffix')
+        cluster_set_name = params.get('cluster_set_name')
         dist_threshold = params.get('dist_threshold')
         dist_metric = params.get('dist_metric')
         linkage_method = params.get('linkage_method')
@@ -937,7 +934,6 @@ class KnowledgeEngineAppsUtil:
 
         matrix_object = self.ws.get_objects2({'objects': [{'ref':
                                                           matrix_ref}]})['data'][0]
-        matrix_info = matrix_object['info']
         matrix_data = matrix_object['data']
 
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
@@ -962,7 +958,6 @@ class KnowledgeEngineAppsUtil:
                                                             fcluster_criterion=fcluster_criterion)
 
         genome_ref = matrix_data.get('genome_ref')
-        matrix_name = matrix_info[1]
 
         clustering_parameters = {'dist_threshold': str(dist_threshold),
                                  'dist_metric': dist_metric,
@@ -971,7 +966,7 @@ class KnowledgeEngineAppsUtil:
 
         cluster_set_refs = []
 
-        row_cluster_set_name = matrix_name + '_row' + cluster_set_suffix
+        row_cluster_set_name = cluster_set_name + '_row'
         row_cluster_set = self._build_hierarchical_cluster_set(
                                                     row_flat_cluster,
                                                     row_cluster_set_name,
@@ -984,7 +979,7 @@ class KnowledgeEngineAppsUtil:
                                                     data_matrix)
         cluster_set_refs.append(row_cluster_set)
 
-        col_cluster_set_name = matrix_name + '_column' + cluster_set_suffix
+        col_cluster_set_name = cluster_set_name + '_column'
         col_cluster_set = self._build_hierarchical_cluster_set(
                                                     col_flat_cluster,
                                                     col_cluster_set_name,
@@ -998,14 +993,6 @@ class KnowledgeEngineAppsUtil:
         cluster_set_refs.append(col_cluster_set)
 
         returnVal = {'cluster_set_refs': cluster_set_refs}
-
-        # report_output = self._generate_hierarchical_cluster_report(
-        #                                                     cluster_set_refs,
-        #                                                     workspace_name,
-        #                                                     feature_dendrogram_path,
-        #                                                     feature_dendrogram_truncate_path,
-        #                                                     condition_dendrogram_path,
-        #                                                     condition_dendrogram_truncate_path)
 
         report_output = self._generate_kmeans_cluster_report(cluster_set_refs, workspace_name)
         returnVal.update(report_output)
