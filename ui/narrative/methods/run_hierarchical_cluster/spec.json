@@ -31,7 +31,7 @@
       "validate_as": "float"
     }
   },{
-    "id" : "feature_set_suffix",
+    "id" : "cluster_set_suffix",
     "optional" : false,
     "advanced" : true,
     "allow_multiple" : false,
@@ -175,8 +175,8 @@
             "target_property" : "dist_threshold"
         },
         {
-            "input_parameter" : "feature_set_suffix",
-            "target_property" : "feature_set_suffix"
+            "input_parameter" : "cluster_set_suffix",
+            "target_property" : "cluster_set_suffix"
         },
         {
           "input_parameter" : "dist_metric",
@@ -196,8 +196,8 @@
           "target_property": "wsName"
         },
         {
-         "service_method_output_path": [0,"feature_set_set_refs"],
-         "target_property": "feature_set_set_refs"
+         "service_method_output_path": [0,"cluster_set_refs"],
+         "target_property": "cluster_set_refs"
         },
         {
           "service_method_output_path": [0, "report_name"],

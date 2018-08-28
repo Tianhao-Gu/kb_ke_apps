@@ -33,7 +33,7 @@ parameters :
         Distance Threshold
     short-hint: |
         Distance Threshold
-  feature_set_suffix :
+  cluster_set_suffix :
     ui-name : |
         Clustering Object Name Suffix
     short-hint : |
