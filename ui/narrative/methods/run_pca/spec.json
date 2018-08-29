@@ -20,6 +20,16 @@
       "valid_ws_types" : ["KBaseExperiments.ClusterSet"]
     }
   },{
+    "id" : "n_components",
+    "optional" : false,
+    "advanced" : true,
+    "allow_multiple" : false,
+    "default_values" : [ "2" ],
+    "field_type" : "text",
+    "text_options" : {
+      "validate_as": "int"
+    }
+  },{
     "id" : "pca_matrix_name",
     "optional" : false,
     "advanced" : false,
@@ -45,6 +55,10 @@
           "input_parameter" : "cluster_set_ref",
           "target_type_transform": "resolved-ref",
           "target_property" : "cluster_set_ref"
+        },
+        {
+            "input_parameter" : "n_components",
+            "target_property" : "n_components"
         },
         {
             "input_parameter" : "pca_matrix_name",

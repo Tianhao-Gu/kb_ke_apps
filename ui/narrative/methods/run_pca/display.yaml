@@ -29,6 +29,12 @@ parameters :
     short-hint : |
         ClusterSet Object
 
+  n_components :
+    ui-name : |
+        Number of Component
+    short-hint : |
+        Number of Component
+
   pca_matrix_name :
     ui-name : |
         PCA Matrix Name

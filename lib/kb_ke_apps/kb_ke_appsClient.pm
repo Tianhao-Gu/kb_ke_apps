@@ -337,6 +337,7 @@ PCAParams is a reference to a hash where the following keys are defined:
 	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	pca_matrix_name has a value which is a string
+	n_components has a value which is an int
 obj_ref is a string
 PCAOutput is a reference to a hash where the following keys are defined:
 	pca_ref has a value which is a kb_ke_apps.obj_ref
@@ -355,6 +356,7 @@ PCAParams is a reference to a hash where the following keys are defined:
 	cluster_set_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	pca_matrix_name has a value which is a string
+	n_components has a value which is an int
 obj_ref is a string
 PCAOutput is a reference to a hash where the following keys are defined:
 	pca_ref has a value which is a kb_ke_apps.obj_ref
@@ -796,6 +798,7 @@ Input of the run_pca function
 cluster_set_ref: KBaseExperiments.ClusterSet object references
 workspace_name: the name of the workspace
 pca_matrix_name: name of PCA (KBaseFeatureValues.FloatMatrix2D) object
+n_components - number of components (default 2)
 
 
 =item Definition
@@ -807,6 +810,7 @@ a reference to a hash where the following keys are defined:
 cluster_set_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
 pca_matrix_name has a value which is a string
+n_components has a value which is an int
 
 </pre>
 
@@ -818,6 +822,7 @@ a reference to a hash where the following keys are defined:
 cluster_set_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
 pca_matrix_name has a value which is a string
+n_components has a value which is an int
 
 
 =end text

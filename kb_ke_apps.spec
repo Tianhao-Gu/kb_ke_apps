@@ -108,11 +108,13 @@ module kb_ke_apps {
     cluster_set_ref: KBaseExperiments.ClusterSet object references
     workspace_name: the name of the workspace
     pca_matrix_name: name of PCA (KBaseFeatureValues.FloatMatrix2D) object
+    n_components - number of components (default 2)
   */
   typedef structure {
     obj_ref cluster_set_ref;
     string workspace_name;
     string pca_matrix_name;
+    int n_components;
   } PCAParams;
 
   /* Ouput of the run_pca function

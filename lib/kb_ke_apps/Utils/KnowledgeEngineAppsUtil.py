@@ -7,6 +7,7 @@ import shutil
 import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
+import itertools
 
 from kb_ke_util.kb_ke_utilClient import kb_ke_util
 from DataFileUtil.DataFileUtilClient import DataFileUtil
@@ -405,7 +406,7 @@ class KnowledgeEngineAppsUtil:
 
         return report_output
 
-    def _generate_pca_html_files(self, pca_plot):
+    def _generate_pca_html_files(self, pca_plots, n_components):
 
         log('start generating html report')
         html_report = list()
@@ -416,19 +417,20 @@ class KnowledgeEngineAppsUtil:
 
         visualization_content = ''
 
-        pca_plot_name = os.path.basename(pca_plot)
-        pca_plot_display_name = '2 Component PCA'
+        for pca_plot in pca_plots:
+            pca_plot_name = os.path.basename(pca_plot)
+            pca_plot_display_name = '{} Component PCA'.format(n_components)
 
-        shutil.copy2(pca_plot,
-                     os.path.join(output_directory, pca_plot_name))
+            shutil.copy2(pca_plot,
+                         os.path.join(output_directory, pca_plot_name))
 
-        visualization_content += '<div class="gallery">'
-        visualization_content += '<a target="_blank" href="{}">'.format(pca_plot_name)
-        visualization_content += '<img src="{}" '.format(pca_plot_name)
-        visualization_content += 'alt="{}" width="600" height="600">'.format(
-                                                                pca_plot_display_name)
-        visualization_content += '</a><div class="desc">{}</div></div>'.format(
-                                                                pca_plot_display_name)
+            visualization_content += '<div class="gallery">'
+            visualization_content += '<a target="_blank" href="{}">'.format(pca_plot_name)
+            visualization_content += '<img src="{}" '.format(pca_plot_name)
+            visualization_content += 'alt="{}" width="600" height="600">'.format(
+                                                                    pca_plot_display_name)
+            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                    pca_plot_display_name)
 
         with open(result_file_path, 'w') as result_file:
             with open(os.path.join(os.path.dirname(__file__), 'pca_report_template.html'),
@@ -452,42 +454,52 @@ class KnowledgeEngineAppsUtil:
         """
         _generate_pca_plot: generate a plot for PCA data
         """
-
+        pca_plots = []
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
-        pca_plot = os.path.join(output_directory, 'pca.png')
 
         df = pd.DataFrame(pca_matrix_data.get('values'),
                           index=pca_matrix_data.get('row_ids'),
                           columns=pca_matrix_data.get('col_ids'))
 
-        plt.switch_backend('agg')
+        n_components = range(1, df.columns.size)
+        all_pairs = list(itertools.combinations(n_components, 2))
 
-        fig = plt.figure(figsize=(8, 8))
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_xlabel('Principal Component 1', fontsize=15)
-        ax.set_ylabel('Principal Component 2', fontsize=15)
-        ax.set_title('2 component PCA', fontsize=20)
+        for pair in all_pairs:
+            first_component = pair[0]
+            second_component = pair[1]
+            pca_plot = os.path.join(output_directory, 'pca_{}_{}.png'.format(first_component,
+                                                                             second_component))
 
-        clusters = list(set(['cluster_{}'.format(x) for x in df['cluster'].tolist()]))
-        colors = ['red', 'green', 'blue', 'orange', 'yellow', 'pink', 'lightcyan', 'cyan']
-        if len(clusters) > len(colors):
-            np.random.seed(12345)
-            n = 1024
-            colors = np.random.rand(n)
+            plt.switch_backend('agg')
 
-        for cluster, color in zip(clusters, colors):
-            indicesToKeep = df['cluster'] == int(cluster.split('_')[-1])
-            ax.scatter(df.loc[indicesToKeep, 'principal_component_1'],
-                       df.loc[indicesToKeep, 'principal_component_2'],
-                       c=str(color),
-                       s=50)
-        ax.legend(clusters)
-        ax.grid()
+            fig = plt.figure(figsize=(8, 8))
+            ax = fig.add_subplot(1, 1, 1)
+            ax.set_xlabel('Principal Component {}'.format(first_component), fontsize=15)
+            ax.set_ylabel('Principal Component {}'.format(second_component), fontsize=15)
+            ax.set_title('{} component PCA'.format(len(n_components)), fontsize=20)
 
-        plt.savefig(pca_plot)
+            clusters = list(set(['cluster_{}'.format(x) for x in df['cluster'].tolist()]))
+            colors = ['red', 'green', 'blue', 'orange', 'yellow', 'pink', 'lightcyan', 'cyan']
+            if len(clusters) > len(colors):
+                np.random.seed(12345)
+                n = 1024
+                colors = np.random.rand(n)
 
-        return pca_plot
+            for cluster, color in zip(clusters, colors):
+                indicesToKeep = df['cluster'] == int(cluster.split('_')[-1])
+                ax.scatter(df.loc[indicesToKeep, 'principal_component_{}'.format(first_component)],
+                           df.loc[indicesToKeep, 'principal_component_{}'.format(second_component)],
+                           c=str(color),
+                           s=50)
+            ax.legend(clusters)
+            ax.grid()
+
+            plt.savefig(pca_plot)
+
+            pca_plots.append(pca_plot)
+
+        return pca_plots, len(n_components)
 
     def _generate_pca_report(self, pca_ref, pca_matrix_data, workspace_name):
         """
@@ -497,8 +509,8 @@ class KnowledgeEngineAppsUtil:
         objects_created.append({'ref': pca_ref,
                                 'description': 'PCA Matrix'})
 
-        pca_plot = self._generate_pca_plot(pca_matrix_data)
-        output_html_files = self._generate_pca_html_files(pca_plot)
+        pca_plots, n_components = self._generate_pca_plot(pca_matrix_data)
+        output_html_files = self._generate_pca_html_files(pca_plots, n_components)
         report_params = {'message': '',
                          'objects_created': objects_created,
                          'workspace_name': workspace_name,
@@ -669,6 +681,7 @@ class KnowledgeEngineAppsUtil:
         cluster_set_ref: KBaseExperiments.ClusterSet object references
         workspace_name: the name of the workspace
         pca_matrix_name: name of PCA (KBaseFeatureValues.FloatMatrix2D) object
+        n_components - number of components (default 2)
 
         pca_ref: PCA object reference (as KBaseFeatureValues.FloatMatrix2D data type)
         report_name: report name generated by KBaseReport
@@ -680,6 +693,7 @@ class KnowledgeEngineAppsUtil:
         cluster_set_ref = params.get('cluster_set_ref')
         workspace_name = params.get('workspace_name')
         pca_matrix_name = params.get('pca_matrix_name')
+        n_components = int(params.get('n_components', 2))
 
         cluster_set_source = self.dfu.get_objects(
                     {"object_refs": [cluster_set_ref]})['data'][0]
@@ -697,7 +711,8 @@ class KnowledgeEngineAppsUtil:
             data_matrix = pd.read_json(data_matrix).T.to_json()  # transpose matrix
 
         # run pca algorithm
-        pca_params = {'data_matrix': data_matrix}
+        pca_params = {'data_matrix': data_matrix,
+                      'n_components': n_components}
         PCA_matrix = self.ke_util.run_PCA(pca_params).get('PCA_matrix')
 
         df = pd.read_json(PCA_matrix)
