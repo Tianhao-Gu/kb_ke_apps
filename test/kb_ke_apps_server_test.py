@@ -332,7 +332,8 @@ class kb_ke_appsTest(unittest.TestCase):
 
         params = {'cluster_set_ref': self.cluster_set_ref,
                   'workspace_name': self.getWsName(),
-                  'pca_matrix_name': 'test_pca_matrix'}
+                  'pca_matrix_name': 'test_pca_matrix',
+                  'n_components': 3}
         ret = self.getImpl().run_pca(self.ctx, params)[0]
 
         self.assertTrue('report_name' in ret)
@@ -344,6 +345,7 @@ class kb_ke_appsTest(unittest.TestCase):
         pca_matrix_data = self.dfu.get_objects(
                     {"object_refs": [pca_matrix_ref]})['data'][0]['data']
         expected_row_ids = [u'WRI_RS00010_CDS_1', u'WRI_RS00015_CDS_1', u'WRI_RS00025_CDS_1']
-        expected_col_ids = [u'principal_component_1', u'principal_component_2', u'cluster']
+        expected_col_ids = [u'principal_component_1', u'principal_component_2',
+                            u'principal_component_3', u'cluster']
         self.assertItemsEqual(expected_row_ids, pca_matrix_data.get('row_ids'))
         self.assertItemsEqual(expected_col_ids, pca_matrix_data.get('col_ids'))

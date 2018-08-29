@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * cluster_set_ref: KBaseExperiments.ClusterSet object references
  * workspace_name: the name of the workspace
  * pca_matrix_name: name of PCA (KBaseFeatureValues.FloatMatrix2D) object
+ * n_components - number of components (default 2)
  * </pre>
  * 
  */
@@ -26,7 +27,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({
     "cluster_set_ref",
     "workspace_name",
-    "pca_matrix_name"
+    "pca_matrix_name",
+    "n_components"
 })
 public class PCAParams {
 
@@ -36,6 +38,8 @@ public class PCAParams {
     private String workspaceName;
     @JsonProperty("pca_matrix_name")
     private String pcaMatrixName;
+    @JsonProperty("n_components")
+    private Long nComponents;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
     @JsonProperty("cluster_set_ref")
@@ -83,6 +87,21 @@ public class PCAParams {
         return this;
     }
 
+    @JsonProperty("n_components")
+    public Long getNComponents() {
+        return nComponents;
+    }
+
+    @JsonProperty("n_components")
+    public void setNComponents(Long nComponents) {
+        this.nComponents = nComponents;
+    }
+
+    public PCAParams withNComponents(Long nComponents) {
+        this.nComponents = nComponents;
+        return this;
+    }
+
     @JsonAnyGetter
     public Map<String, Object> getAdditionalProperties() {
         return this.additionalProperties;
@@ -95,7 +114,7 @@ public class PCAParams {
 
     @Override
     public String toString() {
-        return ((((((((("PCAParams"+" [clusterSetRef=")+ clusterSetRef)+", workspaceName=")+ workspaceName)+", pcaMatrixName=")+ pcaMatrixName)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((("PCAParams"+" [clusterSetRef=")+ clusterSetRef)+", workspaceName=")+ workspaceName)+", pcaMatrixName=")+ pcaMatrixName)+", nComponents=")+ nComponents)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

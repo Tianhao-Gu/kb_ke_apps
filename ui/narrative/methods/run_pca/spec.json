@@ -20,6 +20,16 @@
       "valid_ws_types" : ["KBaseExperiments.ClusterSet"]
     }
   },{
+    "id" : "n_components",
+    "optional" : false,
+    "advanced" : false,
+    "allow_multiple" : false,
+    "default_values" : [ "2" ],
+    "field_type" : "text",
+    "text_options" : {
+      "validate_as": "int"
+    }
+  },{
     "id" : "pca_matrix_name",
     "optional" : false,
     "advanced" : false,
