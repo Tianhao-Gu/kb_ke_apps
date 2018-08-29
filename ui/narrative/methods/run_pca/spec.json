@@ -57,6 +57,10 @@
           "target_property" : "cluster_set_ref"
         },
         {
+            "input_parameter" : "n_components",
+            "target_property" : "n_components"
+        },
+        {
             "input_parameter" : "pca_matrix_name",
             "target_property" : "pca_matrix_name"
         }],
