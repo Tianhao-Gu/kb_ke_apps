@@ -482,15 +482,17 @@ class KnowledgeEngineAppsUtil:
             clusters = list(set(['cluster_{}'.format(x) for x in df['cluster'].tolist()]))
             colors = ['red', 'green', 'blue', 'orange', 'yellow', 'pink', 'lightcyan', 'cyan']
             if len(clusters) > len(colors):
-                np.random.seed(12345)
-                n = 1024
-                colors = np.random.rand(n)
+                np.random.seed(19680801)
+                N = len(clusters)
+                colors = []
+                for i in range(N):
+                    colors.append(np.random.rand(3,))
 
             for cluster, color in zip(clusters, colors):
                 indicesToKeep = df['cluster'] == int(cluster.split('_')[-1])
                 ax.scatter(df.loc[indicesToKeep, 'principal_component_{}'.format(first_component)],
                            df.loc[indicesToKeep, 'principal_component_{}'.format(second_component)],
-                           c=str(color),
+                           c=color,
                            s=50)
             ax.legend(clusters)
             ax.grid()
