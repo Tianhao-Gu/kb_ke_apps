@@ -594,6 +594,7 @@ class KnowledgeEngineAppsUtil:
 
         height = max([item[2] for item in linkage_matrix])
         dist_threshold = height * dist_cutoff_rate
+        log('Height: {} Setting dist_threshold: {}'.format(height, dist_threshold))
         merges = len(linkage_matrix)
 
         # generate flat clusters
