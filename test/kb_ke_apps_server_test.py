@@ -56,7 +56,7 @@ class kb_ke_appsTest(unittest.TestCase):
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
 
-        cls.gfu = GenomeFileUtil(cls.callback_url, service_ver='dev')
+        cls.gfu = GenomeFileUtil(cls.callback_url)
         cls.dfu = DataFileUtil(cls.callback_url)
         cls.gen_api = GenericsAPI(cls.callback_url, service_ver='dev')
 

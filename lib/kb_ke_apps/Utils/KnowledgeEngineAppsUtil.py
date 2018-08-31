@@ -673,8 +673,8 @@ class KnowledgeEngineAppsUtil:
         self.srv_wiz_url = config['srv-wiz-url']
         self.scratch = config['scratch']
         self.dfu = DataFileUtil(self.callback_url)
-        self.ke_util = kb_ke_util(self.callback_url)
-        self.gen_api = GenericsAPI(self.callback_url)
+        self.ke_util = kb_ke_util(self.callback_url, service_ver="dev")
+        self.gen_api = GenericsAPI(self.callback_url, service_ver="dev")
 
         self.ws = Workspace(self.ws_url, token=self.token)
         self.set_client = SetAPI(self.srv_wiz_url)
