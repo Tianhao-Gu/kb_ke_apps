@@ -90,7 +90,7 @@ class KnowledgeEngineAppsUtil:
 
         # check for required parameters
         for p in ['matrix_ref', 'workspace_name', 'cluster_set_name',
-                  'dist_threshold']:
+                  'dist_cutoff_rate']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
@@ -568,7 +568,7 @@ class KnowledgeEngineAppsUtil:
 
         return float_matrix_ref, pca_matrix_data
 
-    def _build_flat_cluster(self, data_matrix, dist_threshold,
+    def _build_flat_cluster(self, data_matrix, dist_cutoff_rate,
                             dist_metric=None, linkage_method=None, fcluster_criterion=None):
         """
         _build_cluster: build flat clusters and dendrogram for data_matrix
@@ -589,6 +589,11 @@ class KnowledgeEngineAppsUtil:
 
         linkage_matrix = linkage_ret['linkage_matrix']
 
+        newick = self.ke_util.linkage_2_newick({'linkage_matrix': linkage_matrix,
+                                                'labels': labels})['newick']
+
+        height = max([item[2] for item in linkage_matrix])
+        dist_threshold = height * dist_cutoff_rate
         merges = len(linkage_matrix)
 
         # generate flat clusters
@@ -624,7 +629,7 @@ class KnowledgeEngineAppsUtil:
         else:
             dendrogram_truncate_path = None
 
-        return flat_cluster, dendrogram_path, dendrogram_truncate_path
+        return flat_cluster, labels, newick, dendrogram_path, dendrogram_truncate_path
 
     def _build_kmeans_cluster(self, data_matrix, k_num, dist_metric=None):
         """
@@ -668,8 +673,8 @@ class KnowledgeEngineAppsUtil:
         self.srv_wiz_url = config['srv-wiz-url']
         self.scratch = config['scratch']
         self.dfu = DataFileUtil(self.callback_url)
-        self.ke_util = kb_ke_util(self.callback_url, service_ver='dev')
-        self.gen_api = GenericsAPI(self.callback_url, service_ver='dev')
+        self.ke_util = kb_ke_util(self.callback_url)
+        self.gen_api = GenericsAPI(self.callback_url)
 
         self.ws = Workspace(self.ws_url, token=self.token)
         self.set_client = SetAPI(self.srv_wiz_url)
@@ -818,7 +823,7 @@ class KnowledgeEngineAppsUtil:
         matrix_ref: Matrix object reference
         workspace_name: the name of the workspace
         cluster_set_name: KBaseExperiments.ClusterSet object name
-        dist_threshold: the threshold to apply when forming flat clusters
+        dist_cutoff_rate: the threshold to apply when forming flat clusters
 
         Optional arguments:
         dist_metric: The distance metric to use. Default set to 'euclidean'.
@@ -856,7 +861,7 @@ class KnowledgeEngineAppsUtil:
         matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
         cluster_set_name = params.get('cluster_set_name')
-        dist_threshold = params.get('dist_threshold')
+        dist_cutoff_rate = float(params.get('dist_cutoff_rate'))
         dist_metric = params.get('dist_metric')
         linkage_method = params.get('linkage_method')
         fcluster_criterion = params.get('fcluster_criterion')
@@ -869,26 +874,30 @@ class KnowledgeEngineAppsUtil:
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
 
         (row_flat_cluster,
+         row_labels,
+         row_newick,
          row_dendrogram_path,
          row_dendrogram_truncate_path) = self._build_flat_cluster(
                                                             data_matrix,
-                                                            dist_threshold,
+                                                            dist_cutoff_rate,
                                                             dist_metric=dist_metric,
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
 
         (col_flat_cluster,
+         col_labels,
+         col_newick,
          col_dendrogram_path,
          col_dendrogram_truncate_path) = self._build_flat_cluster(
                                                             transpose_data_matrix,
-                                                            dist_threshold,
+                                                            dist_cutoff_rate,
                                                             dist_metric=dist_metric,
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
 
         genome_ref = matrix_data.get('genome_ref')
 
-        clustering_parameters = {'dist_threshold': str(dist_threshold),
+        clustering_parameters = {'dist_cutoff_rate': str(dist_cutoff_rate),
                                  'dist_metric': dist_metric,
                                  'linkage_method': linkage_method,
                                  'fcluster_criterion': fcluster_criterion}

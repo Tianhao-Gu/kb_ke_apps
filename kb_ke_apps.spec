@@ -16,7 +16,7 @@ module kb_ke_apps {
     matrix_ref: Matrix object reference
     workspace_name: the name of the workspace
     cluster_set_name: KBaseExperiments.ClusterSet object name
-    dist_threshold: the threshold to apply when forming flat clusters
+    dist_cutoff_rate: the threshold to apply when forming flat clusters
 
     Optional arguments:
     dist_metric: The distance metric to use. Default set to 'euclidean'.
@@ -44,7 +44,7 @@ module kb_ke_apps {
     obj_ref matrix_ref;
     string workspace_name;
     string cluster_set_name;
-    float dist_threshold;
+    float dist_cutoff_rate;
 
     string dist_metric;
     string linkage_method;

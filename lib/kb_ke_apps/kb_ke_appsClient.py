@@ -40,9 +40,9 @@ class kb_ke_apps(object):
            run_hierarchical_cluster function matrix_ref: Matrix object
            reference workspace_name: the name of the workspace
            cluster_set_name: KBaseExperiments.ClusterSet object name
-           dist_threshold: the threshold to apply when forming flat clusters
-           Optional arguments: dist_metric: The distance metric to use.
-           Default set to 'euclidean'. The distance function can be
+           dist_cutoff_rate: the threshold to apply when forming flat
+           clusters Optional arguments: dist_metric: The distance metric to
+           use. Default set to 'euclidean'. The distance function can be
            ["braycurtis", "canberra", "chebyshev", "cityblock",
            "correlation", "cosine", "dice", "euclidean", "hamming",
            "jaccard", "kulsinski", "matching", "rogerstanimoto",
@@ -61,7 +61,7 @@ class kb_ke_apps(object):
            hierarchy.fcluster.html) -> structure: parameter "matrix_ref" of
            type "obj_ref" (An X/Y/Z style reference), parameter
            "workspace_name" of String, parameter "cluster_set_name" of
-           String, parameter "dist_threshold" of Double, parameter
+           String, parameter "dist_cutoff_rate" of Double, parameter
            "dist_metric" of String, parameter "linkage_method" of String,
            parameter "fcluster_criterion" of String
         :returns: instance of type "HierClusterOutput" (Ouput of the
