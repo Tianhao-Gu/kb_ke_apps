@@ -28,11 +28,11 @@ parameters :
         Matrix Object
     short-hint : |
         Matrix Object
-  dist_threshold:
+  dist_cutoff_rate:
     ui-name : |
-        Distance Threshold
+        Height Cutoff Ratio
     short-hint: |
-        Distance Threshold
+        Height Cutoff Ratio
   cluster_set_name :
     ui-name : |
         ClusterSet Object Name

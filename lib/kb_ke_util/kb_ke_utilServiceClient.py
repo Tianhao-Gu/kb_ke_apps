@@ -35,6 +35,25 @@ class kb_ke_util(object):
             auth_svc=auth_svc,
             lookup_url=True)
 
+    def linkage_2_newick(self, params, context=None):
+        """
+        linkage_2_newick: convert a linkage matrix to newick format
+        :param params: instance of type "NewickParams" (Input of the
+           linkage_2_newick function linkage_matrix - hierarchical clustering
+           linkage matrix (refer to run_linkage return) labels - items
+           corresponding to each linkage_matrix element (If labels are given,
+           result flat_cluster will be mapped to element in labels.)) ->
+           structure: parameter "linkage_matrix" of list of list of Double,
+           parameter "labels" of list of String
+        :returns: instance of type "NewickOutput" (Ouput of the
+           linkage_2_newick function newick - newick representation of tree
+           https://en.wikipedia.org/wiki/Newick_format) -> structure:
+           parameter "newick" of String
+        """
+        return self._client.call_method(
+            'kb_ke_util.linkage_2_newick',
+            [params], self._service_ver, context)
+
     def run_PCA(self, params, context=None):
         """
         run_PCA: perform PCA on a n-dimensional matrix
@@ -44,7 +63,9 @@ class kb_ke_util(object):
            None}, u'condition_2': {u'gene_1': 0.2, u'gene_2': 0.4, u'gene_3':
            None}, u'condition_3': {u'gene_1': 0.3, u'gene_2': 0.5, u'gene_3':
            None}, u'condition_4': {u'gene_1': 0.4, u'gene_2': 0.6, u'gene_3':
-           None}}) -> structure: parameter "data_matrix" of String
+           None}} n_components - number of components (default 2)) ->
+           structure: parameter "data_matrix" of String, parameter
+           "n_components" of Long
         :returns: instance of type "PCAOutput" (Ouput of the run_PCA function
            PCA_matrix - PCA matrix in json format with principal_component_1,
            principal_component_2 col and same index as original data matrix)

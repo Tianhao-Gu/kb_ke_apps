@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  * matrix_ref: Matrix object reference
  * workspace_name: the name of the workspace
  * cluster_set_name: KBaseExperiments.ClusterSet object name
- * dist_threshold: the threshold to apply when forming flat clusters
+ * dist_cutoff_rate: the threshold to apply when forming flat clusters
  * Optional arguments:
  * dist_metric: The distance metric to use. Default set to 'euclidean'.
  *              The distance function can be
@@ -47,7 +47,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "matrix_ref",
     "workspace_name",
     "cluster_set_name",
-    "dist_threshold",
+    "dist_cutoff_rate",
     "dist_metric",
     "linkage_method",
     "fcluster_criterion"
@@ -60,8 +60,8 @@ public class HierClusterParams {
     private String workspaceName;
     @JsonProperty("cluster_set_name")
     private String clusterSetName;
-    @JsonProperty("dist_threshold")
-    private Double distThreshold;
+    @JsonProperty("dist_cutoff_rate")
+    private Double distCutoffRate;
     @JsonProperty("dist_metric")
     private String distMetric;
     @JsonProperty("linkage_method")
@@ -115,18 +115,18 @@ public class HierClusterParams {
         return this;
     }
 
-    @JsonProperty("dist_threshold")
-    public Double getDistThreshold() {
-        return distThreshold;
+    @JsonProperty("dist_cutoff_rate")
+    public Double getDistCutoffRate() {
+        return distCutoffRate;
     }
 
-    @JsonProperty("dist_threshold")
-    public void setDistThreshold(Double distThreshold) {
-        this.distThreshold = distThreshold;
+    @JsonProperty("dist_cutoff_rate")
+    public void setDistCutoffRate(Double distCutoffRate) {
+        this.distCutoffRate = distCutoffRate;
     }
 
-    public HierClusterParams withDistThreshold(Double distThreshold) {
-        this.distThreshold = distThreshold;
+    public HierClusterParams withDistCutoffRate(Double distCutoffRate) {
+        this.distCutoffRate = distCutoffRate;
         return this;
     }
 
@@ -187,7 +187,7 @@ public class HierClusterParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((("HierClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetName=")+ clusterSetName)+", distThreshold=")+ distThreshold)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((("HierClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetName=")+ clusterSetName)+", distCutoffRate=")+ distCutoffRate)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }
