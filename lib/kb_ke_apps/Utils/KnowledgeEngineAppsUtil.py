@@ -494,7 +494,7 @@ class KnowledgeEngineAppsUtil:
                            df.loc[indicesToKeep, 'principal_component_{}'.format(second_component)],
                            c=color,
                            s=50)
-            ax.legend(clusters)
+            ax.legend(clusters, loc='best')
             ax.grid()
 
             plt.savefig(pca_plot)
