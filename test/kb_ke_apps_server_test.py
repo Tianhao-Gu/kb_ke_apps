@@ -122,15 +122,16 @@ class kb_ke_appsTest(unittest.TestCase):
                   'matrix_name': 'test_ExpressionMatrix',
                   'workspace_name': cls.wsName,
                   'input_file_path': matrix_file_path,
-                  'genome_ref': cls.genome_ref}
+                  'genome_ref': cls.genome_ref,
+                  'scale': 'raw'}
         gen_api_ret = cls.gen_api.import_matrix_from_excel(params)
 
         cls.matrix_obj_ref = gen_api_ret.get('matrix_obj_ref')
         matrix_obj_data = cls.dfu.get_objects(
             {"object_refs": [cls.matrix_obj_ref]})['data'][0]['data']
 
-        cls.col_conditionset_ref = matrix_obj_data.get('col_conditionset_ref')
-        cls.row_conditionset_ref = matrix_obj_data.get('row_conditionset_ref')
+        cls.col_conditionset_ref = matrix_obj_data.get('col_attributemapping_ref')
+        cls.row_conditionset_ref = matrix_obj_data.get('row_attributemapping_ref')
 
         # upload KBaseExperiments.ClusterSet object
         object_type = 'KBaseExperiments.ClusterSet'
@@ -292,7 +293,7 @@ class kb_ke_appsTest(unittest.TestCase):
                   'workspace_name': self.getWsName(),
                   'cluster_set_name': 'test_hierarchical_cluster_1',
                   'dist_cutoff_rate': 0.5,
-                  'dist_metric': 'cityblock',
+                  'dist_metric': 'euclidean',
                   'linkage_method': 'ward',
                   'fcluster_criterion': 'distance'}
         ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
@@ -302,7 +303,7 @@ class kb_ke_appsTest(unittest.TestCase):
                   'workspace_name': self.getWsName(),
                   'cluster_set_name': 'test_hierarchical_cluster_2',
                   'dist_cutoff_rate': 0.6,
-                  'dist_metric': 'cityblock',
+                  'dist_metric': 'euclidean',
                   'linkage_method': 'ward',
                   'fcluster_criterion': 'distance'}
         ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]

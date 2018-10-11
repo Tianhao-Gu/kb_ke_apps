@@ -8,6 +8,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import numpy as np
 import itertools
+import seaborn as sns
 
 from kb_ke_util.kb_ke_utilClient import kb_ke_util
 from DataFileUtil.DataFileUtilClient import DataFileUtil
@@ -229,13 +230,29 @@ class KnowledgeEngineAppsUtil:
                                         row_dendrogram_path,
                                         row_dendrogram_truncate_path,
                                         col_dendrogram_path,
-                                        col_dendrogram_truncate_path):
+                                        col_dendrogram_truncate_path,
+                                        clusterheatmap):
 
         """
         _generate_visualization_content: generate visualization html content
         """
 
         visualization_content = ''
+
+        clusterheatmap_name = 'clusterheatmap.png'
+        clusterheatmap_display_name = 'clustered heatmap'
+
+        shutil.copy2(clusterheatmap,
+                     os.path.join(output_directory, clusterheatmap_name))
+
+        visualization_content += '<div class="gallery">'
+        visualization_content += '<a target="_blank" href="{}">'.format(
+                                                                    clusterheatmap_name)
+        visualization_content += '<img src="{}" '.format(clusterheatmap_name)
+        visualization_content += 'alt="{}" width="600" height="400">'.format(
+                                                            clusterheatmap_display_name)
+        visualization_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                clusterheatmap_display_name)
 
         if row_dendrogram_path:
             row_dendrogram_name = 'row_dendrogram.png'
@@ -310,7 +327,8 @@ class KnowledgeEngineAppsUtil:
                                            row_dendrogram_path,
                                            row_dendrogram_truncate_path,
                                            col_dendrogram_path,
-                                           col_dendrogram_truncate_path):
+                                           col_dendrogram_truncate_path,
+                                           clusterheatmap):
         """
         _generate_hierarchical_html_report: generate html summary report for hierarchical
                                             clustering app
@@ -328,7 +346,8 @@ class KnowledgeEngineAppsUtil:
                                                             row_dendrogram_path,
                                                             row_dendrogram_truncate_path,
                                                             col_dendrogram_path,
-                                                            col_dendrogram_truncate_path)
+                                                            col_dendrogram_truncate_path,
+                                                            clusterheatmap)
 
         with open(result_file_path, 'w') as result_file:
             with open(os.path.join(os.path.dirname(__file__), 'hier_report_template.html'),
@@ -352,7 +371,8 @@ class KnowledgeEngineAppsUtil:
                                               row_dendrogram_path,
                                               row_dendrogram_truncate_path,
                                               col_dendrogram_path,
-                                              col_dendrogram_truncate_path):
+                                              col_dendrogram_truncate_path,
+                                              clusterheatmap):
         """
         _generate_hierarchical_cluster_report: generate summary report
         """
@@ -364,7 +384,8 @@ class KnowledgeEngineAppsUtil:
                                                         row_dendrogram_path,
                                                         row_dendrogram_truncate_path,
                                                         col_dendrogram_path,
-                                                        col_dendrogram_truncate_path)
+                                                        col_dendrogram_truncate_path,
+                                                        clusterheatmap)
 
         objects_created = []
         for cluster_set_ref in cluster_set_refs:
@@ -668,6 +689,24 @@ class KnowledgeEngineAppsUtil:
 
         return clusters
 
+    def _build_clustermap(self, data_matrix, metric, method):
+        """
+        plot cluster heatmap
+        https://seaborn.pydata.org/generated/seaborn.clustermap.html
+        """
+
+        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        self._mkdir_p(output_directory)
+        plot_file = os.path.join(output_directory, 'clustermap.png')
+
+        df = pd.read_json(data_matrix)
+        df.fillna(0, inplace=True)
+
+        sns_plot = sns.clustermap(df, method=method, metric=metric)
+        sns_plot.savefig(plot_file)
+
+        return plot_file
+
     def __init__(self, config):
         self.ws_url = config["workspace-url"]
         self.callback_url = config['SDK_CALLBACK_URL']
@@ -681,6 +720,8 @@ class KnowledgeEngineAppsUtil:
 
         self.ws = Workspace(self.ws_url, token=self.token)
         self.set_client = SetAPI(self.srv_wiz_url)
+
+        plt.switch_backend('agg')
 
     def run_pca(self, params):
         """
@@ -876,6 +917,8 @@ class KnowledgeEngineAppsUtil:
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
 
+        clusterheatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
+
         (row_flat_cluster,
          row_labels,
          row_newick,
@@ -940,7 +983,8 @@ class KnowledgeEngineAppsUtil:
                                                                    row_dendrogram_path,
                                                                    row_dendrogram_truncate_path,
                                                                    col_dendrogram_path,
-                                                                   col_dendrogram_truncate_path)
+                                                                   col_dendrogram_truncate_path,
+                                                                   clusterheatmap)
         returnVal.update(report_output)
 
         return returnVal

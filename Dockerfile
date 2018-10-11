@@ -13,6 +13,10 @@ MAINTAINER KBase Developer
 
 RUN pip install coverage
 
+RUN pip uninstall matplotlib -y \
+    && pip install matplotlib==1.4.3
+RUN pip install seaborn
+
 # update security libraries in the base image
 RUN pip install cffi --upgrade \
     && pip install pyopenssl --upgrade \
