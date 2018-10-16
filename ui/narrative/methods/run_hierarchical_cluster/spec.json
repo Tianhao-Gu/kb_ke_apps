@@ -46,7 +46,7 @@
     "optional" : true,
     "advanced" : true,
     "allow_multiple" : false,
-    "default_values" : [ "cityblock" ],
+    "default_values" : [ "euclidean" ],
     "field_type" : "dropdown",
     "dropdown_options" : {
       "options": [
@@ -111,7 +111,7 @@
     "optional" : true,
     "advanced" : true,
     "allow_multiple" : false,
-    "default_values" : [ "ward" ],
+    "default_values" : [ "single" ],
     "field_type" : "dropdown",
     "dropdown_options" : {
       "options": [
