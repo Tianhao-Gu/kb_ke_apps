@@ -567,7 +567,7 @@ class KnowledgeEngineAppsUtil:
 
         idx = 0
         for cluster in clusters:
-            cluster_items = cluster.get('id_to_condition').keys()
+            cluster_items = cluster.get('id_to_data_position').keys()
 
             for cluster_item in cluster_items:
                 pos = row_ids.index(cluster_item)
