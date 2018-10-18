@@ -252,23 +252,6 @@ class KnowledgeEngineAppsUtil:
         clusterheatmap_content += '<iframe height="900px" width="100%" '
         clusterheatmap_content += 'src="{}" style="border:none;"></iframe>'.format(clusterheatmap_html)
 
-        # visualization_content = ''
-
-        # clusterheatmap_name = 'clusterheatmap.png'
-        # clusterheatmap_display_name = 'clustered heatmap'
-
-        # shutil.copy2(clusterheatmap,
-        #              os.path.join(output_directory, clusterheatmap_name))
-
-        # visualization_content += '<div class="gallery">'
-        # visualization_content += '<a target="_blank" href="{}">'.format(
-        #                                                             clusterheatmap_name)
-        # visualization_content += '<img src="{}" '.format(clusterheatmap_name)
-        # visualization_content += 'alt="{}" width="600" height="400">'.format(
-        #                                                     clusterheatmap_display_name)
-        # visualization_content += '</a><div class="desc">{}</div></div>'.format(
-        #                                                         clusterheatmap_display_name)
-
         if row_dendrogram_path:
             row_dendrogram_name = 'row_dendrogram.png'
             row_dendrogram_display_name = 'row dendrogram'
@@ -1023,8 +1006,6 @@ class KnowledgeEngineAppsUtil:
 
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
-
-        clusterheatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
 
         plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
 
