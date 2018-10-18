@@ -9,7 +9,7 @@ import shutil
 
 from os import environ
 try:
-    from ConfigParser import ConfigParser  # py2
+    from configparser import ConfigParser  # py2
 except:
     from configparser import ConfigParser  # py3
 
@@ -176,34 +176,34 @@ class kb_ke_appsTest(unittest.TestCase):
 
     def start_test(self):
         testname = inspect.stack()[1][3]
-        print('\n*** starting test: ' + testname + ' **')
+        print(('\n*** starting test: ' + testname + ' **'))
 
     def fail_run_hierarchical_cluster(self, params, error, exception=ValueError,
                                       contains=False):
         with self.assertRaises(exception) as context:
             self.getImpl().run_hierarchical_cluster(self.ctx, params)
         if contains:
-            self.assertIn(error, str(context.exception.message))
+            self.assertIn(error, str(context.exception.args[0]))
         else:
-            self.assertEqual(error, str(context.exception.message))
+            self.assertEqual(error, str(context.exception.args[0]))
 
     def fail_run_kmeans_cluster(self, params, error, exception=ValueError,
                                 contains=False):
         with self.assertRaises(exception) as context:
             self.getImpl().run_kmeans_cluster(self.ctx, params)
         if contains:
-            self.assertIn(error, str(context.exception.message))
+            self.assertIn(error, str(context.exception.args[0]))
         else:
-            self.assertEqual(error, str(context.exception.message))
+            self.assertEqual(error, str(context.exception.args[0]))
 
     def fail_run_pca(self, params, error, exception=ValueError,
                      contains=False):
         with self.assertRaises(exception) as context:
             self.getImpl().run_pca(self.ctx, params)
         if contains:
-            self.assertIn(error, str(context.exception.message))
+            self.assertIn(error, str(context.exception.args[0]))
         else:
-            self.assertEqual(error, str(context.exception.message))
+            self.assertEqual(error, str(context.exception.args[0]))
 
     def check_run_hierarchical_cluster_output(self, ret):
         self.assertTrue('cluster_set_refs' in ret)
@@ -234,7 +234,6 @@ class kb_ke_appsTest(unittest.TestCase):
                              'missing_cluster_set_name': 'cluster_set_name'}
         error_msg = '"cluster_set_name" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
-
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
@@ -283,7 +282,6 @@ class kb_ke_appsTest(unittest.TestCase):
         params = {'matrix_ref': self.expression_matrix_ref,
                   'workspace_name': self.getWsName(),
                   'cluster_set_name': 'test_hierarchical_cluster_1',
-                  'dist_cutoff_rate': 0.5,
                   'dist_metric': 'euclidean',
                   'linkage_method': 'ward',
                   'fcluster_criterion': 'distance'}
@@ -337,8 +335,8 @@ class kb_ke_appsTest(unittest.TestCase):
 
         pca_matrix_data = self.dfu.get_objects(
                     {"object_refs": [pca_matrix_ref]})['data'][0]['data']
-        expected_row_ids = [u'WRI_RS00010_CDS_1', u'WRI_RS00015_CDS_1', u'WRI_RS00025_CDS_1']
-        expected_col_ids = [u'principal_component_1', u'principal_component_2',
-                            u'principal_component_3', u'cluster']
-        self.assertItemsEqual(expected_row_ids, pca_matrix_data.get('row_ids'))
-        self.assertItemsEqual(expected_col_ids, pca_matrix_data.get('col_ids'))
+        expected_row_ids = ['WRI_RS00010_CDS_1', 'WRI_RS00015_CDS_1', 'WRI_RS00025_CDS_1']
+        expected_col_ids = ['principal_component_1', 'principal_component_2',
+                            'principal_component_3', 'cluster']
+        self.assertCountEqual(expected_row_ids, pca_matrix_data.get('row_ids'))
+        self.assertCountEqual(expected_col_ids, pca_matrix_data.get('col_ids'))

@@ -23,7 +23,7 @@ from GenericsAPI.GenericsAPIClient import GenericsAPI
 
 
 def log(message, prefix_newline=False):
-    print(('\n' if prefix_newline else '') + str(time.time()) + ': ' + message)
+    print((('\n' if prefix_newline else '') + str(time.time()) + ': ' + message))
 
 
 class KnowledgeEngineAppsUtil:
@@ -123,11 +123,11 @@ class KnowledgeEngineAppsUtil:
     def _gen_clusters(self, clusters, conditionset_mapping):
         clusters_list = list()
 
-        for cluster in clusters.values():
+        for cluster in list(clusters.values()):
             labeled_cluster = {}
             labeled_cluster.update({'id_to_data_position': cluster})
             if conditionset_mapping:
-                id_to_condition = {k: v for k, v in conditionset_mapping.items() if k in cluster.keys()}
+                id_to_condition = {k: v for k, v in list(conditionset_mapping.items()) if k in list(cluster.keys())}
                 labeled_cluster.update({'id_to_condition': id_to_condition})
 
             clusters_list.append(labeled_cluster)
@@ -140,7 +140,7 @@ class KnowledgeEngineAppsUtil:
         df = pd.read_json(data_matrix)
         index = df.index.tolist()
 
-        for cluster in clusters.values():
+        for cluster in list(clusters.values()):
             labeled_cluster = {}
             id_to_data_position = {}
             for item in cluster:
@@ -148,7 +148,7 @@ class KnowledgeEngineAppsUtil:
 
             labeled_cluster.update({'id_to_data_position': id_to_data_position})
             if conditionset_mapping:
-                id_to_condition = {k: v for k, v in conditionset_mapping.items() if k in cluster}
+                id_to_condition = {k: v for k, v in list(conditionset_mapping.items()) if k in cluster}
                 labeled_cluster.update({'id_to_condition': id_to_condition})
 
             clusters_list.append(labeled_cluster)
@@ -179,7 +179,7 @@ class KnowledgeEngineAppsUtil:
                             'condition_set_ref': conditionset_ref,
                             'genome_ref': genome_ref}
 
-        cluster_set_data = {k: v for k, v in cluster_set_data.items() if v}
+        cluster_set_data = {k: v for k, v in list(cluster_set_data.items()) if v}
 
         object_type = 'KBaseExperiments.ClusterSet'
         save_object_params = {
@@ -215,7 +215,7 @@ class KnowledgeEngineAppsUtil:
                             'condition_set_ref': conditionset_ref,
                             'genome_ref': genome_ref}
 
-        cluster_set_data = {k: v for k, v in cluster_set_data.items() if v}
+        cluster_set_data = {k: v for k, v in list(cluster_set_data.items()) if v}
 
         object_type = 'KBaseExperiments.ClusterSet'
         save_object_params = {
@@ -501,7 +501,7 @@ class KnowledgeEngineAppsUtil:
                           index=pca_matrix_data.get('row_ids'),
                           columns=pca_matrix_data.get('col_ids'))
 
-        n_components = range(1, df.columns.size)
+        n_components = list(range(1, df.columns.size))
         all_pairs = list(itertools.combinations(n_components, 2))
 
         for pair in all_pairs:
@@ -585,7 +585,7 @@ class KnowledgeEngineAppsUtil:
 
         idx = 0
         for cluster in clusters:
-            cluster_items = cluster.get('id_to_data_position').keys()
+            cluster_items = list(cluster.get('id_to_data_position').keys())
 
             for cluster_item in cluster_items:
                 pos = row_ids.index(cluster_item)

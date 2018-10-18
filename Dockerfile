@@ -1,4 +1,4 @@
-FROM kbase/kbase:sdkbase2.latest
+FROM kbase/sdkbase2:python
 MAINTAINER KBase Developer
 # -----------------------------------------
 # In this section, you can install any system dependencies required
@@ -13,26 +13,14 @@ MAINTAINER KBase Developer
 
 RUN pip install coverage
 
-RUN pip uninstall matplotlib -y \
-    && pip install matplotlib==1.4.3
-RUN pip install seaborn
+RUN pip install matplotlib \
+    && pip install seaborn \
+    && pip install pandas \
+    && pip install xlrd \
+    && pip install sklearn \
+    && pip install plotly \
+    && pip install numpy
 
-# update security libraries in the base image
-RUN pip install cffi --upgrade \
-    && pip install pyopenssl --upgrade \
-    && pip install ndg-httpsclient --upgrade \
-    && pip install pyasn1 --upgrade \
-    && pip install requests --upgrade \
-    && pip install 'requests[security]' --upgrade
-
-RUN pip uninstall numpy -y \
-    && pip install numpy==1.14.5
-
-RUN pip install pandas \
-    && pip install xlrd 
-
-RUN pip install sklearn \
-    && pip install plotly
 # -----------------------------------------
 
 COPY ./ /kb/module
