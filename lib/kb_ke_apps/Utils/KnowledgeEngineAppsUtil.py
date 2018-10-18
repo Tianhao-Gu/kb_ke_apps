@@ -248,7 +248,7 @@ class KnowledgeEngineAppsUtil:
             clusterheatmap_name = 'clusterheatmap.png'
             clusterheatmap_display_name = 'cluster heatmap'
 
-            shutil.copy2(row_dendrogram_path,
+            shutil.copy2(clusterheatmap,
                          os.path.join(output_directory, clusterheatmap_name))
 
             clusterheatmap_content += '<div class="gallery">'
