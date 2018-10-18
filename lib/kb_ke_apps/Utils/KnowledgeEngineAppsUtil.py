@@ -597,7 +597,9 @@ class KnowledgeEngineAppsUtil:
         _build_cluster: build flat clusters and dendrogram for data_matrix
         """
 
+        log('start building clusters')
         # calculate distance matrix
+        log('calculating distance matrix')
         pdist_params = {'data_matrix': data_matrix,
                         'metric': dist_metric}
         pdist_ret = self.ke_util.run_pdist(pdist_params)
@@ -606,6 +608,7 @@ class KnowledgeEngineAppsUtil:
         labels = pdist_ret['labels']
 
         # performs hierarchical/agglomerative clustering
+        log('performing hierarchical/agglomerative clustering')
         linkage_params = {'dist_matrix': dist_matrix,
                           'method': linkage_method}
         linkage_ret = self.ke_util.run_linkage(linkage_params)
@@ -631,6 +634,7 @@ class KnowledgeEngineAppsUtil:
 
         # generate dendrogram
         try:
+            log('creating dendrogram')
             dendrogram_params = {'linkage_matrix': linkage_matrix,
                                  'dist_threshold': dist_threshold,
                                  'labels': labels}
@@ -643,6 +647,7 @@ class KnowledgeEngineAppsUtil:
 
         # generate truncated (last 12 merges) dendrogram
         if merges > 256:
+            log('creating truncated dendrogram')
             dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
                                           'dist_threshold': dist_threshold,
                                           'labels': labels,
@@ -660,7 +665,10 @@ class KnowledgeEngineAppsUtil:
         _build_kmeans_cluster: Build Kmeans cluster
         """
 
+        log('start building clusters')
+
         # calculate distance matrix
+        log('calculating distance matrix')
         pdist_params = {'data_matrix': data_matrix,
                         'metric': dist_metric}
         pdist_ret = self.ke_util.run_pdist(pdist_params)
@@ -669,6 +677,7 @@ class KnowledgeEngineAppsUtil:
         labels = pdist_ret['labels']
 
         # run kmeans algorithm
+        log('performing kmeans algorithm')
         kmeans_params = {'dist_matrix': dist_matrix,
                          'k_num': k_num}
         kmeans_ret = self.ke_util.run_kmeans2(kmeans_params)
@@ -694,7 +703,7 @@ class KnowledgeEngineAppsUtil:
         plot cluster heatmap
         https://seaborn.pydata.org/generated/seaborn.clustermap.html
         """
-
+        log('start building seaborn clustermap')
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
         plot_file = os.path.join(output_directory, 'clustermap.png')
@@ -709,6 +718,8 @@ class KnowledgeEngineAppsUtil:
 
     def _build_plotly_clustermap(self, data_matrix, dist_metric, linkage_method):
 
+        log('start building plotly page')
+
         output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
         self._mkdir_p(output_directory)
         plot_file = os.path.join(output_directory, 'clustermap.html')
@@ -717,6 +728,7 @@ class KnowledgeEngineAppsUtil:
         df.fillna(0, inplace=True)
 
         # Initialize figure by creating upper dendrogram
+        log('initializing upper dendrogram')
         figure = ff.create_dendrogram(df.T, orientation='bottom', labels=df.T.index,
                                       linkagefun=lambda x: hier.linkage(df.T.values,
                                                                         method=linkage_method,
@@ -725,6 +737,7 @@ class KnowledgeEngineAppsUtil:
             figure['data'][i]['yaxis'] = 'y2'
 
         # Create Side Dendrogram
+        log('creating side dendrogram')
         dendro_side = ff.create_dendrogram(df, orientation='right', labels=df.index,
                                            linkagefun=lambda x: hier.linkage(
                                                                         df.values,
@@ -738,6 +751,7 @@ class KnowledgeEngineAppsUtil:
         # figure['data'].extend(dendro_side['data'])
 
         # Create Heatmap
+        log('creating heatmap')
         heatmap = [go.Heatmap(x=df.columns, y=df.index, z=df.values, colorscale='YlGnBu')]
 
         original_heatmap_x = heatmap[0]['x']
@@ -791,6 +805,7 @@ class KnowledgeEngineAppsUtil:
                                             'showticklabels': False,
                                             'ticks': ""}})
 
+        log('plotting figure')
         plot(figure, filename=plot_file)
 
         return plot_file

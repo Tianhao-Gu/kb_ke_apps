@@ -239,8 +239,7 @@ class BaseClient(object):
         mod, _ = service_method.split('.')
         job_id = self._submit_job(service_method, args, service_ver, context)
         async_job_check_time = self.async_job_check_time
-        check_job_failures = 0
-        while check_job_failures < _CHECK_JOB_RETRYS:
+        while True:
             time.sleep(async_job_check_time)
             async_job_check_time = (async_job_check_time *
                                     self.async_job_check_time_scale_percent /
@@ -248,12 +247,7 @@ class BaseClient(object):
             if async_job_check_time > self.async_job_check_max_time:
                 async_job_check_time = self.async_job_check_max_time
 
-            try:
-                job_state = self._check_job(mod, job_id)
-            except ConnectionError:
-                _traceback.print_exc()
-                check_job_failures += 1
-                continue
+            job_state = self._check_job(mod, job_id)
 
             if job_state['finished']:
                 if not job_state['result']:
@@ -261,8 +255,6 @@ class BaseClient(object):
                 if len(job_state['result']) == 1:
                     return job_state['result'][0]
                 return job_state['result']
-        raise RuntimeError("_check_job failed {} times and exceeded limit".format(
-            check_job_failures))
 
     def call_method(self, service_method, args, service_ver=None,
                     context=None):

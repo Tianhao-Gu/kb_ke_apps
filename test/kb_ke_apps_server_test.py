@@ -219,31 +219,22 @@ class kb_ke_appsTest(unittest.TestCase):
         self.start_test()
         invalidate_params = {'missing_matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'cluster_set_name': 'cluster_set_name',
-                             'dist_cutoff_rate': 'dist_cutoff_rate'}
+                             'cluster_set_name': 'cluster_set_name'}
         error_msg = '"matrix_ref" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'missing_workspace_name': 'workspace_name',
-                             'cluster_set_name': 'cluster_set_name',
-                             'dist_cutoff_rate': 'dist_cutoff_rate'}
+                             'cluster_set_name': 'cluster_set_name'}
         error_msg = '"workspace_name" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
-                             'missing_cluster_set_name': 'cluster_set_name',
-                             'dist_cutoff_rate': 'dist_cutoff_rate'}
+                             'missing_cluster_set_name': 'cluster_set_name'}
         error_msg = '"cluster_set_name" parameter is required, but missing'
         self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
-        invalidate_params = {'matrix_ref': 'matrix_ref',
-                             'workspace_name': 'workspace_name',
-                             'cluster_set_name': 'cluster_set_name',
-                             'missing_dist_cutoff_rate': 'dist_cutoff_rate'}
-        error_msg = '"dist_cutoff_rate" parameter is required, but missing'
-        self.fail_run_hierarchical_cluster(invalidate_params, error_msg)
 
         invalidate_params = {'matrix_ref': 'matrix_ref',
                              'workspace_name': 'workspace_name',
@@ -302,9 +293,10 @@ class kb_ke_appsTest(unittest.TestCase):
         params = {'matrix_ref': self.matrix_obj_ref,
                   'workspace_name': self.getWsName(),
                   'cluster_set_name': 'test_hierarchical_cluster_2',
-                  'dist_cutoff_rate': 0.6,
+                  'col_dist_cutoff_rate': 0.6,
+                  'row_dist_cutoff_rate': 0.6,
                   'dist_metric': 'euclidean',
-                  'linkage_method': 'ward',
+                  'linkage_method': 'single',
                   'fcluster_criterion': 'distance'}
         ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
         self.check_run_hierarchical_cluster_output(ret)
