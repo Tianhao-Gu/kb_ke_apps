@@ -94,8 +94,7 @@ class KnowledgeEngineAppsUtil:
         log('start validating run_hierarchical_cluster params')
 
         # check for required parameters
-        for p in ['matrix_ref', 'workspace_name', 'cluster_set_name',
-                  'dist_cutoff_rate']:
+        for p in ['matrix_ref', 'workspace_name', 'cluster_set_name']:
             if p not in params:
                 raise ValueError('"{}" parameter is required, but missing'.format(p))
 
