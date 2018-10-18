@@ -290,7 +290,7 @@ class kb_ke_appsTest(unittest.TestCase):
         ret = self.getImpl().run_hierarchical_cluster(self.ctx, params)[0]
         self.check_run_hierarchical_cluster_output(ret)
 
-        params = {'matrix_ref': '35084/134/1',
+        params = {'matrix_ref': self.matrix_obj_ref,
                   'workspace_name': self.getWsName(),
                   'cluster_set_name': 'test_hierarchical_cluster_2',
                   'col_dist_cutoff_rate': 0.6,
