@@ -61,9 +61,10 @@ class kb_ke_apps(object):
            hierarchy.fcluster.html) -> structure: parameter "matrix_ref" of
            type "obj_ref" (An X/Y/Z style reference), parameter
            "workspace_name" of String, parameter "cluster_set_name" of
-           String, parameter "dist_cutoff_rate" of Double, parameter
-           "dist_metric" of String, parameter "linkage_method" of String,
-           parameter "fcluster_criterion" of String
+           String, parameter "row_dist_cutoff_rate" of Double, parameter
+           "col_dist_cutoff_rate" of Double, parameter "dist_metric" of
+           String, parameter "linkage_method" of String, parameter
+           "fcluster_criterion" of String
         :returns: instance of type "HierClusterOutput" (Ouput of the
            run_hierarchical_cluster function cluster_set_refs:
            KBaseExperiments.ClusterSet object references report_name: report
