@@ -1039,8 +1039,8 @@ class KnowledgeEngineAppsUtil:
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
 
-        # plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
-        plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
+        plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
+        # plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
 
         (row_flat_cluster,
          row_labels,
