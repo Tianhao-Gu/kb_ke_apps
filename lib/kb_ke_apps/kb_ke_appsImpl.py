@@ -83,8 +83,8 @@ class kb_ke_apps:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN run_hierarchical_cluster
-        for key, value in params.iteritems():
-            if isinstance(value, basestring):
+        for key, value in params.items():
+            if isinstance(value, str):
                 params[key] = value.strip()
 
         ke_apps_util = KnowledgeEngineAppsUtil(self.config)
@@ -129,8 +129,8 @@ class kb_ke_apps:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN run_kmeans_cluster
-        for key, value in params.iteritems():
-            if isinstance(value, basestring):
+        for key, value in params.items():
+            if isinstance(value, str):
                 params[key] = value.strip()
 
         ke_apps_util = KnowledgeEngineAppsUtil(self.config)
@@ -166,8 +166,8 @@ class kb_ke_apps:
         # ctx is the context object
         # return variables are: returnVal
         #BEGIN run_pca
-        for key, value in params.iteritems():
-            if isinstance(value, basestring):
+        for key, value in params.items():
+            if isinstance(value, str):
                 params[key] = value.strip()
 
         ke_apps_util = KnowledgeEngineAppsUtil(self.config)
