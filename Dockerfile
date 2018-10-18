@@ -30,6 +30,9 @@ RUN pip uninstall numpy -y \
 
 RUN pip install pandas \
     && pip install xlrd 
+
+RUN pip install sklearn \
+    && pip install plotly
 # -----------------------------------------
 
 COPY ./ /kb/module

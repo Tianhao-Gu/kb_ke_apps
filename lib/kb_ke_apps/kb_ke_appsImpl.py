@@ -23,7 +23,7 @@ class kb_ke_apps:
     ######################################### noqa
     VERSION = "1.0.0"
     GIT_URL = "https://github.com/Tianhao-Gu/kb_ke_apps.git"
-    GIT_COMMIT_HASH = "ccb7a212395cb539ee2b3fb185eb4611d1244b22"
+    GIT_COMMIT_HASH = "d20788e624bb2a2d291df116cf70d526de7f7e07"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER
@@ -67,9 +67,10 @@ class kb_ke_apps:
            hierarchy.fcluster.html) -> structure: parameter "matrix_ref" of
            type "obj_ref" (An X/Y/Z style reference), parameter
            "workspace_name" of String, parameter "cluster_set_name" of
-           String, parameter "dist_cutoff_rate" of Double, parameter
-           "dist_metric" of String, parameter "linkage_method" of String,
-           parameter "fcluster_criterion" of String
+           String, parameter "row_dist_cutoff_rate" of Double, parameter
+           "col_dist_cutoff_rate" of Double, parameter "dist_metric" of
+           String, parameter "linkage_method" of String, parameter
+           "fcluster_criterion" of String
         :returns: instance of type "HierClusterOutput" (Ouput of the
            run_hierarchical_cluster function cluster_set_refs:
            KBaseExperiments.ClusterSet object references report_name: report

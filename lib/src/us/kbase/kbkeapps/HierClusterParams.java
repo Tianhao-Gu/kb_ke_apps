@@ -47,7 +47,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
     "matrix_ref",
     "workspace_name",
     "cluster_set_name",
-    "dist_cutoff_rate",
+    "row_dist_cutoff_rate",
+    "col_dist_cutoff_rate",
     "dist_metric",
     "linkage_method",
     "fcluster_criterion"
@@ -60,8 +61,10 @@ public class HierClusterParams {
     private String workspaceName;
     @JsonProperty("cluster_set_name")
     private String clusterSetName;
-    @JsonProperty("dist_cutoff_rate")
-    private Double distCutoffRate;
+    @JsonProperty("row_dist_cutoff_rate")
+    private Double rowDistCutoffRate;
+    @JsonProperty("col_dist_cutoff_rate")
+    private Double colDistCutoffRate;
     @JsonProperty("dist_metric")
     private String distMetric;
     @JsonProperty("linkage_method")
@@ -115,18 +118,33 @@ public class HierClusterParams {
         return this;
     }
 
-    @JsonProperty("dist_cutoff_rate")
-    public Double getDistCutoffRate() {
-        return distCutoffRate;
+    @JsonProperty("row_dist_cutoff_rate")
+    public Double getRowDistCutoffRate() {
+        return rowDistCutoffRate;
     }
 
-    @JsonProperty("dist_cutoff_rate")
-    public void setDistCutoffRate(Double distCutoffRate) {
-        this.distCutoffRate = distCutoffRate;
+    @JsonProperty("row_dist_cutoff_rate")
+    public void setRowDistCutoffRate(Double rowDistCutoffRate) {
+        this.rowDistCutoffRate = rowDistCutoffRate;
     }
 
-    public HierClusterParams withDistCutoffRate(Double distCutoffRate) {
-        this.distCutoffRate = distCutoffRate;
+    public HierClusterParams withRowDistCutoffRate(Double rowDistCutoffRate) {
+        this.rowDistCutoffRate = rowDistCutoffRate;
+        return this;
+    }
+
+    @JsonProperty("col_dist_cutoff_rate")
+    public Double getColDistCutoffRate() {
+        return colDistCutoffRate;
+    }
+
+    @JsonProperty("col_dist_cutoff_rate")
+    public void setColDistCutoffRate(Double colDistCutoffRate) {
+        this.colDistCutoffRate = colDistCutoffRate;
+    }
+
+    public HierClusterParams withColDistCutoffRate(Double colDistCutoffRate) {
+        this.colDistCutoffRate = colDistCutoffRate;
         return this;
     }
 
@@ -187,7 +205,7 @@ public class HierClusterParams {
 
     @Override
     public String toString() {
-        return ((((((((((((((((("HierClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetName=")+ clusterSetName)+", distCutoffRate=")+ distCutoffRate)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
+        return ((((((((((((((((((("HierClusterParams"+" [matrixRef=")+ matrixRef)+", workspaceName=")+ workspaceName)+", clusterSetName=")+ clusterSetName)+", rowDistCutoffRate=")+ rowDistCutoffRate)+", colDistCutoffRate=")+ colDistCutoffRate)+", distMetric=")+ distMetric)+", linkageMethod=")+ linkageMethod)+", fclusterCriterion=")+ fclusterCriterion)+", additionalProperties=")+ additionalProperties)+"]");
     }
 
 }

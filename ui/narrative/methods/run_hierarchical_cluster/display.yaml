@@ -28,11 +28,16 @@ parameters :
         Matrix Object
     short-hint : |
         Matrix Object
-  dist_cutoff_rate:
+  row_dist_cutoff_rate:
     ui-name : |
-        Height Cutoff Ratio
+        Row Height Cutoff Ratio
     short-hint: |
-        Height Cutoff Ratio
+        Row Height Cutoff Ratio
+  col_dist_cutoff_rate:
+    ui-name : |
+        Column Height Cutoff Ratio
+    short-hint: |
+        Column Height Cutoff Ratio
   cluster_set_name :
     ui-name : |
         ClusterSet Object Name

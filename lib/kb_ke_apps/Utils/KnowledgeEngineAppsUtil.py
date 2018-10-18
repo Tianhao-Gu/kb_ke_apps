@@ -9,6 +9,10 @@ from matplotlib import pyplot as plt
 import numpy as np
 import itertools
 import seaborn as sns
+import plotly.graph_objs as go
+import plotly.figure_factory as ff
+from plotly.offline import plot
+import scipy.cluster.hierarchy as hier
 
 from kb_ke_util.kb_ke_utilClient import kb_ke_util
 from DataFileUtil.DataFileUtilClient import DataFileUtil
@@ -237,22 +241,33 @@ class KnowledgeEngineAppsUtil:
         _generate_visualization_content: generate visualization html content
         """
 
-        visualization_content = ''
+        clusterheatmap_content = ''
+        row_dendrogram_content = ''
+        col_dendrogram_content = ''
 
-        clusterheatmap_name = 'clusterheatmap.png'
-        clusterheatmap_display_name = 'clustered heatmap'
-
+        clusterheatmap_html = 'clusterheatmap.html'
         shutil.copy2(clusterheatmap,
-                     os.path.join(output_directory, clusterheatmap_name))
+                     os.path.join(output_directory, clusterheatmap_html))
 
-        visualization_content += '<div class="gallery">'
-        visualization_content += '<a target="_blank" href="{}">'.format(
-                                                                    clusterheatmap_name)
-        visualization_content += '<img src="{}" '.format(clusterheatmap_name)
-        visualization_content += 'alt="{}" width="600" height="400">'.format(
-                                                            clusterheatmap_display_name)
-        visualization_content += '</a><div class="desc">{}</div></div>'.format(
-                                                                clusterheatmap_display_name)
+        clusterheatmap_content += '<iframe height="900px" width="100%" '
+        clusterheatmap_content += 'src="{}" style="border:none;"></iframe>'.format(clusterheatmap_html)
+
+        # visualization_content = ''
+
+        # clusterheatmap_name = 'clusterheatmap.png'
+        # clusterheatmap_display_name = 'clustered heatmap'
+
+        # shutil.copy2(clusterheatmap,
+        #              os.path.join(output_directory, clusterheatmap_name))
+
+        # visualization_content += '<div class="gallery">'
+        # visualization_content += '<a target="_blank" href="{}">'.format(
+        #                                                             clusterheatmap_name)
+        # visualization_content += '<img src="{}" '.format(clusterheatmap_name)
+        # visualization_content += 'alt="{}" width="600" height="400">'.format(
+        #                                                     clusterheatmap_display_name)
+        # visualization_content += '</a><div class="desc">{}</div></div>'.format(
+        #                                                         clusterheatmap_display_name)
 
         if row_dendrogram_path:
             row_dendrogram_name = 'row_dendrogram.png'
@@ -261,13 +276,13 @@ class KnowledgeEngineAppsUtil:
             shutil.copy2(row_dendrogram_path,
                          os.path.join(output_directory, row_dendrogram_name))
 
-            visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(
+            row_dendrogram_content += '<div class="gallery">'
+            row_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                         row_dendrogram_name)
-            visualization_content += '<img src="{}" '.format(row_dendrogram_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(
+            row_dendrogram_content += '<img src="{}" '.format(row_dendrogram_name)
+            row_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
                                                                 row_dendrogram_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+            row_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 row_dendrogram_display_name)
 
         if row_dendrogram_truncate_path:
@@ -277,13 +292,13 @@ class KnowledgeEngineAppsUtil:
             shutil.copy2(row_dendrogram_truncate_path,
                          os.path.join(output_directory, row_den_truncate_name))
 
-            visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(
+            row_dendrogram_content += '<div class="gallery">'
+            row_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                         row_den_truncate_name)
-            visualization_content += '<img src="{}" '.format(row_den_truncate_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(
+            row_dendrogram_content += '<img src="{}" '.format(row_den_truncate_name)
+            row_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
                                                                 row_den_truncate_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+            row_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 row_den_truncate_display_name)
 
         if col_dendrogram_path:
@@ -293,13 +308,13 @@ class KnowledgeEngineAppsUtil:
             shutil.copy2(col_dendrogram_path,
                          os.path.join(output_directory, col_dendrogram_name))
 
-            visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(
+            col_dendrogram_content += '<div class="gallery">'
+            col_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                         col_dendrogram_name)
-            visualization_content += '<img src="{}" '.format(col_dendrogram_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(
+            col_dendrogram_content += '<img src="{}" '.format(col_dendrogram_name)
+            col_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
                                                                 col_dendrogram_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+            col_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 col_dendrogram_display_name)
 
         if col_dendrogram_truncate_path:
@@ -309,19 +324,16 @@ class KnowledgeEngineAppsUtil:
             shutil.copy2(col_dendrogram_truncate_path,
                          os.path.join(output_directory, col_den_truncate_name))
 
-            visualization_content += '<div class="gallery">'
-            visualization_content += '<a target="_blank" href="{}">'.format(
+            col_dendrogram_content += '<div class="gallery">'
+            col_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                     col_den_truncate_name)
-            visualization_content += '<img src="{}" '.format(col_den_truncate_name)
-            visualization_content += 'alt="{}" width="600" height="400">'.format(
+            col_dendrogram_content += '<img src="{}" '.format(col_den_truncate_name)
+            col_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
                                                             col_den_truncate_display_name)
-            visualization_content += '</a><div class="desc">{}</div></div>'.format(
+            col_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                             col_den_truncate_display_name)
 
-        if not visualization_content:
-            visualization_content = '<p>Dendrogram is too large to be printed.</p>'
-
-        return visualization_content
+        return clusterheatmap_content, row_dendrogram_content, col_dendrogram_content
 
     def _generate_hierarchical_html_report(self, cluster_set_refs,
                                            row_dendrogram_path,
@@ -341,7 +353,9 @@ class KnowledgeEngineAppsUtil:
         self._mkdir_p(output_directory)
         result_file_path = os.path.join(output_directory, 'hier_report.html')
 
-        visualization_content = self._generate_visualization_content(
+        (clusterheatmap_content,
+         row_dendrogram_content,
+         col_dendrogram_content) = self._generate_visualization_content(
                                                             output_directory,
                                                             row_dendrogram_path,
                                                             row_dendrogram_truncate_path,
@@ -353,8 +367,12 @@ class KnowledgeEngineAppsUtil:
             with open(os.path.join(os.path.dirname(__file__), 'hier_report_template.html'),
                       'r') as report_template_file:
                 report_template = report_template_file.read()
-                report_template = report_template.replace('<p>Visualization_Content</p>',
-                                                          visualization_content)
+                report_template = report_template.replace('<p>ClusterHeatmap</p>',
+                                                          clusterheatmap_content)
+                report_template = report_template.replace('<p>Row_Dendrogram</p>',
+                                                          row_dendrogram_content)
+                report_template = report_template.replace('<p>Column_Dendrogram</p>',
+                                                          col_dendrogram_content)
                 result_file.write(report_template)
 
         report_shock_id = self.dfu.file_to_shock({'file_path': output_directory,
@@ -707,6 +725,94 @@ class KnowledgeEngineAppsUtil:
 
         return plot_file
 
+    def _build_plotly_clustermap(self, data_matrix, dist_metric, linkage_method):
+
+        output_directory = os.path.join(self.scratch, str(uuid.uuid4()))
+        self._mkdir_p(output_directory)
+        plot_file = os.path.join(output_directory, 'clustermap.html')
+
+        df = pd.read_json(data_matrix)
+        df.fillna(0, inplace=True)
+
+        # Initialize figure by creating upper dendrogram
+        figure = ff.create_dendrogram(df.T, orientation='bottom', labels=df.T.index,
+                                      linkagefun=lambda x: hier.linkage(df.T.values,
+                                                                        method=linkage_method,
+                                                                        metric=dist_metric))
+        for i in range(len(figure['data'])):
+            figure['data'][i]['yaxis'] = 'y2'
+
+        # Create Side Dendrogram
+        dendro_side = ff.create_dendrogram(df, orientation='right', labels=df.index,
+                                           linkagefun=lambda x: hier.linkage(
+                                                                        df.values,
+                                                                        method=linkage_method,
+                                                                        metric=dist_metric))
+        for i in range(len(dendro_side['data'])):
+            dendro_side['data'][i]['xaxis'] = 'x2'
+
+        # Add Side Dendrogram Data to Figure
+        figure.add_traces(dendro_side['data'])
+        # figure['data'].extend(dendro_side['data'])
+
+        # Create Heatmap
+        heatmap = [go.Heatmap(x=df.columns, y=df.index, z=df.values, colorscale='YlGnBu')]
+
+        original_heatmap_x = heatmap[0]['x']
+        original_heatmap_y = heatmap[0]['y']
+
+        heatmap[0]['x'] = figure['layout']['xaxis']['tickvals']
+        heatmap[0]['y'] = dendro_side['layout']['yaxis']['tickvals']
+
+        # Add Heatmap Data to Figure
+        figure.add_traces(heatmap)
+        # figure['data'].extend(heatmap)
+
+        # Edit Layout
+        figure['layout'].update({'width': 800, 'height': 800,
+                                 'showlegend': False, 'hovermode': 'closest',
+                                 })
+        # Edit xaxis
+        figure['layout']['xaxis'].update({'domain': [.15, 1],
+                                          'mirror': False,
+                                          'showgrid': False,
+                                          'showline': False,
+                                          'zeroline': False,
+                                          'ticktext': original_heatmap_x,
+                                          'ticks': ""})
+        # Edit xaxis2
+        figure['layout'].update({'xaxis2': {'domain': [0, .15],
+                                            'mirror': False,
+                                            'showgrid': False,
+                                            'showline': False,
+                                            'zeroline': False,
+                                            'showticklabels': False,
+                                            'ticktext': original_heatmap_x,
+                                            'ticks': ""}})
+
+        # Edit yaxis
+        figure['layout']['yaxis'] = dendro_side['layout']['yaxis']
+        figure['layout']['yaxis'].update({'domain': [0, .85],
+                                          'mirror': False,
+                                          'showgrid': False,
+                                          'showline': False,
+                                          'zeroline': False,
+                                          'showticklabels': False,
+                                          'ticktext': original_heatmap_y,
+                                          'ticks': ""})
+        # Edit yaxis2
+        figure['layout'].update({'yaxis2': {'domain': [.825, .975],
+                                            'mirror': False,
+                                            'showgrid': False,
+                                            'showline': False,
+                                            'zeroline': False,
+                                            'showticklabels': False,
+                                            'ticks': ""}})
+
+        plot(figure, filename=plot_file)
+
+        return plot_file
+
     def __init__(self, config):
         self.ws_url = config["workspace-url"]
         self.callback_url = config['SDK_CALLBACK_URL']
@@ -879,7 +985,7 @@ class KnowledgeEngineAppsUtil:
                      Details refer to:
                      https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.pdist.html
 
-        linkage_method: The linkage algorithm to use. Default set to 'ward'.
+        linkage_method: The linkage algorithm to use. Default set to 'single'.
                         The method can be
                         ["single", "complete", "average", "weighted", "centroid", "median", "ward"]
                         Details refer to:
@@ -905,7 +1011,8 @@ class KnowledgeEngineAppsUtil:
         matrix_ref = params.get('matrix_ref')
         workspace_name = params.get('workspace_name')
         cluster_set_name = params.get('cluster_set_name')
-        dist_cutoff_rate = float(params.get('dist_cutoff_rate'))
+        row_dist_cutoff_rate = float(params.get('row_dist_cutoff_rate', 0.5))
+        col_dist_cutoff_rate = float(params.get('col_dist_cutoff_rate', 0.5))
         dist_metric = params.get('dist_metric')
         linkage_method = params.get('linkage_method')
         fcluster_criterion = params.get('fcluster_criterion')
@@ -919,13 +1026,15 @@ class KnowledgeEngineAppsUtil:
 
         clusterheatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
 
+        plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
+
         (row_flat_cluster,
          row_labels,
          row_newick,
          row_dendrogram_path,
          row_dendrogram_truncate_path) = self._build_flat_cluster(
                                                             data_matrix,
-                                                            dist_cutoff_rate,
+                                                            row_dist_cutoff_rate,
                                                             dist_metric=dist_metric,
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
@@ -936,14 +1045,15 @@ class KnowledgeEngineAppsUtil:
          col_dendrogram_path,
          col_dendrogram_truncate_path) = self._build_flat_cluster(
                                                             transpose_data_matrix,
-                                                            dist_cutoff_rate,
+                                                            col_dist_cutoff_rate,
                                                             dist_metric=dist_metric,
                                                             linkage_method=linkage_method,
                                                             fcluster_criterion=fcluster_criterion)
 
         genome_ref = matrix_data.get('genome_ref')
 
-        clustering_parameters = {'dist_cutoff_rate': str(dist_cutoff_rate),
+        clustering_parameters = {'col_dist_cutoff_rate': str(col_dist_cutoff_rate),
+                                 'row_dist_cutoff_rate': str(row_dist_cutoff_rate),
                                  'dist_metric': dist_metric,
                                  'linkage_method': linkage_method,
                                  'fcluster_criterion': fcluster_criterion}
@@ -984,7 +1094,7 @@ class KnowledgeEngineAppsUtil:
                                                                    row_dendrogram_truncate_path,
                                                                    col_dendrogram_path,
                                                                    col_dendrogram_truncate_path,
-                                                                   clusterheatmap)
+                                                                   plotly_heatmap)
         returnVal.update(report_output)
 
         return returnVal

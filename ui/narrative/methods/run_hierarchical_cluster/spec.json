@@ -19,11 +19,23 @@
       "valid_ws_types" : ["KBaseFeatureValues.ExpressionMatrix", "KBaseMatrices"]
     }
   },{
-   "id" : "dist_cutoff_rate",
+   "id" : "row_dist_cutoff_rate",
     "optional" : false,
     "advanced" : false,
     "allow_multiple" : false,
-    "default_values" : [ "0.5" ],
+    "default_values" : [ "0.6" ],
+    "field_type" : "text",
+    "text_options" : {
+        "validate_as": "float",
+        "min_float" : 0.0,
+        "max_float" : 1.0
+    }
+  },{
+   "id" : "col_dist_cutoff_rate",
+    "optional" : false,
+    "advanced" : false,
+    "allow_multiple" : false,
+    "default_values" : [ "0.6" ],
     "field_type" : "text",
     "text_options" : {
         "validate_as": "float",
@@ -175,8 +187,12 @@
           "target_property" : "matrix_ref"
         },
         {
-            "input_parameter" : "dist_cutoff_rate",
-            "target_property" : "dist_cutoff_rate"
+            "input_parameter" : "col_dist_cutoff_rate",
+            "target_property" : "col_dist_cutoff_rate"
+        },
+        {
+            "input_parameter" : "row_dist_cutoff_rate",
+            "target_property" : "row_dist_cutoff_rate"
         },
         {
             "input_parameter" : "cluster_set_name",

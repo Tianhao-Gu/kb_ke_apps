@@ -44,7 +44,8 @@ module kb_ke_apps {
     obj_ref matrix_ref;
     string workspace_name;
     string cluster_set_name;
-    float dist_cutoff_rate;
+    float row_dist_cutoff_rate;
+    float col_dist_cutoff_rate;
 
     string dist_metric;
     string linkage_method;

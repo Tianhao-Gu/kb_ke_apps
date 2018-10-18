@@ -125,7 +125,8 @@ HierClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	cluster_set_name has a value which is a string
-	dist_cutoff_rate has a value which is a float
+	row_dist_cutoff_rate has a value which is a float
+	col_dist_cutoff_rate has a value which is a float
 	dist_metric has a value which is a string
 	linkage_method has a value which is a string
 	fcluster_criterion has a value which is a string
@@ -147,7 +148,8 @@ HierClusterParams is a reference to a hash where the following keys are defined:
 	matrix_ref has a value which is a kb_ke_apps.obj_ref
 	workspace_name has a value which is a string
 	cluster_set_name has a value which is a string
-	dist_cutoff_rate has a value which is a float
+	row_dist_cutoff_rate has a value which is a float
+	col_dist_cutoff_rate has a value which is a float
 	dist_metric has a value which is a string
 	linkage_method has a value which is a string
 	fcluster_criterion has a value which is a string
@@ -618,7 +620,8 @@ a reference to a hash where the following keys are defined:
 matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
 cluster_set_name has a value which is a string
-dist_cutoff_rate has a value which is a float
+row_dist_cutoff_rate has a value which is a float
+col_dist_cutoff_rate has a value which is a float
 dist_metric has a value which is a string
 linkage_method has a value which is a string
 fcluster_criterion has a value which is a string
@@ -633,7 +636,8 @@ a reference to a hash where the following keys are defined:
 matrix_ref has a value which is a kb_ke_apps.obj_ref
 workspace_name has a value which is a string
 cluster_set_name has a value which is a string
-dist_cutoff_rate has a value which is a float
+row_dist_cutoff_rate has a value which is a float
+col_dist_cutoff_rate has a value which is a float
 dist_metric has a value which is a string
 linkage_method has a value which is a string
 fcluster_criterion has a value which is a string
