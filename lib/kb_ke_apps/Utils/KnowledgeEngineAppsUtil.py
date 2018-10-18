@@ -244,12 +244,30 @@ class KnowledgeEngineAppsUtil:
         row_dendrogram_content = ''
         col_dendrogram_content = ''
 
-        clusterheatmap_html = 'clusterheatmap.html'
-        shutil.copy2(clusterheatmap,
-                     os.path.join(output_directory, clusterheatmap_html))
+        if os.path.basename(clusterheatmap).endswith('.png'):
+            clusterheatmap_name = 'clusterheatmap.png'
+            clusterheatmap_display_name = 'cluster heatmap'
 
-        clusterheatmap_content += '<iframe height="900px" width="100%" '
-        clusterheatmap_content += 'src="{}" style="border:none;"></iframe>'.format(clusterheatmap_html)
+            shutil.copy2(row_dendrogram_path,
+                         os.path.join(output_directory, clusterheatmap_name))
+
+            clusterheatmap_content += '<div class="gallery">'
+            clusterheatmap_content += '<a target="_blank" href="{}">'.format(
+                                                                        clusterheatmap_name)
+            clusterheatmap_content += '<img src="{}" '.format(clusterheatmap_name)
+            clusterheatmap_content += 'alt="{}" width="600" height="400">'.format(
+                                                                clusterheatmap_display_name)
+            clusterheatmap_content += '</a><div class="desc">{}</div></div>'.format(
+                                                                clusterheatmap_display_name)
+        elif os.path.basename(clusterheatmap).endswith('.html'):
+            clusterheatmap_html = 'clusterheatmap.html'
+            shutil.copy2(clusterheatmap,
+                         os.path.join(output_directory, clusterheatmap_html))
+
+            clusterheatmap_content += '<iframe height="900px" width="100%" '
+            clusterheatmap_content += 'src="{}" style="border:none;"></iframe>'.format(clusterheatmap_html)
+        else:
+            raise ValueError('Unexpected cluster heatmap file format')
 
         if row_dendrogram_path:
             row_dendrogram_name = 'row_dendrogram.png'
@@ -1021,7 +1039,8 @@ class KnowledgeEngineAppsUtil:
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
 
-        plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
+        # plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
+        plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
 
         (row_flat_cluster,
          row_labels,
