@@ -248,14 +248,14 @@ class KnowledgeEngineAppsUtil:
             clusterheatmap_name = 'clusterheatmap.png'
             clusterheatmap_display_name = 'cluster heatmap'
 
-            shutil.copy2(row_dendrogram_path,
+            shutil.copy2(clusterheatmap,
                          os.path.join(output_directory, clusterheatmap_name))
 
             clusterheatmap_content += '<div class="gallery">'
             clusterheatmap_content += '<a target="_blank" href="{}">'.format(
                                                                         clusterheatmap_name)
             clusterheatmap_content += '<img src="{}" '.format(clusterheatmap_name)
-            clusterheatmap_content += 'alt="{}" width="600" height="400">'.format(
+            clusterheatmap_content += 'alt="{}" width="1000" height="1000">'.format(
                                                                 clusterheatmap_display_name)
             clusterheatmap_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 clusterheatmap_display_name)
@@ -280,7 +280,7 @@ class KnowledgeEngineAppsUtil:
             row_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                         row_dendrogram_name)
             row_dendrogram_content += '<img src="{}" '.format(row_dendrogram_name)
-            row_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
+            row_dendrogram_content += 'alt="{}" width="1000" height="800">'.format(
                                                                 row_dendrogram_display_name)
             row_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 row_dendrogram_display_name)
@@ -296,7 +296,7 @@ class KnowledgeEngineAppsUtil:
             row_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                         row_den_truncate_name)
             row_dendrogram_content += '<img src="{}" '.format(row_den_truncate_name)
-            row_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
+            row_dendrogram_content += 'alt="{}" width="1000" height="800">'.format(
                                                                 row_den_truncate_display_name)
             row_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 row_den_truncate_display_name)
@@ -312,7 +312,7 @@ class KnowledgeEngineAppsUtil:
             col_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                         col_dendrogram_name)
             col_dendrogram_content += '<img src="{}" '.format(col_dendrogram_name)
-            col_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
+            col_dendrogram_content += 'alt="{}" width="1000" height="800">'.format(
                                                                 col_dendrogram_display_name)
             col_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                                 col_dendrogram_display_name)
@@ -328,7 +328,7 @@ class KnowledgeEngineAppsUtil:
             col_dendrogram_content += '<a target="_blank" href="{}">'.format(
                                                                     col_den_truncate_name)
             col_dendrogram_content += '<img src="{}" '.format(col_den_truncate_name)
-            col_dendrogram_content += 'alt="{}" width="600" height="400">'.format(
+            col_dendrogram_content += 'alt="{}" width="1000" height="800">'.format(
                                                             col_den_truncate_display_name)
             col_dendrogram_content += '</a><div class="desc">{}</div></div>'.format(
                                                             col_den_truncate_display_name)
