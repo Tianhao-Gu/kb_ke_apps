@@ -309,34 +309,3 @@ class kb_ke_appsTest(unittest.TestCase):
                   'dist_metric': 'cityblock'}
         ret = self.getImpl().run_kmeans_cluster(self.ctx, params)[0]
         self.check_run_kmeans_cluster_output(ret)
-
-    def test_bad_run_pca_params(self):
-        self.start_test()
-        invalidate_params = {'missing_cluster_set_ref': 'cluster_set_ref',
-                             'workspace_name': 'workspace_name',
-                             'pca_matrix_name': 'pca_matrix_name'}
-        error_msg = '"cluster_set_ref" parameter is required, but missing'
-        self.fail_run_pca(invalidate_params, error_msg)
-
-    def test_run_pca(self):
-        self.start_test()
-
-        params = {'cluster_set_ref': self.cluster_set_ref,
-                  'workspace_name': self.getWsName(),
-                  'pca_matrix_name': 'test_pca_matrix',
-                  'n_components': 3}
-        ret = self.getImpl().run_pca(self.ctx, params)[0]
-
-        self.assertTrue('report_name' in ret)
-        self.assertTrue('report_ref' in ret)
-        self.assertTrue('pca_ref' in ret)
-
-        pca_matrix_ref = ret.get('pca_ref')
-
-        pca_matrix_data = self.dfu.get_objects(
-                    {"object_refs": [pca_matrix_ref]})['data'][0]['data']
-        expected_row_ids = ['WRI_RS00010_CDS_1', 'WRI_RS00015_CDS_1', 'WRI_RS00025_CDS_1']
-        expected_col_ids = ['principal_component_1', 'principal_component_2',
-                            'principal_component_3', 'cluster']
-        self.assertCountEqual(expected_row_ids, pca_matrix_data.get('row_ids'))
-        self.assertCountEqual(expected_col_ids, pca_matrix_data.get('col_ids'))
