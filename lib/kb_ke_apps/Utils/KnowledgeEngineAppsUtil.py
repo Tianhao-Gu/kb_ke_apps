@@ -3,6 +3,7 @@ import json
 import os
 import errno
 import uuid
+import sys
 import shutil
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -845,6 +846,7 @@ class KnowledgeEngineAppsUtil:
         self.set_client = SetAPI(self.srv_wiz_url)
 
         plt.switch_backend('agg')
+        sys.setrecursionlimit(15000)
 
     def run_pca(self, params):
         """
@@ -1043,11 +1045,9 @@ class KnowledgeEngineAppsUtil:
 
         try:
             plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
+            # plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
         except:
-            try:
-                plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
-            except:
-                plotly_heatmap = None
+            plotly_heatmap = None
 
         (row_flat_cluster,
          row_labels,
