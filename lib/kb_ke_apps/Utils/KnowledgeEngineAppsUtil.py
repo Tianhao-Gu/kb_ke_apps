@@ -244,7 +244,9 @@ class KnowledgeEngineAppsUtil:
         row_dendrogram_content = ''
         col_dendrogram_content = ''
 
-        if os.path.basename(clusterheatmap).endswith('.png'):
+        if clusterheatmap is None:
+            clusterheatmap_content += 'clustet heatmap is too large to display'
+        elif os.path.basename(clusterheatmap).endswith('.png'):
             clusterheatmap_name = 'clusterheatmap.png'
             clusterheatmap_display_name = 'cluster heatmap'
 
@@ -1039,8 +1041,13 @@ class KnowledgeEngineAppsUtil:
         data_matrix = self.gen_api.fetch_data({'obj_ref': matrix_ref}).get('data_matrix')
         transpose_data_matrix = pd.read_json(data_matrix).T.to_json()
 
-        plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
-        # plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
+        try:
+            plotly_heatmap = self._build_plotly_clustermap(data_matrix, dist_metric, linkage_method)
+        except:
+            try:
+                plotly_heatmap = self._build_clustermap(data_matrix, dist_metric, linkage_method)
+            except:
+                plotly_heatmap = None
 
         (row_flat_cluster,
          row_labels,
