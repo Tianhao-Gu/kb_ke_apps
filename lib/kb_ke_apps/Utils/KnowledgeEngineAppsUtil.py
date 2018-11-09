@@ -636,8 +636,10 @@ class KnowledgeEngineAppsUtil:
 
         linkage_matrix = linkage_ret['linkage_matrix']
 
-        newick = self.ke_util.linkage_2_newick({'linkage_matrix': linkage_matrix,
-                                                'labels': labels})['newick']
+        # newick = self.ke_util.linkage_2_newick({'linkage_matrix': linkage_matrix,
+        #                                         'labels': labels})['newick']
+
+        newick = None
 
         height = max([item[2] for item in linkage_matrix])
         dist_threshold = height * dist_cutoff_rate
