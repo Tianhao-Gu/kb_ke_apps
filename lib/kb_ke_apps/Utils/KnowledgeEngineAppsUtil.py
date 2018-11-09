@@ -665,19 +665,22 @@ class KnowledgeEngineAppsUtil:
             dendrogram_ret = self.ke_util.run_dendrogram(dendrogram_params)
 
             dendrogram_path = dendrogram_ret['result_plots'][0]
-        except:
+        except Exception:
             dendrogram_path = None
 
         # generate truncated (last 12 merges) dendrogram
         if merges > 256:
-            log('creating truncated dendrogram')
-            dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
-                                          'dist_threshold': dist_threshold,
-                                          'labels': labels,
-                                          'last_merges': 12}
-            dendrogram_truncate_ret = self.ke_util.run_dendrogram(dendrogram_truncate_params)
+            try:
+                log('creating truncated dendrogram')
+                dendrogram_truncate_params = {'linkage_matrix': linkage_matrix,
+                                              'dist_threshold': dist_threshold,
+                                              'labels': labels,
+                                              'last_merges': 12}
+                dendrogram_truncate_ret = self.ke_util.run_dendrogram(dendrogram_truncate_params)
 
-            dendrogram_truncate_path = dendrogram_truncate_ret['result_plots'][0]
+                dendrogram_truncate_path = dendrogram_truncate_ret['result_plots'][0]
+            except Exception:
+                dendrogram_truncate_path = None
         else:
             dendrogram_truncate_path = None
 
