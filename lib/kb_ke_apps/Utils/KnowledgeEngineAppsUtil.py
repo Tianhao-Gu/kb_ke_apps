@@ -24,7 +24,8 @@ from GenericsAPI.GenericsAPIClient import GenericsAPI
 
 
 def log(message, prefix_newline=False):
-    print((('\n' if prefix_newline else '') + str(time.time()) + ': ' + message))
+    time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(time.time()))
+    print(('\n' if prefix_newline else '') + time_str + ': ' + message)
 
 
 class KnowledgeEngineAppsUtil:
@@ -851,7 +852,7 @@ class KnowledgeEngineAppsUtil:
         self.set_client = SetAPI(self.srv_wiz_url)
 
         plt.switch_backend('agg')
-        sys.setrecursionlimit(1500000)
+        sys.setrecursionlimit(150000)
 
     def run_pca(self, params):
         """
