@@ -848,7 +848,7 @@ class KnowledgeEngineAppsUtil:
         self.set_client = SetAPI(self.srv_wiz_url)
 
         plt.switch_backend('agg')
-        sys.setrecursionlimit(15000)
+        sys.setrecursionlimit(150000)
 
     def run_pca(self, params):
         """
