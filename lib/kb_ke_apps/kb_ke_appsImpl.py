@@ -21,9 +21,9 @@ class kb_ke_apps:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "1.0.0"
+    VERSION = "1.0.1"
     GIT_URL = "https://github.com/Tianhao-Gu/kb_ke_apps.git"
-    GIT_COMMIT_HASH = "139ca8ee97ae0b1dbb7853e42640a39d1065f534"
+    GIT_COMMIT_HASH = "8cff446e6d6561e169be319d4b28dfa7f5c61c22"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER

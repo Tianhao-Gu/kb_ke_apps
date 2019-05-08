@@ -6,15 +6,15 @@
 #
 ############################################################
 
-
+from __future__ import print_function
 # the following is a hack to get the baseclient to import whether we're in a
 # package or not. This makes pep8 unhappy hence the annotations.
 try:
     # baseclient and this client are in a package
     from .baseclient import BaseClient as _BaseClient  # @UnusedImport
-except:
+except ImportError:
     # no they aren't
-    from .baseclient import BaseClient as _BaseClient  # @Reimport
+    from baseclient import BaseClient as _BaseClient  # @Reimport
 
 
 class kb_ke_apps(object):
@@ -23,7 +23,7 @@ class kb_ke_apps(object):
             self, url=None, timeout=30 * 60, user_id=None,
             password=None, token=None, ignore_authrc=False,
             trust_all_ssl_certificates=False,
-            auth_svc='https://kbase.us/services/authorization/Sessions/Login'):
+            auth_svc='https://ci.kbase.us/services/auth/api/legacy/KBase/Sessions/Login'):
         if url is None:
             raise ValueError('A url is required')
         self._service_ver = None
@@ -74,9 +74,8 @@ class kb_ke_apps(object):
            reference), parameter "report_name" of String, parameter
            "report_ref" of String
         """
-        return self._client.call_method(
-            'kb_ke_apps.run_hierarchical_cluster',
-            [params], self._service_ver, context)
+        return self._client.call_method('kb_ke_apps.run_hierarchical_cluster',
+                                        [params], self._service_ver, context)
 
     def run_kmeans_cluster(self, params, context=None):
         """
@@ -106,9 +105,8 @@ class kb_ke_apps(object):
            reference), parameter "report_name" of String, parameter
            "report_ref" of String
         """
-        return self._client.call_method(
-            'kb_ke_apps.run_kmeans_cluster',
-            [params], self._service_ver, context)
+        return self._client.call_method('kb_ke_apps.run_kmeans_cluster',
+                                        [params], self._service_ver, context)
 
     def run_pca(self, params, context=None):
         """
@@ -129,9 +127,8 @@ class kb_ke_apps(object):
            reference), parameter "report_name" of String, parameter
            "report_ref" of String
         """
-        return self._client.call_method(
-            'kb_ke_apps.run_pca',
-            [params], self._service_ver, context)
+        return self._client.call_method('kb_ke_apps.run_pca',
+                                        [params], self._service_ver, context)
 
     def status(self, context=None):
         return self._client.call_method('kb_ke_apps.status',
